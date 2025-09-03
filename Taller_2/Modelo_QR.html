@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jhon Tascon">
+<meta name="author" content="Lino Sinisterra">
+<meta name="author" content="Juan Chacon">
+<meta name="dcterms.date" content="2025-09-08">
+
+<title>Taller 2 - Modelo Regresión Cuantílica</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="Modelo_QR_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Modelo_QR_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Modelo_QR_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Modelo_QR_files/libs/quarto-html/popper.min.js"></script>
+<script src="Modelo_QR_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Modelo_QR_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Modelo_QR_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Modelo_QR_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Modelo_QR_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Modelo_QR_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Modelo_QR_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Taller 2 - Modelo Regresión Cuantílica</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Authors</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jhon Tascon </p>
+             <p>Lino Sinisterra </p>
+             <p>Juan Chacon </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 8, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="información-general" class="level2">
+<h2 class="anchored" data-anchor-id="información-general"><strong>0. Información general</strong></h2>
+<p>Este trabajo consiste identificar un caso real donde el interés esté en colas de la distribución (poblaciones muy vulnerables o muy favorecidas) y mostrar cómo la regresión cuantil (QR) revela patrones que el promedio (OLS) oculta.</p>
+<p>En este caso, haremos el ejercicio con el dataset “Evaluación de la polución y calidad del aire” de kaggle: https://www.kaggle.com/datasets/mujtabamatin/air-quality-and-pollution-assessment. Este dataset se enfoca en envaluaciones de la calidad de aire en varias regiones del mundo. El dataset contiene 5000 muestras y caputra facotres ambientales y demográficos que influyen en los niveles de polución.</p>
+<p>La pregunta de investigación es: ¿Cómo influyen los facotres meteorológicos, de densidad de población y cercanía a zonas industriales los diferentes niveles de CO?</p>
+</section>
+<section id="análisis-exploratorio" class="level2">
+<h2 class="anchored" data-anchor-id="análisis-exploratorio"><strong>1. Análisis exploratorio</strong></h2>
+<p>Las variables a analizar son las siguientes:</p>
+<ul>
+<li>Temperatura (°C): Temperatura media de la región</li>
+<li>Humedad (%): Humedad relativa registrada en la región</li>
+<li>Concentración PM2.5 (µg/m³): Niveles de partículas finas</li>
+<li>Concentración de PM10 (µg/m³): Niveles de partículas gruesas -&gt; no se trabajará en el estudio</li>
+<li>Concentración de NO2 (ppb): Niveles de dióxido de nitrógeno -&gt; no se trabajará en el estudio</li>
+<li>Concentración de SO2 (ppb): Niveles de dióxido de azufre -&gt; no se trabajará en el estudio</li>
+<li>Cercanía a Zonas Industriales (km): Distancia a la zona industrial más cercana</li>
+<li>Densidad de población (personas/km²): Número de personas por kilómetro cuadrado en la región</li>
+<li>Calidad del aire: niveles de calidad del aire (Bueno, Moderado, Pobre, Peligroso)</li>
+<li><strong>Concentración de CO (ppm): Niveles de monóxido de carbono -&gt; Variable objetivo</strong></li>
+</ul>
+<p>Los percentiles a trabajar serán: 0.05, 0.25, 0.50, 0.75 y 0.95</p>
+<p>A continuación, se hace un análisis exploratorio de los datos:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Visualización de los 10 primeros registros del conjunto de datos:</code></pre>
+</div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 8%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 30%">
+<col style="width: 20%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Temperatura</th>
+<th style="text-align: right;">Humedad</th>
+<th style="text-align: right;">PM2.5</th>
+<th style="text-align: right;">CO</th>
+<th style="text-align: right;">Cercania_Areas_Industriales</th>
+<th style="text-align: right;">Densidad_Poblacion</th>
+<th style="text-align: left;">Calidad_Aire</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">29.8</td>
+<td style="text-align: right;">59.1</td>
+<td style="text-align: right;">5.2</td>
+<td style="text-align: right;">1.72</td>
+<td style="text-align: right;">6.3</td>
+<td style="text-align: right;">319</td>
+<td style="text-align: left;">Moderate</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">28.3</td>
+<td style="text-align: right;">75.6</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: right;">1.64</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: right;">611</td>
+<td style="text-align: left;">Moderate</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">23.1</td>
+<td style="text-align: right;">74.7</td>
+<td style="text-align: right;">26.7</td>
+<td style="text-align: right;">1.63</td>
+<td style="text-align: right;">5.2</td>
+<td style="text-align: right;">619</td>
+<td style="text-align: left;">Moderate</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">27.1</td>
+<td style="text-align: right;">39.1</td>
+<td style="text-align: right;">6.1</td>
+<td style="text-align: right;">1.15</td>
+<td style="text-align: right;">11.1</td>
+<td style="text-align: right;">551</td>
+<td style="text-align: left;">Good</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">26.5</td>
+<td style="text-align: right;">70.7</td>
+<td style="text-align: right;">6.9</td>
+<td style="text-align: right;">1.01</td>
+<td style="text-align: right;">12.7</td>
+<td style="text-align: right;">303</td>
+<td style="text-align: left;">Good</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">39.4</td>
+<td style="text-align: right;">96.6</td>
+<td style="text-align: right;">14.6</td>
+<td style="text-align: right;">1.82</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">674</td>
+<td style="text-align: left;">Hazardous</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">41.7</td>
+<td style="text-align: right;">82.5</td>
+<td style="text-align: right;">1.7</td>
+<td style="text-align: right;">1.80</td>
+<td style="text-align: right;">4.6</td>
+<td style="text-align: right;">735</td>
+<td style="text-align: left;">Poor</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">31.0</td>
+<td style="text-align: right;">59.6</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">1.38</td>
+<td style="text-align: right;">6.3</td>
+<td style="text-align: right;">443</td>
+<td style="text-align: left;">Moderate</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">29.4</td>
+<td style="text-align: right;">93.8</td>
+<td style="text-align: right;">10.3</td>
+<td style="text-align: right;">2.03</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">486</td>
+<td style="text-align: left;">Poor</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">33.2</td>
+<td style="text-align: right;">80.5</td>
+<td style="text-align: right;">11.1</td>
+<td style="text-align: right;">1.69</td>
+<td style="text-align: right;">4.9</td>
+<td style="text-align: right;">535</td>
+<td style="text-align: left;">Poor</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="análisis-univariado" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-univariado"><strong>Análisis univariado</strong></h3>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 2%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 10%">
+<col style="width: 22%">
+<col style="width: 15%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Temperatura</th>
+<th style="text-align: left;">Humedad</th>
+<th style="text-align: left;">PM2.5</th>
+<th style="text-align: left;">CO</th>
+<th style="text-align: left;">Cercania_Areas_Industriales</th>
+<th style="text-align: left;">Densidad_Poblacion</th>
+<th style="text-align: left;">Calidad_Aire</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Min. :13.40</td>
+<td style="text-align: left;">Min. : 36.00</td>
+<td style="text-align: left;">Min. : 0.00</td>
+<td style="text-align: left;">Min. :0.65</td>
+<td style="text-align: left;">Min. : 2.500</td>
+<td style="text-align: left;">Min. :188.0</td>
+<td style="text-align: left;">Good :2000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">1st Qu.:25.10</td>
+<td style="text-align: left;">1st Qu.: 58.30</td>
+<td style="text-align: left;">1st Qu.: 4.60</td>
+<td style="text-align: left;">1st Qu.:1.03</td>
+<td style="text-align: left;">1st Qu.: 5.400</td>
+<td style="text-align: left;">1st Qu.:381.0</td>
+<td style="text-align: left;">Moderate :1500</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Median :29.00</td>
+<td style="text-align: left;">Median : 69.80</td>
+<td style="text-align: left;">Median : 12.00</td>
+<td style="text-align: left;">Median :1.41</td>
+<td style="text-align: left;">Median : 7.900</td>
+<td style="text-align: left;">Median :494.0</td>
+<td style="text-align: left;">Poor :1000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Mean :30.03</td>
+<td style="text-align: left;">Mean : 70.06</td>
+<td style="text-align: left;">Mean : 20.14</td>
+<td style="text-align: left;">Mean :1.50</td>
+<td style="text-align: left;">Mean : 8.425</td>
+<td style="text-align: left;">Mean :497.4</td>
+<td style="text-align: left;">Hazardous: 500</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">3rd Qu.:34.00</td>
+<td style="text-align: left;">3rd Qu.: 80.30</td>
+<td style="text-align: left;">3rd Qu.: 26.10</td>
+<td style="text-align: left;">3rd Qu.:1.84</td>
+<td style="text-align: left;">3rd Qu.:11.100</td>
+<td style="text-align: left;">3rd Qu.:600.0</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Max. :58.60</td>
+<td style="text-align: left;">Max. :128.10</td>
+<td style="text-align: left;">Max. :295.00</td>
+<td style="text-align: left;">Max. :3.72</td>
+<td style="text-align: left;">Max. :25.800</td>
+<td style="text-align: left;">Max. :957.0</td>
+<td style="text-align: left;">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="distribución-de-las-variables-numéricas" class="level4">
+<h4 class="anchored" data-anchor-id="distribución-de-las-variables-numéricas"><strong>Distribución de las variables numéricas</strong></h4>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_QR_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Puntos Clave:</p>
+</section>
+<section id="distribución-de-las-variables-categóricas" class="level4">
+<h4 class="anchored" data-anchor-id="distribución-de-las-variables-categóricas"><strong>Distribución de las variables categóricas</strong></h4>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_QR_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Puntos Clave:</p>
+</section>
+</section>
+</section>
+<section id="modelo-de-regresión-cuantílica" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-de-regresión-cuantílica"><strong>2. Modelo de regresión cuantílica</strong></h2>
+<section id="modelo-ols" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-ols"><strong>2.1. Modelo OLS</strong></h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = CO ~ ., data = df)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.40766 -0.11574 -0.00227  0.11109  1.21272 
+
+Coefficients:
+                              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                  1.755e+00  3.586e-02  48.958  &lt; 2e-16 ***
+Temperatura                 -4.776e-04  7.154e-04  -0.668  0.50442    
+Humedad                     -2.066e-04  2.553e-04  -0.809  0.41846    
+PM2.5                        3.685e-04  1.417e-04   2.601  0.00933 ** 
+Cercania_Areas_Industriales  1.435e-04  1.573e-03   0.091  0.92728    
+Densidad_Poblacion           2.566e-05  2.708e-05   0.948  0.34340    
+Calidad_Aire.L               1.107e+00  1.655e-02  66.934  &lt; 2e-16 ***
+Calidad_Aire.Q              -7.498e-03  7.932e-03  -0.945  0.34456    
+Calidad_Aire.C               2.035e-03  6.681e-03   0.305  0.76065    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.2233 on 4991 degrees of freedom
+Multiple R-squared:  0.8331,    Adjusted R-squared:  0.8328 
+F-statistic:  3113 on 8 and 4991 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Interpretar</p>
+</section>
+<section id="modelo-qr" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-qr"><strong>2.2. Modelo QR</strong></h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call: rq(formula = CO ~ ., tau = taus, data = df)
+
+tau: [1] 0.05
+
+Coefficients:
+                            Value    Std. Error t value  Pr(&gt;|t|)
+(Intercept)                  1.33734  0.05592   23.91678  0.00000
+Temperatura                  0.00057  0.00145    0.38945  0.69696
+Humedad                      0.00017  0.00037    0.45331  0.65034
+PM2.5                       -0.00016  0.00029   -0.55688  0.57763
+Cercania_Areas_Industriales -0.00071  0.00265   -0.26791  0.78878
+Densidad_Poblacion           0.00001  0.00005    0.29263  0.76982
+Calidad_Aire.L               0.79030  0.03076   25.69342  0.00000
+Calidad_Aire.Q               0.02076  0.02125    0.97711  0.32856
+Calidad_Aire.C               0.01195  0.02088    0.57260  0.56694
+
+Call: rq(formula = CO ~ ., tau = taus, data = df)
+
+tau: [1] 0.25
+
+Coefficients:
+                            Value    Std. Error t value  Pr(&gt;|t|)
+(Intercept)                  1.56810  0.04846   32.35881  0.00000
+Temperatura                  0.00029  0.00086    0.33827  0.73517
+Humedad                     -0.00028  0.00026   -1.08266  0.27901
+PM2.5                        0.00012  0.00023    0.51003  0.61006
+Cercania_Areas_Industriales  0.00001  0.00189    0.00281  0.99776
+Densidad_Poblacion           0.00004  0.00003    1.33149  0.18309
+Calidad_Aire.L               0.94994  0.02710   35.04766  0.00000
+Calidad_Aire.Q              -0.01108  0.01848   -0.59982  0.54865
+Calidad_Aire.C               0.00454  0.01278    0.35509  0.72254
+
+Call: rq(formula = CO ~ ., tau = taus, data = df)
+
+tau: [1] 0.5
+
+Coefficients:
+                            Value    Std. Error t value  Pr(&gt;|t|)
+(Intercept)                  1.74914  0.03233   54.11050  0.00000
+Temperatura                  0.00011  0.00066    0.16770  0.86683
+Humedad                     -0.00037  0.00025   -1.44310  0.14906
+PM2.5                        0.00015  0.00020    0.76901  0.44192
+Cercania_Areas_Industriales -0.00104  0.00148   -0.69794  0.48525
+Densidad_Poblacion           0.00003  0.00002    1.41324  0.15765
+Calidad_Aire.L               1.08095  0.02272   47.58143  0.00000
+Calidad_Aire.Q              -0.01268  0.01147   -1.10600  0.26878
+Calidad_Aire.C              -0.00713  0.00926   -0.76978  0.44147
+
+Call: rq(formula = CO ~ ., tau = taus, data = df)
+
+tau: [1] 0.75
+
+Coefficients:
+                            Value    Std. Error t value  Pr(&gt;|t|)
+(Intercept)                  1.92954  0.04285   45.02540  0.00000
+Temperatura                 -0.00100  0.00090   -1.10803  0.26790
+Humedad                     -0.00014  0.00029   -0.47295  0.63627
+PM2.5                        0.00041  0.00023    1.75747  0.07890
+Cercania_Areas_Industriales  0.00009  0.00140    0.06635  0.94710
+Densidad_Poblacion           0.00003  0.00003    0.89686  0.36984
+Calidad_Aire.L               1.24396  0.02209   56.32140  0.00000
+Calidad_Aire.Q              -0.01820  0.01561   -1.16590  0.24371
+Calidad_Aire.C              -0.00574  0.01247   -0.46044  0.64522
+
+Call: rq(formula = CO ~ ., tau = taus, data = df)
+
+tau: [1] 0.95
+
+Coefficients:
+                            Value    Std. Error t value  Pr(&gt;|t|)
+(Intercept)                  2.16689  0.06207   34.91161  0.00000
+Temperatura                 -0.00175  0.00137   -1.27253  0.20324
+Humedad                     -0.00014  0.00047   -0.30250  0.76228
+PM2.5                        0.00036  0.00038    0.95632  0.33896
+Cercania_Areas_Industriales  0.00158  0.00263    0.59883  0.54931
+Densidad_Poblacion           0.00009  0.00005    1.92242  0.05461
+Calidad_Aire.L               1.51622  0.04713   32.17250  0.00000
+Calidad_Aire.Q               0.02164  0.03564    0.60727  0.54370
+Calidad_Aire.C               0.01132  0.02388    0.47409  0.63546</code></pre>
+</div>
+</div>
+<p>Interpretar</p>
+</section>
+<section id="resultados-gráficos" class="level3">
+<h3 class="anchored" data-anchor-id="resultados-gráficos"><strong>2.3. Resultados gráficos</strong></h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_QR_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Interpretar</p>
+</section>
+<section id="modelo-qr-con-interacción" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-qr-con-interacción"><strong>2.4. Modelo QR con interacción</strong></h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_QR_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Interpretar</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,9 +1,10 @@
 ---
-title: "L&A - Luz y Aroma"
+title: "Taller 2 - Modelo Regresión Cuantílica"
 author:
   - name: "Jhon Tascon"
+  - name: "Lino Sinisterra"
   - name: "Juan Chacon"
-date: "2025-09-01"
+date: "2025-09-08"
 output:
   html_document: default
   pdf_document: default
@@ -22,109 +23,60 @@ library(tidyverse)
 library(plotly)
 library(ggcorrplot)
 library("easypackages")
-
-# Listado de librerias requeridas por el script
-lib_req = c("car","lmtest","visdat","corrplot","MASS", "olsrr","pROC","class")
-
-
-# Establecer el mirror de CRAN
-options(repos = c(CRAN = "https://cloud.r-project.org"))
-
-# Instala los paquetes que faltan
-install_if_missing <- function(pkgs) {
-  to_install <- pkgs[!pkgs %in% installed.packages()[, "Package"]]
-  if (length(to_install) > 0) install.packages(to_install)
-}
-install_if_missing(lib_req)
-
-# Carga los paquetes
-lapply(lib_req, library, character.only = TRUE)
-
+library(quantreg)
+library(broom)
+library(purrr)
 ```
 
 ## **0. Información general**
 
-L&A - Luz y Aroma es un emprendimiento de velas decoraticas y aromatizantes de la ciudad de Cali. Para este trabajo, hicimos una encuesta a personas mayores de edad que viven en Colombia. En total se recopilaron 104 encuestas, principalmente en las ciudades de Cali y Buga.
+Este trabajo consiste identificar un caso real donde el interés esté en colas de la distribución (poblaciones muy vulnerables o muy favorecidas) y mostrar cómo la regresión cuantil (QR) revela patrones que el promedio (OLS) oculta.
 
-Contactos:
+En este caso, haremos el ejercicio con el dataset "Evaluación de la polución y calidad del aire" de kaggle: https://www.kaggle.com/datasets/mujtabamatin/air-quality-and-pollution-assessment. Este dataset se enfoca en envaluaciones de la calidad de aire en varias regiones del mundo. El dataset contiene 5000 muestras y caputra facotres ambientales y demográficos que influyen en los niveles de polución.
 
--   Teléfono: 322 956 6728
--   Instagram: @luzyaromacali
--   TikTok: luzyaroma.cali
+La pregunta de investigación es: ¿Cómo influyen los facotres meteorológicos, de densidad de población y cercanía a zonas industriales los diferentes niveles de CO?
 
 ## **1. Análisis exploratorio**
 
-Las variables a analizar fueron las siguientes:
+Las variables a analizar son las siguientes:
 
--   Edad - Cuantitativa
--   Género (Genero) - Cualitativa Nominal
--   Número de personas que viven en el hogar de la persona encuestada (Personas_Hogar) - Cuantitativa
--   Estrato - Cualitativa Ordinal
--   Número de horas que espera que dure la vela encendida (Horas_Velas) - Cuantitativa
--   Aroma de preferencia (Aroma_Velas) - Cualitativa Nominal
--   Tamaño de las velas (Tamano_Velas) - Cualitativa Ordinal
--   Cantidad de velas que compra al año (Velas_Ano) - Cuantitativa
--   Uso principal de las velas (Uso_Velas) - Cualitativa Nominal
--   Si le gustan velas personalizadas (Personalizacion) - Cualitativa Nominal
--   Precio que está dispuesto a pagar (Precio) - Cuantitativa
+- Temperatura (°C): Temperatura media de la región
+- Humedad (%): Humedad relativa registrada en la región
+- Concentración PM2.5 (µg/m³): Niveles de partículas finas 
+- Concentración de PM10 (µg/m³): Niveles de partículas gruesas -> no se trabajará en el estudio
+- Concentración de NO2 (ppb): Niveles de dióxido de nitrógeno -> no se trabajará en el estudio
+- Concentración de SO2 (ppb): Niveles de dióxido de azufre -> no se trabajará en el estudio
+- Cercanía a Zonas Industriales (km): Distancia a la zona industrial más cercana
+- Densidad de población (personas/km²): Número de personas por kilómetro cuadrado en la región
+- Calidad del aire: niveles de calidad del aire (Bueno, Moderado, Pobre, Peligroso)
+- **Concentración de CO (ppm): Niveles de monóxido de carbono -> Variable objetivo**
+
+Los percentiles a trabajar serán: 0.05, 0.25, 0.50, 0.75 y 0.95
 
 A continuación, se hace un análisis exploratorio de los datos:
 
 ```{r echo=FALSE}
-df = read.table("data/processed/processed_data.csv", sep=",", header=T, dec=".")
+df = read.table("updated_pollution_dataset.csv", sep=",", header=T, dec=".")
 
-cat("\nEstructura del conjunto de datos:")
-knitr::kable(str(df), "pipe")
+# Seleccionamos las variables
+df = df %>%
+  dplyr::select(Temperature, Humidity, PM2.5, CO, Proximity_to_Industrial_Areas,
+  Population_Density, Air.Quality
+)
+
+# Modificar nombre de las coliumnas
+names(df) <- c(
+  "Temperatura", "Humedad", "PM2.5", "CO", "Cercania_Areas_Industriales",
+  "Densidad_Poblacion", "Calidad_Aire"
+)
 
 cat("Visualización de los 10 primeros registros del conjunto de datos:")
 knitr::kable(head(df, 10), "pipe")
 
-# Filter
-df_clean = df %>%
-  filter(Velas_Ano >= 1)
-
-# Convertir Columnas cualitativas como factor
-
-## Género
-df_clean$Genero = factor(
-  df_clean$Genero,
-  levels=c("Masculino","Femenino"),
-  ordered=FALSE
-)
-
-## Tamaño velas
-df_clean$Tamano_Velas = factor(
-  df_clean$Tamano_Velas,
-  levels=c("81 gramos", "144 gramos", "200 gramos"),
+df$Calidad_Aire = factor(
+  df$Calidad_Aire,
+  levels=c("Good", "Moderate", "Poor", "Hazardous"),
   ordered=TRUE
-)
-
-## Uso velas
-df_clean$Aroma_Velas = factor(
-  df_clean$Aroma_Velas,
-  levels=c("Florales", "Cítricos", "Frutales", "Frescos", "Dulces"),
-  ordered=FALSE
-)
-
-## Uso velas
-df_clean$Uso_Velas = factor(
-  df_clean$Uso_Velas,
-  levels=c("Aromática", "Decorativa"),
-  ordered=FALSE
-)
-
-## Estrato
-df_clean$Estrato = factor(
-  df_clean$Estrato,
-  levels=c(1, 2, 3, 4, 5, 6),
-  ordered=TRUE
-)
-
-## Personalizacion
-df_clean$Personalizacion = factor(
-  df_clean$Personalizacion,
-  levels=c("No", "Sí"),
-  ordered=FALSE
 )
 ```
 
@@ -132,7 +84,7 @@ df_clean$Personalizacion = factor(
 
 ```{r echo=FALSE}
 # Visualización Univariada de datos
-Resumen= summary(df_clean)
+Resumen= summary(df)
 knitr::kable(Resumen, "pipe")
 ```
 
@@ -141,12 +93,12 @@ knitr::kable(Resumen, "pipe")
 ```{r echo=FALSE, message=FALSE}
 cat("\n")
 # Crear boxplots con facetas
-df_long = df_clean %>%
-  dplyr::select(Precio, Personas_Hogar, Horas_Velas, Velas_Ano, Edad)
+df_long = df %>%
+  dplyr::select(Temperatura, Humedad, PM2.5, CO, Cercania_Areas_Industriales, Densidad_Poblacion)
 
 df_long = pivot_longer(
   df_long,
-  cols = c(Precio, Personas_Hogar, Horas_Velas, Velas_Ano, Edad),
+  cols = c(Temperatura, Humedad, PM2.5, CO, Densidad_Poblacion),
   names_to = "Variable",
   values_to = "Valor"
 )
@@ -161,41 +113,23 @@ boxplots
 
 Puntos Clave:
 
-- La edad de las personas encuestadas están entre 15 y 65 años, teniendo un promedio de 30 años
-- Las personas esperan que las velan duren ocho horas (como mediana).
-- Las personas viven en promedio con tres personas y compran tres velas al año (usando la mediana)
-- Las personas están dispuestas a pagar por las velas valores entre $14.000 y $60.000
-- El precio, horas y velas que compran por año presentan anomlías. Se eliminarán usando el método del rango intercuartílico.
 
 #### **Distribución de las variables categóricas**
-```{r fig.height=8, echo=FALSE, message=FALSE}
+```{r echo=FALSE, message=FALSE}
 cat("\n")
-df_long = df_clean %>%
-  dplyr::select(Genero, Estrato, Aroma_Velas, Tamano_Velas, Uso_Velas, Personalizacion) %>%
-  mutate(across(c(Genero, Estrato, Aroma_Velas, Tamano_Velas, Uso_Velas, Personalizacion), as.character))
-
-# Convertir a formato largo
-df_long = pivot_longer(
-  df_long,
-  cols = everything(),
-  names_to = "Variable",
-  values_to = "Categoria"
-)
 
 # Calcular proporciones
-df_prop = df_long %>%
-  group_by(Variable, Categoria) %>%
+df_prop = df %>%
+  group_by(Calidad_Aire) %>%
   summarise(Frecuencia = n(), .groups = "drop") %>%
-  group_by(Variable) %>%
   mutate(Proporcion = Frecuencia / sum(Frecuencia))
 
 
 # Gráfico de barras con facetas
-ggplot(df_prop, aes(x = Categoria, y = Proporcion, fill = Categoria)) +
+ggplot(df_prop, aes(x = Calidad_Aire, y = Proporcion, fill = Calidad_Aire)) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = scales::percent(Proporcion, accuracy = 0.1)), 
             vjust = -0.5, size = 3) +
-  facet_wrap(~Variable, scales = "free_x") +
   theme_light() +
   theme(
       legend.position = "none",
@@ -205,297 +139,119 @@ ggplot(df_prop, aes(x = Categoria, y = Proporcion, fill = Categoria)) +
 
 Puntos Clave:
 
-- La mayoría de las personas encuentadas prefieren velas con aromas frescos (36.4%), cítricos (26%) y frutales (22.1%).
-- El 87.1% de las personas viven en estratos dos, tres y cuatro.
-- El 53.2% de los encuestados fueron mujeres.
-- El 59.7% prefieren las velas personalziadas (colores o diseños personalizados).
-- El 61% de las personas encuestadas prefieren velas con tamaño de 144 gramos (mediano).
-- El 77.9% prefiere las velas aromatizantes.
 
-### **Relación de las variables con el Precio**
+## **2. Modelo de regresión cuantílica**
 
-#### **Variables numéricas**
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-# Eliminar outliers
-is_not_outlier <- function(x) {
-  # na.rm = TRUE es importante si tienes valores NA
-  limites = quantile(x, c(0.25, 0.75), na.rm = TRUE)
-  iqr = IQR(x, na.rm = TRUE)
-  
-  # La condición de NO ser outlier
-  x >= (limites[1] - 1.5 * iqr) & x <= (limites[2] + 1.5 * iqr)
-}
-columnas_a_revisar = c("Precio", "Horas_Velas", "Velas_Ano")
-
-# Filtrar el dataframe
-df_clean <- df_clean %>%
-  filter(
-    across(all_of(columnas_a_revisar), is_not_outlier)
-  )
-```
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-df_long = df_clean %>%
-  dplyr::select(Precio, Personas_Hogar, Horas_Velas, Velas_Ano, Edad)
-
-df_long = pivot_longer(
-  df_long,
-  cols = c(Personas_Hogar, Horas_Velas, Velas_Ano, Edad),
-  names_to = "Variable",
-  values_to = "Valor"
-)
-
-ggplot(df_long, aes(x = Valor, y = Precio)) +
-  geom_point(alpha = 0.6, color = "blue") + # Puntos de dispersión semitransparentes
-  facet_wrap(~ Variable, scales = "free_x") + # Crea subplots por cada 'metrica' con ejes X independientes
-  labs(
-    title = "Relación entre el Precio y las variables numéricas",
-    y = "Precio ($)",
-    x = ""
-  ) +
-  theme_light()
-```
-
-```{r echo=FALSE, message=FALSE}
-# Selecciona solo las columnas numéricas
-df_sel = df_clean %>%
-  dplyr::select(Precio, Personas_Hogar, Horas_Velas, Velas_Ano, Edad)
-
-# Calcula la matriz de correlación
-corr_matrix = round(cor(df_sel), 2)
-
-ggcorrplot(corr_matrix,
-  lab = TRUE,             # Muestra los coeficientes de correlación en el gráfico
-  type = "lower",         # Muestra solo la matriz triangular inferior
-  outline.col = "white",  # Color del borde de los cuadrados
-  ggtheme = ggplot2::theme_gray, # Tema de ggplot
-  colors = c("#6D9EC1", "white", "#E46726") # Colores para correlaciones negativas, cero y positivas
-) +
-labs(title = "Matriz de Correlación")
-```
-
-En los gráficos de dispersión, el precio y la edad presentan una relación positiva: a mayor edad, 
-algunas personas reportan disposición a pagar precios más altos (hasta $50.000). Pasando a la duración de la vela, no se aprecia un patrón claro. Los precios se concentran entre $15.000 y $30.000 sin importar cuántas horas se espera que dure la vela. Por número de personas en el hogar, la relación no es definida. Los precios varían dentro de cada tamaño de hogar, lo que indica que esta variable podría no ser un predictor fuerte. En el consumo anual, no hay una relación evidente. Incluso quienes compran más velas al año no necesariamente pagan más por cada vela. Lo anterior, se confirma con la matriz de correlación, en el que la Edad tiene una relación positiva media con el precio que están dispuestos a pagar.
-
-De este conjunto de gráficos, la Edad es la única variable con un patrón relativamente más marcado frente al Precio, mientras que las demás no muestran relaciones lineales fuertes.
-
-#### **Variables categóricas**
-
-```{r fig.weight=1, echo=FALSE}
-df_long = df_clean %>%
-  dplyr::select(Precio, Genero, Estrato, Aroma_Velas, Tamano_Velas, Uso_Velas, Personalizacion) %>%
-  mutate(across(c(Genero, Estrato, Aroma_Velas, Tamano_Velas, Uso_Velas, Personalizacion), as.character))
-
-df_long <- df_long %>%
-  pivot_longer(
-    cols = c(Genero, Estrato, Aroma_Velas, Tamano_Velas, Uso_Velas, Personalizacion), # Las columnas categóricas que quieres comparar
-    names_to = "Categoria",                     # Nueva columna para los nombres de las variables
-    values_to = "Valor"                         # Nueva columna para los valores de esas variables
-  )
-
-ggplot(df_long, aes(x = Valor, y = Precio, fill = Valor)) +
-  geom_boxplot() +
-  facet_wrap(~ Categoria, scales = "free_x") + # Crea subplots por cada 'categoria' con ejes X independientes
-  labs(
-    title = "Distribución del Precio",
-    y = "Precio ($)",
-    x = ""  # La etiqueta X no es necesaria, cada faceta es auto-descriptiva
-  ) +
-  theme_light() + # Un tema limpio
-  theme(
-      legend.position = "none",
-      axis.text.x = element_text(angle = 45, hjust = 1)
-    )
-```
-
-1. Se aprecia que las personas que prefieren aromas frutales o florales están dispuestas a pagar más por las velas (teniedno en cuenta la mediana).
-2. En cuánto al estrato, parece que entre mayor el estrato, es mayor el precio están dispuestos a pagar por las velas.
-3. El género parece no inducir en el precio a pagar por las velas.
-4. En cuánto el tamaño de la vela, hay una asociación entre el tamaño y el precio: entre más grande la vela, las personas tienden a pagar más por estas.
-5. En cuanto a personalización, no se aprecia una diferencia entre los que prefieren velas persoanlizadas y el precio que están dispuetos a pagar.
-6. Por último, se aprecia que las personas que dicen que prefieren las velas para decorar tienden a pagar más por las velas: las personas que prefieren velas aromatizantes pagarían un valor de aprox. $20.000 por vela (como mediana), mientras las personas que prefieren velas decorativas pagarían aprox. $30.000 por la vela (como mediana).
-
-## **2. Modelo de regresión**
-
-### **Modelo inicial con todas las variables**
-
-Para el modelo inicial, se realizó un modelo de regresión lineal incluyendo todas las variables. a continuación, se muestran los resultados del modelo:
-```{r echo=FALSE}
-# Modelo completo
-modelo_completo = lm(Precio ~ ., data = df_clean)
-summary(modelo_completo)
-```
-
-Con base en lo anterior, el modelo presenta un R2 ajustado del 37.55%, siendo la edad y el estrado variables significativas. Teniendo en cuenta lo anterior, se puede decir que:
-
-- Por cada año, las personas tienden a pagar $748.82 de más por las velas.
-
-### **Simulación**
-
-Para la simulación, se creó un dataset de 1000 registros, teniendo en cuentas las variables de **Edad, Taño de las velas, aroma de las velas y estrato**, con las siguientes características:
-
-- Para la edad, se aplicó distribución normal con media y desviación estándar con base en las encuestas.
-- Para el precio, se usó un modelo de regresión lineal simple con la edad, ajustando el modelo con los datos de las encuestas y aplcando un ruido aleatorio normal con desviación estándar de $5.000.
-- Para el tamaño de las velas, estrato y aroma de las velas se aplicó el modelo KNN.
+### **2.1. Modelo OLS**
 
 ```{r echo=FALSE}
-modelo_inicial = lm(
-  Precio ~ Edad, data = df_clean)
+# Modelo OLS
+ols = lm(CO ~ ., data = df)
+summary(ols)
+```
 
-set.seed(10)
-nueva_muestra = data.frame(
-  Edad = rnorm(1000, mean = mean(df_clean$Edad), 
-                          sd = sd(df_clean$Edad))
+Interpretar
+
+### **2.2. Modelo QR**
+```{r echo=FALSE, warning=FALSE}
+# Modelo QR
+taus <- c(0.05, 0.25, 0.5, 0.75, 0.95)
+qr_fits <- rq(CO ~ ., tau = taus, data = df)
+summary(qr_fits, se = "boot")
+```
+
+Interpretar
+
+### **2.3. Resultados gráficos**
+```{r echo=FALSE, warning=FALSE}
+# Vector de cuantiles
+G <- seq(0.05, 0.95, by = 0.05)
+
+# Variables a graficar
+coef_keep <- c(
+  "Temperatura", "Humedad", "PM2.5", "CO", "Cercania_Areas_Industriales",
+  "Densidad_Poblacion", "Calidad_Aire.L"
 )
 
-# Usamos el modelo inicial para predecir 'Precio' en la nueva muestra
-nueva_muestra$Precio = predict(modelo_inicial, nueva_muestra) + rnorm(1000, 0, 5000) # Añadimos ruido
+# Ajuste QR
+qr_fit = quantreg::rq(CO ~ ., tau = G, data = df)
 
-# Plot de la nueva muestra
-ggplot(nueva_muestra,aes(x=Edad,y=Precio))+
-  geom_point(alpha = 0.6, color = "blue")+
-  theme_light() +
-  labs(title = "Edad vs Precio")
+# Coefs OLS para la línea discontinua
+ols_coef <- broom::tidy(ols) |>
+  dplyr::filter(term %in% c("(Intercept)", coef_keep)) |>
+  dplyr::transmute(term, ols = estimate)
 
-# Aplicar el modelo KNN para predecir el Estrato, Tamano_Velas y Aroma_Velas
-# Escalamos las variables para asegurar que están en la misma escala
-escala_datos = scale(df_clean[, c("Precio", "Edad")])
-escala_nueva_muestra = scale(nueva_muestra[, c("Precio", "Edad")])
+# Coefs QR con IC (95%). se.type = "nid" es rápido y estándar.
+# Si quieres bootstrap: se.type="boot", R=500, bsmethod="xy"
+prof_ci <- broom::tidy(
+  qr_fit,
+  se.type   = "boot",
+  conf.int  = TRUE,
+  conf.level= 0.95
+) |>
+  dplyr::filter(term %in% coef_keep) |>
+  dplyr::left_join(ols_coef, by = "term")
 
-# Predicción de la Estrato con KNN
-nueva_muestra$Estrato = knn(
-  train = escala_datos,
-  test = escala_nueva_muestra,
-  cl = df_clean$Estrato,
-  k = 3  # Número de vecinos
-)
+ggplot(prof_ci, aes(tau, estimate)) +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.15) +
+  geom_line() + geom_point() +
+  geom_hline(aes(yintercept = ols), linetype = "dashed") +
+  facet_wrap(~ term, scales = "free_y") +
+  labs(title = "QR vs OLS con IC (banda 95%)", x = "τ", y = "Estimación")
+```
 
-# Predicción de la Tamano_Velas con KNN
-nueva_muestra$Tamano_Velas = knn(
-  train = escala_datos,
-  test = escala_nueva_muestra,
-  cl = df_clean$Tamano_Velas,
-  k = 3  # Número de vecinos
-)
+Interpretar
 
-# Predicción de la Aroma_Velas con KNN
-nueva_muestra$Aroma_Velas = knn(
-  train = escala_datos,
-  test = escala_nueva_muestra,
-  cl = df_clean$Aroma_Velas,
-  k = 3  # Número de vecinos
-)
+### **2.4. Modelo QR con interacción**
+```{r echo=FALSE, warning=FALSE}
+# Modelo con interacción
+taus = c(0.05, 0.5, 0.95)
 
-df_long = nueva_muestra %>%
-  dplyr::select(Precio, Estrato, Tamano_Velas, Aroma_Velas) %>%
-  mutate(across(c(Estrato, Tamano_Velas), as.character))
+# Aplicamos el modelo con la interacción
+fits = lapply(taus, function(t) quantreg::rq(CO ~ Temperatura * Calidad_Aire, tau = t, data = df))
 
-df_long <- df_long %>%
-  pivot_longer(
-    cols = c(Estrato, Tamano_Velas, Aroma_Velas), # Las columnas categóricas que quieres comparar
-    names_to = "Categoria",                     # Nueva columna para los nombres de las variables
-    values_to = "Valor"                         # Nueva columna para los valores de esas variables
+# Malla de predicción por grupo
+xg = dplyr::tibble(Temperatura = seq(min(df$Temperatura), max(df$Temperatura), length.out = 200))
+newGood = dplyr::mutate(xg, Calidad_Aire = "Good")
+newMod = dplyr::mutate(xg, Calidad_Aire = "Moderate")
+newPoor = dplyr::mutate(xg, Calidad_Aire = "Poor")
+newH = dplyr::mutate(xg, Calidad_Aire = "Hazardous")
+
+pred = dplyr::bind_rows(lapply(seq_along(fits), function(i){
+  dplyr::bind_rows(
+    dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(fits[[i]], newGood), tau = paste0("τ=",taus[i]), Calidad_Aire="Good"),
+    dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(fits[[i]], newMod), tau = paste0("τ=",taus[i]), Calidad_Aire="Moderate"),
+    dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(fits[[i]], newPoor), tau = paste0("τ=",taus[i]), Calidad_Aire="Poor"),
+    dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(fits[[i]], newH), tau = paste0("τ=",taus[i]), Calidad_Aire="Hazardous")
   )
+}))
 
-ggplot(df_long, aes(x = Valor, y = Precio, fill = Valor)) +
-  geom_boxplot() +
-  facet_wrap(~ Categoria, scales = "free_x") + # Crea subplots por cada 'categoria' con ejes X independientes
-  labs(
-    title = "Distribución del Precio con Estrato, Tamano_Velas y Aroma_Velas",
-    y = "Precio ($)",
-    x = ""  # La etiqueta X no es necesaria, cada faceta es auto-descriptiva
-  ) +
-  theme_light() + # Un tema limpio
-  theme(
-      legend.position = "none",
-      axis.text.x = element_text(angle = 45, hjust = 1)
-    )
-
-# Dividir datos en conjunto de entrenamiento y prueba (80/20)
-set.seed(94)
-trainIndex = createDataPartition(nueva_muestra$Precio, p = .8, list = FALSE, times = 1)
-datos_entrenamiento = nueva_muestra[trainIndex, ]
-datos_prueba = nueva_muestra[-trainIndex, ]
-```
-
-```{r echo=FALSE, warning=FALSE}
-# Entrenar el modelo de regresión lineal
-modelo = train(
-  Precio ~ Edad + Estrato + Tamano_Velas + Aroma_Velas,
-  data = datos_entrenamiento,
-  method = "lm"
+# OLS por grupo (comparación)
+ols = lm(CO ~ Temperatura * Calidad_Aire, data = df)
+pred_ols <- dplyr::bind_rows(
+  dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(ols, newGood), tau = "OLS", Calidad_Aire="Good"),
+    dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(ols, newMod), tau = "OLS", Calidad_Aire="Moderate"),
+    dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(ols, newPoor), tau = "OLS", Calidad_Aire="Poor"),
+    dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(ols, newH), tau = "OLS", Calidad_Aire="Hazardous")
 )
 
-# Resumen del modelo
-summary(modelo)
-
-# Realizar predicción en el conjunto de prueba
-predicciones = predict(modelo, datos_prueba)
-
-# Visualizar relación
-g1 = ggplot(datos_prueba, aes(x = Edad, y = Precio)) +
-  geom_point(aes(color=Estrato),size=3) +
-  geom_smooth(method = "lm") +
-  labs(title = "Relación entre Edad y Precio Dispuesto a Pagar por las velas",
-       x = "Edad",
-       y = "Precio",
-       color = "Estrato") +
-  theme_light()
-g1
-
-g2 = ggplot(datos_prueba, aes(x = Edad, y = Precio)) +
-  geom_point(aes(color=Tamano_Velas),size=3) +
-  geom_smooth(method = "lm") +
-  labs(title = "Relación entre Edad y Precio Dispuesto a Pagar por las velas",
-       x = "Edad",
-       y = "Precio",
-       color = "Tamano_Velas") +
-  theme_light()
-g2
-
-g3 = ggplot(datos_prueba, aes(x = Edad, y = Precio)) +
-  geom_point(aes(color=Aroma_Velas),size=3) +
-  geom_smooth(method = "lm") +
-  labs(title = "Relación entre Edad y Precio Dispuesto a Pagar por las velas",
-       x = "Edad",
-       y = "Precio",
-       color = "Aroma_Velas") +
-  theme_light()
-g3
-
+ggplot(df, aes(Temperatura, CO, color = Calidad_Aire)) +
+  geom_point(alpha = .25) +
+  geom_line(data = pred, aes(Temperatura, CO, linetype = tau), linewidth = 1) +
+  geom_line(
+    data = pred_ols,
+    aes(Temperatura, CO, group = Calidad_Aire),   # dos líneas (H y M)
+    inherit.aes = FALSE,              # no hereda color = grupo
+    color = "black",                  # color distinto para OLS
+    linetype = "longdash",
+    linewidth = .9
+  ) +
+  scale_color_discrete(name = "Calidad Aire") +
+  scale_linetype_discrete(name = "Cuantil") +
+  labs(title = "Cuantiles condicionales con dummy e interacción",
+       subtitle = "Líneas sólidas: τ=0.05, 0.5, 0.95 por calidad de aire | Discontinua: OLS por grupo",
+       x = "Temperatura", y = "CO") +
+  theme_minimal(base_size = 12)
 ```
 
-Con base en el modelo de la simulación, se logra un R2 de 69.1%, siendo las variables Edad, Estratos tres y cinco, tamaño de las velas y aroma cítricos y dulces son significativas.
-
-### **Evaluando las predicciones**
-```{r echo=FALSE, warning=FALSE}
-# Distribución de las predicciones
-ggplot(data.frame(predicciones), aes(x = predicciones)) +
-  geom_histogram(aes(y = ..density..), bins = 20, fill = "skyblue", color = "black") +
-  geom_density(color = "blue", size = 1) +
-  geom_vline(aes(xintercept = mean(predicciones)), color = "red", linetype = "dashed", size = 1) +
-  labs(title = "Distribución de la Predicción de Disposición a Pagar por las velas",
-       x = "Predicción de Disposición a Pagar",
-       y = "Densidad") +
-  theme_light()
-
-summary(predicciones)
-shapiro.test(residuals(modelo))
-
-#install.packages("lmtest")
-library(lmtest)
-bptest(modelo$finalModel)
-
-# Guardar modelo
-save(modelo, file = "modelo_final.RData")
-
-# Realizar una predicción para un nuevo dato
-#nuevo_dato = data.frame(
-#  Edad = 30, Estrato = as.factor(3),
-#  Tamano_Velas = "144 gramos", Aroma_Velas = "Cítricos"
-#)
-#prediccion_nuevo = predict(modelo, nuevo_dato)
-#cat("Predicción del precio dispuesto a pagar para el nuevo dato: ", prediccion_nuevo, "\n")
-```
-
-Evaluando las predicciones, se puede decir que los residuso no siguen una distribución normal (el test Shapiro-Wilk da un p-valu menor a 0.05), y con base en el test de Breusch-Pagan, la varianza no es homogénea.
+Interpretar
