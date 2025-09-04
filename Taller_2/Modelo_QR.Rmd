@@ -286,8 +286,6 @@ qr_fits <- rq(form, tau = taus, data = df)
 summary(qr_fits, se = "boot")
 ```
 
-Interpretar
-
 ### **2.3. Resultados gráficos**
 ```{r echo=FALSE, warning=FALSE}
 # Vector de cuantiles
@@ -326,7 +324,17 @@ ggplot(prof_ci, aes(tau, estimate)) +
   labs(title = "QR vs OLS con IC (banda 95%)", x = "τ", y = "Estimación")
 ```
 
-Interpretar
+Se hace el análisis por niveles taus y se analiza si hay sobreestimación o subestimación. Ej:
+
+Educación: su “efecto” crece hacia los salarios altos.
+
+Bajo 
+ ~0.24
+Medio 
+ ~0.83
+Alto 
+ ~1.34
+OLS (~0.89) sobreestima el efecto en la base y subestima en la cúpula. → La educación rinde más entre quienes ya están arriba de la distribución salarial.
 
 ### **2.4. Modelo QR con interacción**
 ```{r echo=FALSE, warning=FALSE}
@@ -380,4 +388,4 @@ ggplot(df, aes(Cercania_Areas_Industriales, CO, color = Calidad_Aire)) +
   theme_minimal(base_size = 12)
 ```
 
-Interpretar
+Interpretar: comparación de la cercanía con la calidad del aire
