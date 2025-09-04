@@ -49,7 +49,7 @@ Las variables a analizar son las siguientes:
 - Cercanía a Zonas Industriales (km): Distancia a la zona industrial más cercana
 - Densidad de población (personas/km²): Número de personas por kilómetro cuadrado en la región
 - Calidad del aire: niveles de calidad del aire (Bueno, Moderado, Pobre, Peligroso)
-- **Concentración de CO (ppm): Niveles de monóxido de carbono -> Variable objetivo**
+- **Concentración de CO (ppb): Niveles de monóxido de carbono -> Variable objetivo**
 
 Los percentiles a trabajar serán: 0.05, 0.25, 0.50, 0.75 y 0.95
 
@@ -76,11 +76,11 @@ knitr::kable(head(df, 10), "pipe")
 df$Calidad_Aire = factor(
   df$Calidad_Aire,
   levels=c("Good", "Moderate", "Poor", "Hazardous"),
-  ordered=TRUE
+  #ordered=TRUE
 )
 ```
 
-### **Análisis univariado**
+### **1.1. Análisis univariado**
 
 ```{r echo=FALSE}
 # Visualización Univariada de datos
@@ -88,7 +88,7 @@ Resumen= summary(df)
 knitr::kable(Resumen, "pipe")
 ```
 
-#### **Distribución de las variables numéricas**
+#### **1.1.1. Distribución de las variables numéricas**
 
 ```{r echo=FALSE, message=FALSE}
 cat("\n")
@@ -98,23 +98,32 @@ df_long = df %>%
 
 df_long = pivot_longer(
   df_long,
-  cols = c(Temperatura, Humedad, PM2.5, CO, Densidad_Poblacion),
+  cols = c(Temperatura, Humedad, PM2.5, CO, Cercania_Areas_Industriales, Densidad_Poblacion),
   names_to = "Variable",
   values_to = "Valor"
 )
+
+histogramas = ggplot(df_long, aes(x = Valor, fill = Variable)) +
+  geom_histogram() +
+  facet_wrap(~Variable, scales = "free") +
+  theme_light() +
+  theme(legend.position = "none") +
+  labs(title="Histogramas de las variables numéricas")
+histogramas
 
 boxplots = ggplot(df_long, aes(y = Valor, fill = Variable)) +
   geom_boxplot() +
   facet_wrap(~Variable, scales = "free") +
   theme_light() +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  labs(title = "Boxplots de las variables numéricas")
 boxplots
 ```
 
-Puntos Clave:
+En general se presentan algunas distribuciones sesgadas, especialmente en el PM2.5 (partículas finas) y la variable objetivo (CO) presenta una distribución bimodal. Las demás variables siguen una distribución cercana a la normal.
 
 
-#### **Distribución de las variables categóricas**
+#### **1.1.2. Distribución de las variables categóricas**
 ```{r echo=FALSE, message=FALSE}
 cat("\n")
 
@@ -137,26 +146,115 @@ ggplot(df_prop, aes(x = Calidad_Aire, y = Proporcion, fill = Calidad_Aire)) +
     )
 ```
 
-Puntos Clave:
+En cuánto a la variable de la calidad del aire, la mayor proporción la tiene la calidad del aire buena, seguida por moderado, luego pobre y por último calidad de aire peligroso.
 
+#### **1.2. Análisis bivariado**
+```{r echo=FALSE, message=FALSE}
+cat("\n")
+df_long = df %>%
+  dplyr::select(Temperatura, Humedad, PM2.5, CO, Cercania_Areas_Industriales, Densidad_Poblacion)
+
+df_long = pivot_longer(
+  df_long,
+  cols = c(Temperatura, Humedad, PM2.5, Cercania_Areas_Industriales, Densidad_Poblacion),
+  names_to = "Variable",
+  values_to = "Valor"
+)
+
+ggplot(df_long, aes(x = Valor, y = CO)) +
+  geom_point(alpha = 0.6, color = "blue") + # Puntos de dispersión semitransparentes
+  facet_wrap(~ Variable, scales = "free_x") + # Crea subplots por cada 'metrica' con ejes X independientes
+  labs(
+    title = "Relación entre el CO y las variables numéricas",
+    y = "CO",
+    x = ""
+  ) +
+  theme_light()
+```
+
+##### **Variables numéricas vs CO**
+```{r echo=FALSE, message=FALSE}
+# Selecciona solo las columnas numéricas
+df_sel = df %>%
+  dplyr::select(Temperatura, Humedad, PM2.5, Cercania_Areas_Industriales, Densidad_Poblacion, CO)
+
+# Calcula la matriz de correlación
+corr_matrix = round(cor(df_sel), 2)
+
+ggcorrplot(corr_matrix,
+  lab = TRUE,             # Muestra los coeficientes de correlación en el gráfico
+  type = "lower",         # Muestra solo la matriz triangular inferior
+  outline.col = "white",  # Color del borde de los cuadrados
+  ggtheme = ggplot2::theme_gray, # Tema de ggplot
+  colors = c("#6D9EC1", "white", "#E46726") # Colores para correlaciones negativas, cero y positivas
+) +
+labs(title = "Matriz de Correlación")
+```
+
+El CO con las demás variables numéricas presentan relaciones medias-altas, especialmente con la temperatura (relación positiva), húmedad (positiva), densidad de población (positiva) y cercanía a áreas industriales (negativa).
+
+- **Temperatura**: En cuanto a la relación con la temperatura, se puede ver que a mayor temperatura, las concentraciones de CO tienden a ser mayores.
+- **Húmedad**: muy similar a la temperatura en cuanto a su relación. Sin embgargo, en zonas medias de húmedad (60%-90%) hay una mayor variabilidad de concentración de CO.
+- **Densidad de población**: comportamiento similar a los anteriores. Sin embargo, en zonas de baja concentración de población (alrededor de 200 a 300 personas/km), la concentración de CO tiende a ser constante, moviéndose entre 0.5 y 1.5 ppb.
+- **Cercanía a áreas industriales**: en este caso, la relación es inversa: entre más cercano esté una región a zonas industriales, la concentración de CO tiende a ser mayor. La relación no es del todo lineal.
+
+##### **Variables categóricas vs CO**
+```{r fig.weight=1, echo=FALSE}
+df_long = df %>%
+  dplyr::select(CO, Calidad_Aire) %>%
+  mutate(across(c(Calidad_Aire), as.character))
+
+df_long <- df_long %>%
+  pivot_longer(
+    cols = c(Calidad_Aire), # Las columnas categóricas que quieres comparar
+    names_to = "Categoria",                     # Nueva columna para los nombres de las variables
+    values_to = "Valor"                         # Nueva columna para los valores de esas variables
+  )
+
+ggplot(df_long, aes(x = Valor, y = CO, fill = Valor)) +
+  geom_boxplot() +
+  facet_wrap(~ Categoria, scales = "free_x") + # Crea subplots por cada 'categoria' con ejes X independientes
+  labs(
+    title = "Distribución del CO",
+    y = "CO",
+    x = ""  # La etiqueta X no es necesaria, cada faceta es auto-descriptiva
+  ) +
+  theme_light() + # Un tema limpio
+  theme(
+      legend.position = "none",
+      axis.text.x = element_text(angle = 45, hjust = 1)
+    )
+```
+
+En cuanto a la calidad del aire, se ve que el CO influye en gran medida: en zonas donde la calidad del aire es buena o moderada, los niveles de CO son menores, mientras en regiones con calidad de aire pobre o peligroso, el nivel de CO es mayor.
 
 ## **2. Modelo de regresión cuantílica**
 
 ### **2.1. Modelo OLS**
 
+
+
 ```{r echo=FALSE}
 # Modelo OLS
-ols = lm(CO ~ ., data = df)
-summary(ols)
+form = CO ~ Temperatura + Humedad + PM2.5 + Cercania_Areas_Industriales + I(log(Cercania_Areas_Industriales)) + Densidad_Poblacion + Calidad_Aire
+ols = lm(form, data = df)
+summary(ols)$coefficients
 ```
 
-Interpretar
+**1. Temperatura: -0.00046**
+Diferencia no significativa (p = 0.504; IC95% cruza 0). Con estos datos, no hay evidencia de efecto promedio de la temperatura sobre el CO.
+
+**2. Humedad: -0.00023**
+Diferencia no significativa (p = 0.418; IC95% cruza 0). Con estos datos, no hay evidencia de efecto promedio de la humedad sobre el CO.
+
+**3. Partículas finas (PM2.5): 0.00036**
+Cada nivel adicional de partículas finas en el aire, se asocia con +0.00036 unidades de CO (p. < 0.05; IC95% ≈ [0.74, 1.05]), manteniendo lo demás constante. 
 
 ### **2.2. Modelo QR**
 ```{r echo=FALSE, warning=FALSE}
 # Modelo QR
 taus <- c(0.05, 0.25, 0.5, 0.75, 0.95)
-qr_fits <- rq(CO ~ ., tau = taus, data = df)
+qr_fits <- rq(form, tau = taus, data = df)
 summary(qr_fits, se = "boot")
 ```
 
@@ -169,12 +267,12 @@ G <- seq(0.05, 0.95, by = 0.05)
 
 # Variables a graficar
 coef_keep <- c(
-  "Temperatura", "Humedad", "PM2.5", "CO", "Cercania_Areas_Industriales",
-  "Densidad_Poblacion", "Calidad_Aire.L"
+  "Temperatura", "Humedad", "PM2.5", "Cercania_Areas_Industriales", "I(log(Cercania_Areas_Industriales))",
+  "Densidad_Poblacion", "Calidad_Aire", "CO"
 )
 
 # Ajuste QR
-qr_fit = quantreg::rq(CO ~ ., tau = G, data = df)
+qr_fit = quantreg::rq(form, tau = G, data = df)
 
 # Coefs OLS para la línea discontinua
 ols_coef <- broom::tidy(ols) |>
@@ -208,10 +306,10 @@ Interpretar
 taus = c(0.05, 0.5, 0.95)
 
 # Aplicamos el modelo con la interacción
-fits = lapply(taus, function(t) quantreg::rq(CO ~ Temperatura * Calidad_Aire, tau = t, data = df))
+fits = lapply(taus, function(t) quantreg::rq(CO ~ Cercania_Areas_Industriales * Calidad_Aire, tau = t, data = df))
 
 # Malla de predicción por grupo
-xg = dplyr::tibble(Temperatura = seq(min(df$Temperatura), max(df$Temperatura), length.out = 200))
+xg = dplyr::tibble(Cercania_Areas_Industriales = seq(min(df$Cercania_Areas_Industriales), max(df$Cercania_Areas_Industriales), length.out = 200))
 newGood = dplyr::mutate(xg, Calidad_Aire = "Good")
 newMod = dplyr::mutate(xg, Calidad_Aire = "Moderate")
 newPoor = dplyr::mutate(xg, Calidad_Aire = "Poor")
@@ -219,28 +317,28 @@ newH = dplyr::mutate(xg, Calidad_Aire = "Hazardous")
 
 pred = dplyr::bind_rows(lapply(seq_along(fits), function(i){
   dplyr::bind_rows(
-    dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(fits[[i]], newGood), tau = paste0("τ=",taus[i]), Calidad_Aire="Good"),
-    dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(fits[[i]], newMod), tau = paste0("τ=",taus[i]), Calidad_Aire="Moderate"),
-    dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(fits[[i]], newPoor), tau = paste0("τ=",taus[i]), Calidad_Aire="Poor"),
-    dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(fits[[i]], newH), tau = paste0("τ=",taus[i]), Calidad_Aire="Hazardous")
+    dplyr::tibble(Cercania_Areas_Industriales = xg$Cercania_Areas_Industriales, CO = predict(fits[[i]], newGood), tau = paste0("τ=",taus[i]), Calidad_Aire="Good"),
+    dplyr::tibble(Cercania_Areas_Industriales = xg$Cercania_Areas_Industriales, CO = predict(fits[[i]], newMod), tau = paste0("τ=",taus[i]), Calidad_Aire="Moderate"),
+    dplyr::tibble(Cercania_Areas_Industriales = xg$Cercania_Areas_Industriales, CO = predict(fits[[i]], newPoor), tau = paste0("τ=",taus[i]), Calidad_Aire="Poor"),
+    dplyr::tibble(Cercania_Areas_Industriales = xg$Cercania_Areas_Industriales, CO = predict(fits[[i]], newH), tau = paste0("τ=",taus[i]), Calidad_Aire="Hazardous")
   )
 }))
 
 # OLS por grupo (comparación)
-ols = lm(CO ~ Temperatura * Calidad_Aire, data = df)
+ols = lm(CO ~ Cercania_Areas_Industriales * Calidad_Aire, data = df)
 pred_ols <- dplyr::bind_rows(
-  dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(ols, newGood), tau = "OLS", Calidad_Aire="Good"),
-    dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(ols, newMod), tau = "OLS", Calidad_Aire="Moderate"),
-    dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(ols, newPoor), tau = "OLS", Calidad_Aire="Poor"),
-    dplyr::tibble(Temperatura = xg$Temperatura, CO = predict(ols, newH), tau = "OLS", Calidad_Aire="Hazardous")
+  dplyr::tibble(Cercania_Areas_Industriales = xg$Cercania_Areas_Industriales, CO = predict(ols, newGood), tau = "OLS", Calidad_Aire="Good"),
+    dplyr::tibble(Cercania_Areas_Industriales = xg$Cercania_Areas_Industriales, CO = predict(ols, newMod), tau = "OLS", Calidad_Aire="Moderate"),
+    dplyr::tibble(Cercania_Areas_Industriales = xg$Cercania_Areas_Industriales, CO = predict(ols, newPoor), tau = "OLS", Calidad_Aire="Poor"),
+    dplyr::tibble(Cercania_Areas_Industriales = xg$Cercania_Areas_Industriales, CO = predict(ols, newH), tau = "OLS", Calidad_Aire="Hazardous")
 )
 
-ggplot(df, aes(Temperatura, CO, color = Calidad_Aire)) +
+ggplot(df, aes(Cercania_Areas_Industriales, CO, color = Calidad_Aire)) +
   geom_point(alpha = .25) +
-  geom_line(data = pred, aes(Temperatura, CO, linetype = tau), linewidth = 1) +
+  geom_line(data = pred, aes(Cercania_Areas_Industriales, CO, linetype = tau), linewidth = 1) +
   geom_line(
     data = pred_ols,
-    aes(Temperatura, CO, group = Calidad_Aire),   # dos líneas (H y M)
+    aes(Cercania_Areas_Industriales, CO, group = Calidad_Aire),   # dos líneas (H y M)
     inherit.aes = FALSE,              # no hereda color = grupo
     color = "black",                  # color distinto para OLS
     linetype = "longdash",
@@ -250,7 +348,7 @@ ggplot(df, aes(Temperatura, CO, color = Calidad_Aire)) +
   scale_linetype_discrete(name = "Cuantil") +
   labs(title = "Cuantiles condicionales con dummy e interacción",
        subtitle = "Líneas sólidas: τ=0.05, 0.5, 0.95 por calidad de aire | Discontinua: OLS por grupo",
-       x = "Temperatura", y = "CO") +
+       x = "Cercanía áreas industriales", y = "CO") +
   theme_minimal(base_size = 12)
 ```
 
