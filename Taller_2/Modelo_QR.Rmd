@@ -46,7 +46,7 @@ Las variables a analizar son las siguientes:
 - Concentración de PM10 (µg/m³): Niveles de partículas gruesas -> no se trabajará en el estudio
 - Concentración de NO2 (ppb): Niveles de dióxido de nitrógeno -> no se trabajará en el estudio
 - Concentración de SO2 (ppb): Niveles de dióxido de azufre -> no se trabajará en el estudio
-- Cercanía a Zonas Industriales (km): Distancia a la zona industrial más cercana
+- Cercanía a Áreas Industriales (km): Distancia a la zona industrial más cercana
 - Densidad de población (personas/km²): Número de personas por kilómetro cuadrado en la región
 - Calidad del aire: niveles de calidad del aire (Bueno, Moderado, Pobre, Peligroso)
 - **Concentración de CO (ppb): Niveles de monóxido de carbono -> Variable objetivo**
@@ -238,7 +238,7 @@ En cuanto a la calidad del aire, se ve que el CO influye en gran medida: en zona
 # Modelo OLS
 form = CO ~ Temperatura + Humedad + PM2.5 + Cercania_Areas_Industriales + I(log(Cercania_Areas_Industriales)) + Densidad_Poblacion + Calidad_Aire
 ols = lm(form, data = df)
-summary(ols)$coefficients
+summary(ols)
 ```
 
 **1. Temperatura: -0.00046**
@@ -248,7 +248,14 @@ Diferencia no significativa (p = 0.504; IC95% cruza 0). Con estos datos, no hay 
 Diferencia no significativa (p = 0.418; IC95% cruza 0). Con estos datos, no hay evidencia de efecto promedio de la humedad sobre el CO.
 
 **3. Partículas finas (PM2.5): 0.00036**
-Cada nivel adicional de partículas finas en el aire, se asocia con +0.00036 unidades de CO (p. < 0.05; IC95% ≈ [0.74, 1.05]), manteniendo lo demás constante. 
+Cada nivel adicional de partículas finas en el aire, se asocia con +0.00036 unidades de CO (p. < 0.05; IC95% ≈ [0.0008, 0.00064]), manteniendo lo demás constante.
+
+**4. Cercanía a áreas industriales: 0.012 y log(Cercania_Areas_Industriales): 0.103**
+Cada nivel adicional de partículas finas en el aire, se asocia con +0.00036 unidades de CO (p. < 0.05; IC95% ≈ [0.0008, 0.00064]), manteniendo lo demás constante.
+
+**5. Humedad: -0.00023**
+Diferencia no significativa (p = 0.418; IC95% cruza 0). Con estos datos, no hay evidencia de efecto promedio de la humedad sobre el CO.
+
 
 ### **2.2. Modelo QR**
 ```{r echo=FALSE, warning=FALSE}
