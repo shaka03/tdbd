@@ -427,6 +427,15 @@ window.Quarto = {
 </section>
 <section id="modelo-de-regresión-cuantílica" class="level2">
 <h2 class="anchored" data-anchor-id="modelo-de-regresión-cuantílica"><strong>2. Modelo de regresión cuantílica</strong></h2>
+<section id="modelo-completo" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-completo">Modelo completo</h3>
+<p><span class="math display">\[
+Q_\tau(CO|X) = \beta_0(\tau) + \beta_1(\tau)Temperatura + \beta_2(\tau)Humedad + \beta_3(\tau)Cercania Areas Industriales +
+\]</span></p>
+<p><span class="math display">\[
+\beta_4(\tau)log(Cercania_Areas_Industriales) + \beta_5(\tau)Densidad_Poblacion + \beta_6(\tau)Calidad_Aire
+\]</span></p>
+</section>
 <section id="modelo-ols" class="level3">
 <h3 class="anchored" data-anchor-id="modelo-ols"><strong>2.1. Modelo OLS</strong></h3>
 <div class="cell">
@@ -467,9 +476,9 @@ F-statistic:  2773 on 9 and 4990 DF,  p-value: &lt; 2.2e-16</code></pre>
 \frac{\partial CO}{\partial Cercania Areas Industriales} = -0.012 + \frac{0.103}{Cercania Areas Industriales}
 \]</span></p>
 <p>Si está muy cerca a áreas industriales, si la distancia aumenta 1 km aumenta 0.091 los niveles de CO, alejarse 5 km aumenta los niveles de CO en 0.0086, lejos de areás industriales, los niveles de CO disminuyen en -0.0109 si la distancia aumenta a 100 km.</p>
-<p>Ambos son significativos (p.&nbsp;&lt; 0.01)</p>
+<p>Ambos son significativos (p.&nbsp;&lt; 0.01).</p>
 <p><strong>5. Densidad de población: -0.000027</strong> Diferencia no significativa (p = 0.32; IC95% cruza 0). Con estos datos, no hay evidencia de efecto promedio de la densidad de población sobre el CO.</p>
-<p><strong>6. Calidad del aire</strong> Interpretar</p>
+<p><strong>6. Calidad del aire</strong> A mismo nivel de partículas finas y cercanía a áreas industriales: - Si la calidad del aire es moderada, el nivel de CO aumenta en 0.503 unidades (p.&nbsp;&lt; 0.001; IC95% ≈ [0.479, 0.527]). - Si la calidad del aire es pobre, el nivel de CO aumenta en 1.006 unidades (p.&nbsp;&lt; 0.001; IC95% ≈ [0.971, 1.041]). - Si la calidad del aire es peligrosa, el nivel de CO aumenta en 1.506 unidades (p.&nbsp;&lt; 0.001; IC95% ≈ [1.459, 1.553]).</p>
 </section>
 <section id="modelo-qr" class="level3">
 <h3 class="anchored" data-anchor-id="modelo-qr"><strong>2.2. Modelo QR</strong></h3>
@@ -482,16 +491,16 @@ tau: [1] 0.05
 
 Coefficients:
                                     Value    Std. Error t value  Pr(&gt;|t|)
-(Intercept)                          0.63730  0.11252    5.66383  0.00000
-Temperatura                          0.00081  0.00153    0.52557  0.59921
-Humedad                              0.00009  0.00036    0.25962  0.79517
-PM2.5                               -0.00008  0.00029   -0.29322  0.76937
-Cercania_Areas_Industriales         -0.01351  0.00626   -2.15677  0.03107
-I(log(Cercania_Areas_Industriales))  0.13814  0.06903    2.00128  0.04542
-Densidad_Poblacion                  -0.00002  0.00004   -0.43972  0.66016
-Calidad_AireModerate                 0.35961  0.02355   15.26879  0.00000
-Calidad_AirePoor                     0.71069  0.03502   20.29475  0.00000
-Calidad_AireHazardous                1.11754  0.05507   20.29296  0.00000
+(Intercept)                          0.63730  0.10324    6.17276  0.00000
+Temperatura                          0.00081  0.00149    0.54061  0.58880
+Humedad                              0.00009  0.00040    0.23210  0.81647
+PM2.5                               -0.00008  0.00028   -0.30417  0.76101
+Cercania_Areas_Industriales         -0.01351  0.00569   -2.37335  0.01767
+I(log(Cercania_Areas_Industriales))  0.13814  0.06453    2.14068  0.03235
+Densidad_Poblacion                  -0.00002  0.00004   -0.45290  0.65064
+Calidad_AireModerate                 0.35961  0.02239   16.06377  0.00000
+Calidad_AirePoor                     0.71069  0.03170   22.42175  0.00000
+Calidad_AireHazardous                1.11754  0.05196   21.50898  0.00000
 
 Call: rq(formula = form, tau = taus, data = df)
 
@@ -499,16 +508,16 @@ tau: [1] 0.25
 
 Coefficients:
                                     Value    Std. Error t value  Pr(&gt;|t|)
-(Intercept)                          0.83442  0.10102    8.26020  0.00000
-Temperatura                          0.00036  0.00092    0.38996  0.69658
-Humedad                             -0.00031  0.00026   -1.18634  0.23554
-PM2.5                                0.00005  0.00024    0.21248  0.83174
-Cercania_Areas_Industriales         -0.00703  0.00600   -1.17258  0.24102
-I(log(Cercania_Areas_Industriales))  0.06917  0.06375    1.08514  0.27791
-Densidad_Poblacion                   0.00005  0.00003    1.75112  0.07999
-Calidad_AireModerate                 0.44299  0.01236   35.83794  0.00000
-Calidad_AirePoor                     0.86837  0.02544   34.13777  0.00000
-Calidad_AireHazardous                1.28625  0.04232   30.38979  0.00000
+(Intercept)                          0.83442  0.09505    8.77887  0.00000
+Temperatura                          0.00036  0.00094    0.38148  0.70286
+Humedad                             -0.00031  0.00026   -1.20209  0.22938
+PM2.5                                0.00005  0.00022    0.22893  0.81894
+Cercania_Areas_Industriales         -0.00703  0.00593   -1.18528  0.23596
+I(log(Cercania_Areas_Industriales))  0.06917  0.06078    1.13820  0.25509
+Densidad_Poblacion                   0.00005  0.00003    1.73610  0.08261
+Calidad_AireModerate                 0.44299  0.01346   32.91194  0.00000
+Calidad_AirePoor                     0.86837  0.02469   35.17276  0.00000
+Calidad_AireHazardous                1.28625  0.04193   30.67864  0.00000
 
 Call: rq(formula = form, tau = taus, data = df)
 
@@ -516,16 +525,16 @@ tau: [1] 0.5
 
 Coefficients:
                                     Value    Std. Error t value  Pr(&gt;|t|)
-(Intercept)                          0.97887  0.07652   12.79230  0.00000
-Temperatura                          0.00013  0.00079    0.16777  0.86677
-Humedad                             -0.00036  0.00026   -1.35952  0.17404
-PM2.5                                0.00015  0.00019    0.78159  0.43449
-Cercania_Areas_Industriales         -0.00382  0.00451   -0.84656  0.39728
-I(log(Cercania_Areas_Industriales))  0.02924  0.04879    0.59930  0.54900
-Densidad_Poblacion                   0.00003  0.00002    1.40398  0.16039
-Calidad_AireModerate                 0.49335  0.01418   34.80046  0.00000
-Calidad_AirePoor                     0.98726  0.02071   47.66609  0.00000
-Calidad_AireHazardous                1.45891  0.03395   42.96958  0.00000
+(Intercept)                          0.97887  0.08123   12.05107  0.00000
+Temperatura                          0.00013  0.00081    0.16415  0.86962
+Humedad                             -0.00036  0.00027   -1.33205  0.18291
+PM2.5                                0.00015  0.00022    0.69471  0.48727
+Cercania_Areas_Industriales         -0.00382  0.00429   -0.89167  0.37261
+I(log(Cercania_Areas_Industriales))  0.02924  0.04945    0.59127  0.55437
+Densidad_Poblacion                   0.00003  0.00002    1.40466  0.16019
+Calidad_AireModerate                 0.49335  0.01552   31.79455  0.00000
+Calidad_AirePoor                     0.98726  0.02301   42.90277  0.00000
+Calidad_AireHazardous                1.45891  0.03783   38.56392  0.00000
 
 Call: rq(formula = form, tau = taus, data = df)
 
@@ -533,16 +542,16 @@ tau: [1] 0.75
 
 Coefficients:
                                     Value    Std. Error t value  Pr(&gt;|t|)
-(Intercept)                          0.96649  0.08796   10.98829  0.00000
-Temperatura                         -0.00113  0.00089   -1.27518  0.20230
-Humedad                             -0.00018  0.00027   -0.68309  0.49458
-PM2.5                                0.00032  0.00024    1.32385  0.18561
-Cercania_Areas_Industriales         -0.00865  0.00474   -1.82363  0.06827
-I(log(Cercania_Areas_Industriales))  0.09348  0.05534    1.68928  0.09123
-Densidad_Poblacion                   0.00003  0.00003    0.90730  0.36429
-Calidad_AireModerate                 0.58201  0.01392   41.80527  0.00000
-Calidad_AirePoor                     1.15693  0.02652   43.63298  0.00000
-Calidad_AireHazardous                1.70920  0.03807   44.89509  0.00000
+(Intercept)                          0.96649  0.08729   11.07275  0.00000
+Temperatura                         -0.00113  0.00085   -1.32700  0.18457
+Humedad                             -0.00018  0.00030   -0.61019  0.54176
+PM2.5                                0.00032  0.00022    1.42682  0.15370
+Cercania_Areas_Industriales         -0.00865  0.00446   -1.93999  0.05244
+I(log(Cercania_Areas_Industriales))  0.09348  0.05205    1.79606  0.07255
+Densidad_Poblacion                   0.00003  0.00003    0.92315  0.35597
+Calidad_AireModerate                 0.58201  0.01461   39.82449  0.00000
+Calidad_AirePoor                     1.15693  0.02643   43.77480  0.00000
+Calidad_AireHazardous                1.70920  0.03743   45.65954  0.00000
 
 Call: rq(formula = form, tau = taus, data = df)
 
@@ -550,16 +559,16 @@ tau: [1] 0.95
 
 Coefficients:
                                     Value    Std. Error t value  Pr(&gt;|t|)
-(Intercept)                          1.13414  0.14272    7.94673  0.00000
-Temperatura                         -0.00181  0.00135   -1.34661  0.17817
-Humedad                             -0.00011  0.00046   -0.24178  0.80896
-PM2.5                                0.00036  0.00039    0.94250  0.34598
-Cercania_Areas_Industriales         -0.00059  0.00794   -0.07458  0.94055
-I(log(Cercania_Areas_Industriales))  0.01992  0.09141    0.21793  0.82749
-Densidad_Poblacion                   0.00009  0.00004    2.10899  0.03499
-Calidad_AireModerate                 0.66627  0.02786   23.91254  0.00000
-Calidad_AirePoor                     1.33356  0.04372   30.50395  0.00000
-Calidad_AireHazardous                2.04209  0.08468   24.11616  0.00000</code></pre>
+(Intercept)                          1.13414  0.14874    7.62512  0.00000
+Temperatura                         -0.00181  0.00143   -1.27012  0.20410
+Humedad                             -0.00011  0.00041   -0.26945  0.78759
+PM2.5                                0.00036  0.00036    1.00050  0.31712
+Cercania_Areas_Industriales         -0.00059  0.00840   -0.07050  0.94380
+I(log(Cercania_Areas_Industriales))  0.01992  0.09599    0.20752  0.83561
+Densidad_Poblacion                   0.00009  0.00004    2.01269  0.04420
+Calidad_AireModerate                 0.66627  0.02764   24.10819  0.00000
+Calidad_AirePoor                     1.33356  0.04835   27.58298  0.00000
+Calidad_AireHazardous                2.04209  0.08109   25.18359  0.00000</code></pre>
 </div>
 </div>
 <p>Interpretar</p>

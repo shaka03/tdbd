@@ -230,10 +230,18 @@ En cuanto a la calidad del aire, se ve que el CO influye en gran medida: en zona
 
 ## **2. Modelo de regresión cuantílica**
 
+### Modelo completo
+
+$$
+Q_\tau(CO|X) = \beta_0(\tau) + \beta_1(\tau)Temperatura + \beta_2(\tau)Humedad + \beta_3(\tau)Cercania Areas Industriales +
+$$
+
+$$
+\beta_4(\tau)log(Cercania_Areas_Industriales) + \beta_5(\tau)Densidad_Poblacion + \beta_6(\tau)Calidad_Aire
+$$
+
+
 ### **2.1. Modelo OLS**
-
-
-
 ```{r echo=FALSE}
 # Modelo OLS
 form = CO ~ Temperatura + Humedad + PM2.5 + Cercania_Areas_Industriales + I(log(Cercania_Areas_Industriales)) + Densidad_Poblacion + Calidad_Aire
@@ -259,13 +267,16 @@ $$
 
 Si está muy cerca a áreas industriales, si la distancia aumenta 1 km aumenta 0.091 los niveles de CO, alejarse 5 km aumenta los niveles de CO en 0.0086, lejos de areás industriales, los niveles de CO disminuyen en -0.0109 si la distancia aumenta a 100 km.
 
-Ambos son significativos (p. < 0.01)
+Ambos son significativos (p. < 0.01).
 
 **5. Densidad de población: -0.000027**
 Diferencia no significativa (p = 0.32; IC95% cruza 0). Con estos datos, no hay evidencia de efecto promedio de la densidad de población sobre el CO.
 
 **6. Calidad del aire**
-Interpretar
+A mismo nivel de partículas finas y cercanía a áreas industriales:
+- Si la calidad del aire es moderada, el nivel de CO aumenta en 0.503 unidades (p. < 0.001; IC95% ≈ [0.479, 0.527]).
+- Si la calidad del aire es pobre, el nivel de CO aumenta en 1.006 unidades (p. < 0.001; IC95% ≈ [0.971, 1.041]).
+- Si la calidad del aire es peligrosa, el nivel de CO aumenta en 1.506 unidades (p. < 0.001; IC95% ≈ [1.459, 1.553]).
 
 ### **2.2. Modelo QR**
 ```{r echo=FALSE, warning=FALSE}
