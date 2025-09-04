@@ -250,12 +250,22 @@ Diferencia no significativa (p = 0.418; IC95% cruza 0). Con estos datos, no hay 
 **3. Partículas finas (PM2.5): 0.00036**
 Cada nivel adicional de partículas finas en el aire, se asocia con +0.00036 unidades de CO (p. < 0.05; IC95% ≈ [0.0008, 0.00064]), manteniendo lo demás constante.
 
-**4. Cercanía a áreas industriales: 0.012 y log(Cercania_Areas_Industriales): 0.103**
-Cada nivel adicional de partículas finas en el aire, se asocia con +0.00036 unidades de CO (p. < 0.05; IC95% ≈ [0.0008, 0.00064]), manteniendo lo demás constante.
+**4. Cercanía a áreas industriales: -0.012 y log(Cercania_Areas_Industriales): 0.103**
+La cercanía a zonas industriales aumenta los niveles de CO en las regiones. Sin embargo, entre más lejos de zonas industriales, los niveles de CO bajan pero no de la misma manera. El efecto marginal es el siguiente:
 
-**5. Humedad: -0.00023**
-Diferencia no significativa (p = 0.418; IC95% cruza 0). Con estos datos, no hay evidencia de efecto promedio de la humedad sobre el CO.
+$$
+\frac{\partial CO}{\partial Cercania Areas Industriales} = -0.012 + \frac{0.103}{Cercania Areas Industriales}
+$$
 
+Si está muy cerca a áreas industriales, si la distancia aumenta 1 km aumenta 0.091 los niveles de CO, alejarse 5 km aumenta los niveles de CO en 0.0086, lejos de areás industriales, los niveles de CO disminuyen en -0.0109 si la distancia aumenta a 100 km.
+
+Ambos son significativos (p. < 0.01)
+
+**5. Densidad de población: -0.000027**
+Diferencia no significativa (p = 0.32; IC95% cruza 0). Con estos datos, no hay evidencia de efecto promedio de la densidad de población sobre el CO.
+
+**6. Calidad del aire**
+Interpretar
 
 ### **2.2. Modelo QR**
 ```{r echo=FALSE, warning=FALSE}
