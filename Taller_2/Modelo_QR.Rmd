@@ -90,6 +90,9 @@ knitr::kable(Resumen, "pipe")
 
 #### **1.1.1. Distribución de las variables numéricas**
 
+Puntos Clave:
+
+
 ```{r echo=FALSE, message=FALSE}
 cat("\n")
 # Crear boxplots con facetas
@@ -121,6 +124,7 @@ boxplots
 ```
 
 En general se presentan algunas distribuciones sesgadas, especialmente en el PM2.5 (partículas finas) y la variable objetivo (CO) presenta una distribución bimodal. Las demás variables siguen una distribución cercana a la normal.
+
 
 
 #### **1.1.2. Distribución de las variables categóricas**
