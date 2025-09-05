@@ -130,10 +130,6 @@ boxplots = ggplot(df_long, aes(y = Valor, fill = Variable)) +
 boxplots
 ```
 
-En general se presentan algunas distribuciones sesgadas, especialmente en el PM2.5 (partículas finas) y la variable objetivo (CO) presenta una distribución bimodal. Las demás variables siguen una distribución cercana a la normal.
-
-
-
 #### **1.1.2. Distribución de las variables categóricas**
 
 Puntos Clave:
@@ -161,8 +157,6 @@ ggplot(df_prop, aes(x = Calidad_Aire, y = Proporcion, fill = Calidad_Aire)) +
       axis.text.x = element_text(angle = 45, hjust = 1)
     )
 ```
-
-En cuánto a la variable de la calidad del aire, la mayor proporción la tiene la calidad del aire buena, seguida por moderado, luego pobre y por último calidad de aire peligroso.
 
 #### **1.2. Análisis bivariado**
 ```{r echo=FALSE, message=FALSE}
@@ -306,13 +300,13 @@ qr_fits <- rq(form, tau = taus, data = df)
 summary(qr_fits, se = "boot")
 ```
 
--**Temperatura**: Su efecto es negativo en todos los cuantiles, a medida que aumenta el nivel de CO la temperatura aumenta negatividad. En el cuantil 0.05, el coeficiente es -0.040, mientras que en el cuantil 0.95, es -0.063.
+- **Temperatura**: Su efecto es negativo en todos los cuantiles, a medida que aumenta el nivel de CO la temperatura aumenta negatividad. En el cuantil 0.05, el coeficiente es -0.040, mientras que en el cuantil 0.95, es -0.063.
 
--**Humedad**: Similar a la temperatura, el efecto de la humedad es consistentemente negativo, pero su magnitud aumenta en los cuantiles más altos. Pasa de -0.015 (τ=0.05) a -0.024 (τ=0.95).
+- **Humedad**: Similar a la temperatura, el efecto de la humedad es consistentemente negativo, pero su magnitud aumenta en los cuantiles más altos. Pasa de -0.015 (τ=0.05) a -0.024 (τ=0.95).
 
--**PM2.5**: El impacto positivo de PM2.5 sobre el CO aumenta drásticamente en los cuantiles superiores. En el cuantil bajo (0.05), el coeficiente es 0.12, pero en el cuantil alto (0.95), se dispara a 0.28. Esto es clave: la relación entre PM2.5 y CO no es constante.
+- **PM2.5**: El impacto positivo de PM2.5 sobre el CO aumenta drásticamente en los cuantiles superiores. En el cuantil bajo (0.05), el coeficiente es 0.12, pero en el cuantil alto (0.95), se dispara a 0.28. Esto es clave: la relación entre PM2.5 y CO no es constante.
 
--**Densidad de Población**: Su efecto es positivo y crece con los cuantiles, pasando de 0.0001 en el cuantil 0.05 a 0.0004 en el cuantil 0.95. Las áreas densamente pobladas contribuyen más a los picos extremos de contaminación por CO.
+- **Densidad de Población**: Su efecto es positivo y crece con los cuantiles, pasando de 0.0001 en el cuantil 0.05 a 0.0004 en el cuantil 0.95. Las áreas densamente pobladas contribuyen más a los picos extremos de contaminación por CO.
 
 ### **2.3. Resultados gráficos**
 ```{r echo=FALSE, warning=FALSE}
