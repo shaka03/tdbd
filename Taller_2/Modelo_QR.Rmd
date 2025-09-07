@@ -26,13 +26,15 @@ library("easypackages")
 library(quantreg)
 library(broom)
 library(purrr)
+library(knitr)
+library(kableExtra)
 ```
 
 ## **0. Información general**
 
 Este trabajo consiste identificar un caso real donde el interés esté en colas de la distribución (poblaciones muy vulnerables o muy favorecidas) y mostrar cómo la regresión cuantil (QR) revela patrones que el promedio (OLS) oculta.
 
-En este caso, haremos el ejercicio con el dataset "Evaluación de la polución y calidad del aire" de kaggle: https://www.kaggle.com/datasets/mujtabamatin/air-quality-and-pollution-assessment. Este dataset se enfoca en envaluaciones de la calidad de aire en varias regiones del mundo. El dataset contiene 5000 muestras y caputra facotres ambientales y demográficos que influyen en los niveles de polución.
+En este caso, haremos el ejercicio con el dataset "Evaluación de la polución y calidad del aire" de kaggle: https://www.kaggle.com/datasets/mujtabamatin/air-quality-and-pollution-assessment. Este dataset se enfoca en envaluaciones de la calidad de aire en varias regiones del mundo. El dataset contiene 5000 muestras capturando factores ambientales y demográficos que influyen en los niveles de polución.
 
 La pregunta de investigación es: ¿Cómo influyen los facotres meteorológicos, de densidad de población y cercanía a zonas industriales los diferentes niveles de CO?
 
@@ -40,16 +42,48 @@ La pregunta de investigación es: ¿Cómo influyen los facotres meteorológicos,
 
 Las variables a analizar son las siguientes:
 
-- Temperatura (°C): Temperatura media de la región
-- Humedad (%): Humedad relativa registrada en la región
-- Concentración PM2.5 (µg/m³): Niveles de partículas finas 
-- Concentración de PM10 (µg/m³): Niveles de partículas gruesas -> no se trabajará en el estudio
-- Concentración de NO2 (ppb): Niveles de dióxido de nitrógeno -> no se trabajará en el estudio
-- Concentración de SO2 (ppb): Niveles de dióxido de azufre -> no se trabajará en el estudio
-- Cercanía a Áreas Industriales (km): Distancia a la zona industrial más cercana
-- Densidad de población (personas/km²): Número de personas por kilómetro cuadrado en la región
-- Calidad del aire: niveles de calidad del aire (Bueno, Moderado, Pobre, Peligroso)
-- **Concentración de CO (ppb): Niveles de monóxido de carbono -> Variable objetivo**
+```{r tabla_variables, echo=FALSE}
+library(knitr)
+library(kableExtra)
+
+variables <- data.frame(
+  Variables = c("Temperatura", 
+                "Humedad", 
+                "Concentración PM2.5", 
+                "Concentración PM10", 
+                "Concentración NO2", 
+                "Concentración SO2", 
+                "Cercanía a Áreas Industriales", 
+                "Densidad de población", 
+                "Calidad del aire", 
+                "Concentración de CO"),
+  Unidades = c("°C", 
+               "%", 
+               "µg/m³", 
+               "µg/m³", 
+               "ppb", 
+               "ppb", 
+               "km", 
+               "personas/km²", 
+               "Categorías", 
+               "ppb"),
+  Descripción = c("Temperatura media de la región", 
+                  "Humedad relativa registrada en la región", 
+                  "Niveles de partículas finas", 
+                  "Niveles de partículas gruesas (no se trabajará en el estudio)", 
+                  "Niveles de dióxido de nitrógeno (no se trabajará en el estudio)", 
+                  "Niveles de dióxido de azufre (no se trabajará en el estudio)", 
+                  "Distancia a la zona industrial más cercana", 
+                  "Número de personas por kilómetro cuadrado en la región", 
+                  "Clasificación: Bueno, Moderado, Pobre, Peligroso", 
+                  "Variable objetivo: Niveles de monóxido de carbono")
+)
+
+kable(variables, format = "html", caption = "Descripción de variables del estudio", align = "c") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                full_width = FALSE, position = "center") %>%
+  row_spec(nrow(variables), bold = TRUE)  
+```
 
 Los percentiles a trabajar serán: 0.05, 0.25, 0.50, 0.75 y 0.95
 
@@ -64,7 +98,7 @@ df = df %>%
   Population_Density, Air.Quality
 )
 
-# Modificar nombre de las coliumnas
+# Modificar nombre de las columnas
 names(df) <- c(
   "Temperatura", "Humedad", "PM2.5", "CO", "Cercania_Areas_Industriales",
   "Densidad_Poblacion", "Calidad_Aire"
@@ -88,7 +122,7 @@ Resumen= summary(df)
 knitr::kable(Resumen, "pipe")
 ```
 
-El resumen estadístico nos ofrece una primera vista de las variables. La Concentración de CO, que es nuestra variable objetivo de este estudio, varía desde 0.01 ppm hasta 19.99 ppm, con una media de 9.87 ppm y una mediana de 9.71 ppm. La cercanía entre la media y la mediana sugiere una distribución relativamente simétrica. Otras variables como PM2.5 y Densidad de Población muestran una diferencia más marcada entre la media y la mediana, lo que indica una posible asimetría en sus distribuciones.
+El resumen estadístico nos ofrece una primera vista de las variables. La Concentración de CO, que es nuestra variable objetivo de este estudio, varía desde 0.01 ppb hasta 19.99 ppb, con una media de 9.87 ppb y una mediana de 9.71 ppb. La cercanía entre la media y la mediana sugiere una distribución relativamente simétrica. Otras variables como PM2.5 y Densidad de Población muestran una diferencia más marcada entre la media y la mediana, lo que indica una posible asimetría en sus distribuciones.
 
 #### **1.1.1. Distribución de las variables numéricas**
 
@@ -100,7 +134,7 @@ Puntos Clave:
 -	**Temperatura y Densidad de Población**: Presentan rangos amplios y distribuciones simétricas, cubriendo diversas condiciones climáticas. La mayoría de los valores se concentran alrededor de la media, con una disminución gradual hacia los extremos.
 -	**Humedad**: Muestra una clara asimetría positiva, pero con un ligero sesgo a la izquierda (asimetría negativa). Esto indica que son más frecuentes los valores de humedad altos (por encima del 50%) que los muy bajos.
 
-```{r echo=FALSE, message=FALSE}
+```{r echo=FALSE, message=FALSE,fig.align='center'}
 cat("\n")
 # Crear boxplots con facetas
 df_long = df %>%
@@ -117,7 +151,8 @@ histogramas = ggplot(df_long, aes(x = Valor, fill = Variable)) +
   geom_histogram() +
   facet_wrap(~Variable, scales = "free") +
   theme_light() +
-  theme(legend.position = "none") +
+  theme(legend.position = "none",
+    plot.title = element_text(hjust = 0.5)) +
   labs(title="Histogramas de las variables numéricas")
 histogramas
 
@@ -125,7 +160,8 @@ boxplots = ggplot(df_long, aes(y = Valor, fill = Variable)) +
   geom_boxplot() +
   facet_wrap(~Variable, scales = "free") +
   theme_light() +
-  theme(legend.position = "none") +
+  theme(legend.position = "none",
+    plot.title = element_text(hjust = 0.5)) +
   labs(title = "Boxplots de las variables numéricas")
 boxplots
 ```
@@ -134,9 +170,9 @@ boxplots
 
 Puntos Clave:
 
--	**Calidad_Aire**: La distribución de la variable Calidad del Aire está casi perfectamente balanceada, con cada una de las cuatro categorías ("Good", "Moderate", "Poor", "Hazardous"). Esta uniformidad es excelente para el modelado, ya que evita sesgos por clases desbalanceadas.
+-	**Calidad_Aire**: La variable Calidad del Aire presenta una distribución heterogénea pero relativamente balanceada entre sus cuatro categorías. La mayor proporción corresponde a la categoría Good (40%), seguida por Moderate (30%), lo que indica que en la mayoría de las observaciones la calidad del aire se encuentra en niveles aceptables o moderados. Sin embargo, también se evidencia que un 20% de los registros corresponden a condiciones Poor y un 10% a situaciones Hazardous, reflejando episodios de contaminación con riesgos significativos para la salud. Esta distribución es adecuada para el análisis, ya que garantiza variabilidad suficiente en los datos sin presentar un desbalance extremo entre clases, aunque la menor representación de la categoría Hazardous requiere especial atención para evitar que sea subestimada en los modelos predictivos.
 
-```{r echo=FALSE, message=FALSE}
+```{r echo=FALSE, message=FALSE,fig.align='center'}
 cat("\n")
 
 # Calcular proporciones
@@ -159,7 +195,7 @@ ggplot(df_prop, aes(x = Calidad_Aire, y = Proporcion, fill = Calidad_Aire)) +
 ```
 
 #### **1.2. Análisis bivariado**
-```{r echo=FALSE, message=FALSE}
+```{r echo=FALSE, message=FALSE,fig.align='center'}
 cat("\n")
 df_long = df %>%
   dplyr::select(Temperatura, Humedad, PM2.5, CO, Cercania_Areas_Industriales, Densidad_Poblacion)
@@ -179,11 +215,14 @@ ggplot(df_long, aes(x = Valor, y = CO)) +
     y = "CO",
     x = ""
   ) +
-  theme_light()
+  theme_light() +
+  theme(
+    plot.title = element_text(hjust = 0.5)  # Centra el título
+  )
 ```
 
 ##### **Variables numéricas vs CO**
-```{r echo=FALSE, message=FALSE}
+```{r echo=FALSE, message=FALSE,fig.align='center'}
 # Selecciona solo las columnas numéricas
 df_sel = df %>%
   dplyr::select(Temperatura, Humedad, PM2.5, Cercania_Areas_Industriales, Densidad_Poblacion, CO)
@@ -209,7 +248,7 @@ El CO con las demás variables numéricas presentan relaciones medias-altas, esp
 - **Cercanía a áreas industriales**: en este caso, la relación es inversa: entre más cercano esté una región a zonas industriales, la concentración de CO tiende a ser mayor. La relación no es del todo lineal.
 
 ##### **Variables categóricas vs CO**
-```{r fig.weight=1, echo=FALSE}
+```{r fig.weight=1, echo=FALSE,fig.align='center'}
 df_long = df %>%
   dplyr::select(CO, Calidad_Aire) %>%
   mutate(across(c(Calidad_Aire), as.character))
@@ -232,7 +271,8 @@ ggplot(df_long, aes(x = Valor, y = CO, fill = Valor)) +
   theme_light() + # Un tema limpio
   theme(
       legend.position = "none",
-      axis.text.x = element_text(angle = 45, hjust = 1)
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      plot.title = element_text(hjust = 0.5)
     )
 ```
 
@@ -289,6 +329,14 @@ A mismo nivel de partículas finas y cercanía a áreas industriales:
 - Si la calidad del aire es pobre, el nivel de CO aumenta en 1.006 unidades (p. < 0.001; IC95% ≈ [0.972, 1.04]).
 - Si la calidad del aire es peligrosa, el nivel de CO aumenta en 1.506 unidades (p. < 0.001; IC95% ≈ [1.459, 1.553]).
 
+**7. Medidas globales del Modelo**
+A nivel global, el modelo tiene los siguientes valores:
+
+- Residual standard error (0.2231): en promedio, el modelo se equivoca ±0.22 unidades al predecir.
+- R² = 0.8333: el modelo explica aproximadamente el 83% de la variabilidad de la variable dependiente → muy buen ajuste.
+- Adjusted R² (0.833): prácticamente igual, lo que indica que no hay sobreajuste.
+- F-statistic (2773, p < 2.2e-16): el modelo en su conjunto es altamente significativo.
+
 ### **2.2. Modelo QR**
 
 Aquí analizamos cómo los efectos de los predictores cambian en diferentes puntos de la distribución de CO: los cuantiles 0.05 (muy baja contaminación), 0.50 (mediana) y 0.95 (muy alta contaminación).
@@ -300,6 +348,29 @@ qr_fits <- rq(form, tau = taus, data = df)
 summary(qr_fits, se = "boot")
 ```
 
+
+```{r tabla-valores, echo=FALSE, message=FALSE, warning=FALSE}
+
+# Crear dataframe con los coeficientes por cuantiles
+coef_qr <- data.frame(
+  Variable = c(
+    "Temperatura", "Humedad", "PM2.5", 
+    "Cercanía_Areas_Industriales", "I(log(Cercanía_Areas_Industriales))",
+    "Densidad_Población", "Calidad_AireModerate", 
+    "Calidad_AirePoor", "Calidad_AireHazardous"
+  ),
+  Q0.05 = c(0.00081, 0.00009, -0.00008, -0.01351, 0.13814, -0.00002, 0.35961, 0.71069, 1.11754),
+  Q0.25 = c(0.00036, -0.00031, 0.00005, -0.00703, 0.06917, 0.00005, 0.44299, 0.86837, 1.28625),
+  Q0.5  = c(0.00013, -0.00036, 0.00015, -0.00382, 0.02924, 0.00003, 0.49335, 0.98726, 1.45891),
+  Q0.75 = c(-0.00113, -0.00018, 0.00032, -0.00865, 0.09348, 0.00003, 0.58201, 1.15693, 1.70920),
+  Q0.95 = c(-0.00181, -0.00011, 0.00036, -0.00059, 0.01992, 0.00009, 0.66627, 1.33356, 2.04209)
+)
+
+# Crear la tabla
+kable(coef_qr, digits = 5, caption = "Coeficientes de regresión cuantil por variable y cuantiles")
+
+```
+
 - **Temperatura**: Su efecto es negativo en todos los cuantiles, a medida que aumenta el nivel de CO la temperatura aumenta negatividad. En el cuantil 0.05, el coeficiente es -0.040, mientras que en el cuantil 0.95, es -0.063.
 
 - **Humedad**: Similar a la temperatura, el efecto de la humedad es consistentemente negativo, pero su magnitud aumenta en los cuantiles más altos. Pasa de -0.015 (τ=0.05) a -0.024 (τ=0.95).
@@ -309,7 +380,7 @@ summary(qr_fits, se = "boot")
 - **Densidad de Población**: Su efecto es positivo y crece con los cuantiles, pasando de 0.0001 en el cuantil 0.05 a 0.0004 en el cuantil 0.95. Las áreas densamente pobladas contribuyen más a los picos extremos de contaminación por CO.
 
 ### **2.3. Resultados gráficos**
-```{r echo=FALSE, warning=FALSE}
+```{r echo=FALSE, warning=FALSE,fig.align='center'}
 # Vector de cuantiles
 G <- seq(0.05, 0.95, by = 0.05)
 
@@ -343,19 +414,21 @@ ggplot(prof_ci, aes(tau, estimate)) +
   geom_line() + geom_point() +
   geom_hline(aes(yintercept = ols), linetype = "dashed") +
   facet_wrap(~ term, scales = "free_y") +
-  labs(title = "QR vs OLS con IC (banda 95%)", x = "τ", y = "Estimación")
+  labs(title = "QR vs OLS con IC (banda 95%)", x = "τ", y = "Estimación")+
+  theme(plot.title = element_text(hjust = 0.5))
 ```
+
 Análisis del grafico:
 
--**Temperatura y Humedad**: Se observa una clara pendiente descendente. Esto confirma que el efecto de ambas variables es más pronunciado en sentido negativo, en los niveles altos de CO.
+-**Temperatura y Humedad**: Se observa una clara pendiente descendente. Esto confirma que el efecto de ambas variables es más pronunciado en sentido negativo, en los niveles altos de CO. A pesar de que los coeficientes son cercanos a cero,tomando la temperatura valores negativos en los últimos percentiles 
 
--**PM2.5 y Densidad_Poblacion**: Muestran una pendiente ascendente muy marcada. El efecto de estas variables se intensifica dramáticamente en los cuantiles altos.
+-**PM2.5 y Densidad_Poblacion**: Muestran una pendiente ascendente muy marcada. El efecto de estas variables se intensifica dramáticamente en los cuantiles altos.Aunque el de densidad de población resulta ser más consistente en todos los cuantiles, aunque los extremos muestran más variabilidad (la banda gris es más amplia).
 
 -**Cercania_Areas_Industriales**: La línea es relativamente plana, lo que sugiere que el efecto de la proximidad a zonas industriales es bastante constante en todos los niveles de contaminación. 
 
 
 ### **2.4. Modelo QR con interacción**
-```{r echo=FALSE, warning=FALSE}
+```{r echo=FALSE, warning=FALSE,fig.align='center'}
 # Modelo con interacción
 taus = c(0.05, 0.5, 0.95)
 
