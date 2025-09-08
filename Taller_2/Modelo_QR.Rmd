@@ -122,7 +122,7 @@ Resumen= summary(df)
 knitr::kable(Resumen, "pipe")
 ```
 
-El resumen estadístico nos ofrece una primera vista de las variables. La Concentración de CO, que es nuestra variable objetivo de este estudio, varía desde 0.01 ppb hasta 19.99 ppb, con una media de 9.87 ppb y una mediana de 9.71 ppb. La cercanía entre la media y la mediana sugiere una distribución relativamente simétrica. Otras variables como PM2.5 y Densidad de Población muestran una diferencia más marcada entre la media y la mediana, lo que indica una posible asimetría en sus distribuciones.
+El resumen estadístico nos ofrece una primera vista de las variables. La Concentración de CO, que es nuestra variable objetivo de este estudio, varía desde 0.65 ppb hasta 3.72 ppb, con una media de 1.50 ppb y una mediana de 7.9 ppb. La cercanía entre la media y la mediana sugiere una distribución relativamente simétrica. Otras variables como PM2.5 y Densidad de Población muestran una diferencia más marcada entre la media y la mediana, lo que indica una posible asimetría en sus distribuciones.
 
 #### **1.1.1. Distribución de las variables numéricas**
 
@@ -476,4 +476,4 @@ Comparación de la cercanía con la calidad del aire:
 
 - **Zonas de baja calidad de aire ("Poor" y "Hazardous")**: en estas zonas, la interacción entre calidad de aire y la cercania es mayor, lo que indica que la cercanía a zonas industriales se asocia claramente con un aumento en los niveles de CO. En zonas en el que la calidad de aire es pobre (poor), la proximidad a fuentes industriales contribuye significativamente a la contaminación por CO, afectando incluso los valores bajos (cuantil 0.05), mientras que, cuando la calidad del aire ya es peligrosa (Hazardous), la exposición a fuentes industriales es crítica. Incluso a distancias moderadas, los niveles de CO son peligrosamente altos.
 
-Los dos puntos anteriores nos dicen que, la interacción entre la calidad del aire y la cercanía no es lineal ni uniforme, y la influencia de la cercanía es más fuerte en regiones en el que la calidad del aire es pobre o peligrosa.
+Los dos puntos anteriores nos dicen que, la interacción entre la calidad del aire y la cercanía no es lineal ni uniforme, y la influencia de la cercanía es más fuerte en regiones en el que la calidad del aire es pobre o peligroso.
