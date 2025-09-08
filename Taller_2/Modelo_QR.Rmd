@@ -302,7 +302,7 @@ summary(ols)
 **1. Temperatura: -0.00046**
 Diferencia no significativa (p = 0.519; IC95% cruza 0). Con estos datos, no hay evidencia de efecto promedio de la temperatura sobre el CO.
 
-**2. Humedad: -0.00024**
+**2. Humedad: -0.00023**
 Diferencia no significativa (p = 0.346; IC95% cruza 0). Con estos datos, no hay evidencia de efecto promedio de la humedad sobre el CO.
 
 **3. Partículas finas (PM2.5): 0.00036**
@@ -319,7 +319,7 @@ Si está muy cerca a áreas industriales, al disminuir 1 km aumenta 0.0863 los n
 
 Ambos son significativos (p. < 0.01).
 
-**5. Densidad de población: -0.000027**
+**5. Densidad de población: 0.000027**
 Diferencia no significativa (p = 0.32; IC95% cruza 0). Con estos datos, no hay evidencia de efecto promedio de la densidad de población sobre el CO.
 
 **6. Calidad del aire**
@@ -363,21 +363,14 @@ coef_qr <- data.frame(
   Q0.25 = c(0.00036, -0.00031, 0.00005, -0.00703, 0.06917, 0.00005, 0.44299, 0.86837, 1.28625),
   Q0.5  = c(0.00013, -0.00036, 0.00015, -0.00382, 0.02924, 0.00003, 0.49335, 0.98726, 1.45891),
   Q0.75 = c(-0.00113, -0.00018, 0.00032, -0.00865, 0.09348, 0.00003, 0.58201, 1.15693, 1.70920),
-  Q0.95 = c(-0.00181, -0.00011, 0.00036, -0.00059, 0.01992, 0.00009, 0.66627, 1.33356, 2.04209)
+  Q0.95 = c(-0.00181, -0.00011, 0.00036, -0.00059, 0.01992, 0.00009, 0.66627, 1.33356, 2.04209),
+  OLS = c(-0.00046, -0.00023, 0.00036, -0.0162, 0.1025, 0.000027, 0.503, 1.006, 1.506)
 )
 
 # Crear la tabla
 kable(coef_qr, digits = 5, caption = "Coeficientes de regresión cuantil por variable y cuantiles")
 
 ```
-
-- **Temperatura**: Su efecto es negativo en todos los cuantiles, a medida que aumenta el nivel de CO la temperatura aumenta negatividad. En el cuantil 0.05, el coeficiente es -0.040, mientras que en el cuantil 0.95, es -0.063.
-
-- **Humedad**: Similar a la temperatura, el efecto de la humedad es consistentemente negativo, pero su magnitud aumenta en los cuantiles más altos. Pasa de -0.015 (τ=0.05) a -0.024 (τ=0.95).
-
-- **PM2.5**: El impacto positivo de PM2.5 sobre el CO aumenta drásticamente en los cuantiles superiores. En el cuantil bajo (0.05), el coeficiente es 0.12, pero en el cuantil alto (0.95), se dispara a 0.28. Esto es clave: la relación entre PM2.5 y CO no es constante.
-
-- **Densidad de Población**: Su efecto es positivo y crece con los cuantiles, pasando de 0.0001 en el cuantil 0.05 a 0.0004 en el cuantil 0.95. Las áreas densamente pobladas contribuyen más a los picos extremos de contaminación por CO.
 
 ### **2.3. Resultados gráficos**
 ```{r echo=FALSE, warning=FALSE,fig.align='center'}
@@ -387,7 +380,7 @@ G <- seq(0.05, 0.95, by = 0.05)
 # Variables a graficar
 coef_keep <- c(
   "Temperatura", "Humedad", "PM2.5", "Cercania_Areas_Industriales", "I(log(Cercania_Areas_Industriales))",
-  "Densidad_Poblacion", "Calidad_Aire", "CO"
+  "Densidad_Poblacion", "Calidad_AireModerate", "Calidad_AirePoor", "Calidad_AireHazardous", "CO"
 )
 
 # Ajuste QR
@@ -418,14 +411,12 @@ ggplot(prof_ci, aes(tau, estimate)) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-Análisis del grafico:
-
--**Temperatura y Humedad**: Se observa una clara pendiente descendente. Esto confirma que el efecto de ambas variables es más pronunciado en sentido negativo, en los niveles altos de CO. A pesar de que los coeficientes son cercanos a cero,tomando la temperatura valores negativos en los últimos percentiles 
-
--**PM2.5 y Densidad_Poblacion**: Muestran una pendiente ascendente muy marcada. El efecto de estas variables se intensifica dramáticamente en los cuantiles altos.Aunque el de densidad de población resulta ser más consistente en todos los cuantiles, aunque los extremos muestran más variabilidad (la banda gris es más amplia).
-
--**Cercania_Areas_Industriales**: La línea es relativamente plana, lo que sugiere que el efecto de la proximidad a zonas industriales es bastante constante en todos los niveles de contaminación. 
-
+- **Temperatura**: Su efecto va decreciendo a través de los cuantiles. Sin embargo, **no es significativo** en todos los tau. En cuánto al modelo OLS, **sobreestima** en la base y **subestima** en la cúpula.
+- **Humedad**: Su impacto es positivo en el quantil 0.05, pero negativo creciente a partir del cuantil 0.25. Sin embargo, al igual que la temperatura, **no es significativo** en todos los tau.
+- **PM2.5**: Tiene un impacto negativo en la base y va creciendo. Sin embargo, **no es significativo** en todos los tau.
+- **Cercania Areas Industriales**: la parte lineal presenta una tendencia creciente en los taus, teniendo un impacto negativo (a mayor distancia, menores los nievels de CO). Sin embargo, esta variable **solo es significativa** en los cuantiles 0.05 y 0.75. La parte logarítmica presenta una tendencia decreciente en los taus, sin emabrgo **no es significativa** en ningún tau.
+- **Densidad de Población**: su efecto es negativo en la base y tiende a crecer muy poco a través de los taus.Sin embargo, **no es significativa**.
+- **Calidad del aire**: en todos los casos, la calidad del aire es significativa y es creciente en todos los taus. Además, con base en los gráficos, su crecimiento es constante (lineal), pero hay una brecha un poco mayor en la cúpula, lo que indica que los niveles de CO son cada vez mayores a medica que la calidad del aire va empeorando.
 
 ### **2.4. Modelo QR con interacción**
 ```{r echo=FALSE, warning=FALSE,fig.align='center'}
@@ -481,10 +472,8 @@ ggplot(df, aes(Cercania_Areas_Industriales, CO, color = Calidad_Aire)) +
 
 Comparación de la cercanía con la calidad del aire:
 
--**Zonas de Baja Contaminación ("Good" y "Moderate")**: En estas condiciones, la cercanía a un área industrial tiene un efecto mínimo o nulo sobre la concentración de CO. No importa si se analizan los niveles promedio (OLS), los más bajos (τ=0.05) o los más altos (τ=0.95); la proximidad no es un factor determinante. Aquí, el OLS y la QR cuentan una historia similar.
+- **Zonas de mejor calidad de aire ("Good" y "Moderate")**: En estas condiciones, la cercanía a un área industrial tiene un efecto mínimo-medio sobre los niveles de CO. No importa si se analizan los niveles promedio (OLS), los más bajos (τ=0.05) o los más altos (τ=0.95); la proximidad no es un factor determinante. Aquí, el OLS y la QR cuentan una historia similar. Sin embargo, las pendientes en calidad de aire moderada muestran una inclinación positiva, aunque no muy pronunciada, indicando que la cercanía industrial empieza a tener un efecto perceptible, especialmente en los valores más altos de CO.
 
--**Zonas de Alta Contaminación ("Poor" y "Hazardous")**:
+- **Zonas de baja calidad de aire ("Poor" y "Hazardous")**: en estas zonas, la interacción entre calidad de aire y la cercania es mayor, lo que indica que la cercanía a zonas industriales se asocia claramente con un aumento en los niveles de CO. En zonas en el que la calidad de aire es pobre (poor), la proximidad a fuentes industriales contribuye significativamente a la contaminación por CO, afectando incluso los valores bajos (cuantil 0.05), mientras que, cuando la calidad del aire ya es peligrosa (Hazardous), la exposición a fuentes industriales es crítica. Incluso a distancias moderadas, los niveles de CO son peligrosamente altos.
 
-  - **Cuantil Bajo (τ=0.05)**: La línea es casi plana. Esto indica que la calidad del aire "más limpios" dentro de estas zonas ya contaminadas, la cercanía a la industria no tiene un impacto relevante.
-
-  - **Cuantil Alto (τ=0.95)**: Esta línea muestra una pendiente negativa muy pronunciada. Aquí está la clave del análisis. Este resultado se traduce en que la proximidad a zonas industriales es un factor crítico y agravante específicamente durante los peores episodios de contaminación. Para los picos más extremos de CO, estar más cerca de la industria se asocia con niveles de contaminación drásticamente más altos.
+Los dos puntos anteriores nos dicen que, la interacción entre la calidad del aire y la cercanía no es lineal ni uniforme, y la influencia de la cercanía es más fuerte en regiones en el que la calidad del aire es pobre o peligrosa.
