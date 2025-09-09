@@ -325,9 +325,9 @@ Diferencia no significativa (p = 0.32; IC95% cruza 0). Con estos datos, no hay e
 **6. Calidad del aire**
 A mismo nivel de partículas finas y cercanía a áreas industriales:
 
-- Si la calidad del aire es moderada, el nivel de CO aumenta en 0.503 unidades (p. < 0.001; IC95% ≈ [0.478, 0.528]).
-- Si la calidad del aire es pobre, el nivel de CO aumenta en 1.006 unidades (p. < 0.001; IC95% ≈ [0.972, 1.04]).
-- Si la calidad del aire es peligrosa, el nivel de CO aumenta en 1.506 unidades (p. < 0.001; IC95% ≈ [1.459, 1.553]).
+- Si la calidad del aire es moderada, el nivel de CO aumenta en 0.503 unidades vs si la calidad de aire es bueno (p. < 0.001; IC95% ≈ [0.478, 0.528]).
+- Si la calidad del aire es pobre, el nivel de CO aumenta en 1.006 unidades vs si la calidad de aire es bueno (p. < 0.001; IC95% ≈ [0.972, 1.04]).
+- Si la calidad del aire es peligrosa, el nivel de CO aumenta en 1.506 unidades vs si la calidad de aire es bueno (p. < 0.001; IC95% ≈ [1.459, 1.553]).
 
 **7. Medidas globales del Modelo**
 A nivel global, el modelo tiene los siguientes valores:
