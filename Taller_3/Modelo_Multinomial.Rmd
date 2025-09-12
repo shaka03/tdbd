@@ -14,6 +14,32 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+**Supuesto IIA**
+
+El supuesto IIA establece que la razón de probabilidades entre dos alternativas cualesquiera es independiente de la presencia o características de otras alternativas en el conjunto de elección.
+
+Formalmente: Si tienes tres alternativas  A, B y C, el supuesto IIA implica que:
+
+
+$$
+\frac{P(A)}{P(B)} \text{ es independiente de la existencia o característica de } C
+$$ 
+
+Esto significa que si se elimina o se agrega una alternativa irrelevante (como C), la relación entre A y B no debería cambiar.
+
+Implicaciones empíricas:
+
+1. **Restricción de comportamiento:** El IIA impone una estructura rígida en el comportamiento del consumidor o decisor. Por ejemplo, si alguien elige entre tren y autobús, y se introduce una nueva opción como "autobús premium", el modelo MNL asumiría que la relación entre tren y autobús regular no cambia, lo cual puede no ser realista.
+2. **Problemas en la modelación:** En contextos donde las alternativas son similares o correlacionadas, el supuesto IIA puede llevar a predicciones erróneas. Ejemplo clásico: la "paradoja de la línea roja" en transporte público.
+3. **Tests empíricos:** Se pueden aplicar pruebas como el test de **Hausman-McFadden** para verificar si el supuesto IIA se cumple. Si se rechaza, se recomienda usar modelos más flexibles como:
+
+    - Logit anidado (Nested Logit)
+    - Logit mixto (Mixed Logit)
+    - Probit multinomial
+
+En el test de Hausman-McFadden, si p > 0.05, no se rechaza el spuesto de IIA, por lo tanto el modelo logit es apropiado.
+
+
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 library(dplyr)
 library(ggplot2)
