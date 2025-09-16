@@ -41,35 +41,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="Modelo_Multinomial_files/libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="Modelo_Multinomial_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -112,32 +83,9 @@ window.Quarto = {
 </header>
 
 
-<p><strong>Supuesto IIA</strong></p>
-<p>El supuesto IIA establece que la razón de probabilidades entre dos alternativas cualesquiera es independiente de la presencia o características de otras alternativas en el conjunto de elección.</p>
-<p>Formalmente: Si tienes tres alternativas A, B y C, el supuesto IIA implica que:</p>
-<p><span class="math display">\[
-\frac{P(A)}{P(B)}
-\]</span> es independiente de la existencia o característica de C.</p>
-<p>Esto significa que si se elimina o se agrega una alternativa irrelevante (como C), la relación entre A y B no debería cambiar.</p>
-<p>Implicaciones empíricas:</p>
-<ol type="1">
-<li><p><strong>Restricción de comportamiento:</strong> El IIA impone una estructura rígida en el comportamiento del consumidor o decisor. Por ejemplo, si alguien elige entre tren y autobús, y se introduce una nueva opción como “autobús premium”, el modelo MNL asumiría que la relación entre tren y autobús regular no cambia, lo cual puede no ser realista.</p></li>
-<li><p><strong>Problemas en la modelación:</strong> En contextos donde las alternativas son similares o correlacionadas, el supuesto IIA puede llevar a predicciones erróneas. Ejemplo clásico: la “paradoja de la línea roja” en transporte público.</p></li>
-<li><p><strong>Tests empíricos:</strong> Se pueden aplicar pruebas como el test de <strong>Hausman-McFadden</strong> para verificar si el supuesto IIA se cumple. Si se rechaza, se recomienda usar modelos más flexibles como:</p>
-<ul>
-<li>Logit anidado (Nested Logit)</li>
-<li>Logit mixto (Mixed Logit)</li>
-<li>Probit multinomial</li>
-</ul></li>
-</ol>
 <section id="información-general" class="level2">
 <h2 class="anchored" data-anchor-id="información-general"><strong>0. Información general</strong></h2>
-<p>Este trabajo consiste identificar un caso real donde el interés esté en colas de la distribución (poblaciones muy vulnerables o muy favorecidas) y mostrar cómo la regresión cuantil (QR) revela patrones que el promedio (OLS) oculta.</p>
-<p>En este caso, haremos el ejercicio con el dataset “Evaluación de la polución y calidad del aire” de kaggle: https://www.kaggle.com/datasets/mujtabamatin/air-quality-and-pollution-assessment. Este dataset se enfoca en envaluaciones de la calidad de aire en varias regiones del mundo. El dataset contiene 5000 muestras capturando factores ambientales y demográficos que influyen en los niveles de polución.</p>
-<p>La pregunta de investigación es: ¿Cómo influyen los facotres meteorológicos, de densidad de población y cercanía a zonas industriales los diferentes niveles de CO?</p>
-</section>
-<section id="análisis-exploratorio" class="level2">
-<h2 class="anchored" data-anchor-id="análisis-exploratorio"><strong>1. Análisis exploratorio</strong></h2>
+<p>En este trabajo se identificarán qué factores inciden en la preferencia de modo de transporte: avión, tren, bus y carro.</p>
 <p>Las variables a analizar son las siguientes:</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -147,66 +95,957 @@ window.Quarto = {
 <thead>
 <tr class="header">
 <th style="text-align: center;" data-quarto-table-cell-role="th">Variables</th>
-<th style="text-align: center;" data-quarto-table-cell-role="th">Unidades</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Tipo_Variable</th>
 <th style="text-align: center;" data-quarto-table-cell-role="th">Descripción</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;">Temperatura</td>
-<td style="text-align: center;">°C</td>
-<td style="text-align: center;">Temperatura media de la región</td>
+<td style="text-align: center;">Tiempo_Espera</td>
+<td style="text-align: center;">Cuantitativa</td>
+<td style="text-align: center;">Tiempo de espera en terminal</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">Humedad</td>
-<td style="text-align: center;">%</td>
-<td style="text-align: center;">Humedad relativa registrada en la región</td>
+<td style="text-align: center;">Costo_Viaje</td>
+<td style="text-align: center;">Cuantitativa</td>
+<td style="text-align: center;">Costo del viaje</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">Concentración PM2.5</td>
-<td style="text-align: center;">µg/m³</td>
-<td style="text-align: center;">Niveles de partículas finas</td>
+<td style="text-align: center;">Tiempo_Viaje</td>
+<td style="text-align: center;">Cuantitativa</td>
+<td style="text-align: center;">Tiempo de viaje</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">Concentración PM10</td>
-<td style="text-align: center;">µg/m³</td>
-<td style="text-align: center;">Niveles de partículas gruesas (no se trabajará en el estudio)</td>
+<td style="text-align: center;">Costo_Generalizado</td>
+<td style="text-align: center;">Cuantitativa</td>
+<td style="text-align: center;">Costo generalizado del viaje</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">Concentración NO2</td>
-<td style="text-align: center;">ppb</td>
-<td style="text-align: center;">Niveles de dióxido de nitrógeno (no se trabajará en el estudio)</td>
+<td style="text-align: center;">Ingresos_Hogar</td>
+<td style="text-align: center;">Cuantitativa</td>
+<td style="text-align: center;">Ingresos del hogar</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">Concentración SO2</td>
-<td style="text-align: center;">ppb</td>
-<td style="text-align: center;">Niveles de dióxido de azufre (no se trabajará en el estudio)</td>
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Ordinal</td>
+<td style="text-align: center;">Tamaño del grupo que viaja</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">Cercanía a Áreas Industriales</td>
-<td style="text-align: center;">km</td>
-<td style="text-align: center;">Distancia a la zona industrial más cercana</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Densidad de población</td>
-<td style="text-align: center;">personas/km²</td>
-<td style="text-align: center;">Número de personas por kilómetro cuadrado en la región</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">Calidad del aire</td>
-<td style="text-align: center;">Categorías</td>
-<td style="text-align: center;">Clasificación: Bueno, Moderado, Pobre, Peligroso</td>
-</tr>
-<tr class="even">
-<td style="text-align: center; font-weight: bold;">Concentración de CO</td>
-<td style="text-align: center; font-weight: bold;">ppb</td>
-<td style="text-align: center; font-weight: bold;">Variable objetivo: Niveles de monóxido de carbono</td>
+<td style="text-align: center; font-weight: bold;">Modo_Viaje</td>
+<td style="text-align: center; font-weight: bold;">Nominal/Variable objetivo</td>
+<td style="text-align: center; font-weight: bold;">Modo de transporte</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 </div>
+</section>
+<section id="análisis-exploratorio" class="level2">
+<h2 class="anchored" data-anchor-id="análisis-exploratorio"><strong>1. Análisis exploratorio</strong></h2>
+<section id="revisión-de-datos-faltantes" class="level3">
+<h3 class="anchored" data-anchor-id="revisión-de-datos-faltantes"><strong>1.1. Revisión de datos faltantes</strong></h3>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Datos faltantes</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Modo_Viaje</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tiempo_Espera</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Costo_Viaje</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tiempo_Viaje</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Costo_Generalizado</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ingresos_Hogar</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tamano_Grupo</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Con base en la tabla anterior, no hay datos faltantes.</p>
+</section>
+<section id="resumen-de-las-variables" class="level3">
+<h3 class="anchored" data-anchor-id="resumen-de-las-variables"><strong>1.2. Resumen de las variables</strong></h3>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Descripción del conjunto de datos</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Modo_Viaje</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Tiempo_Espera</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Costo_Viaje</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Tiempo_Viaje</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Costo_Generalizado</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Ingresos_Hogar</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Tamano_Grupo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Avión:58</td>
+<td style="text-align: left;">Min. : 0.00</td>
+<td style="text-align: left;">Min. : 2.0</td>
+<td style="text-align: left;">Min. : 65.0</td>
+<td style="text-align: left;">Min. : 30.0</td>
+<td style="text-align: left;">Min. : 2.00</td>
+<td style="text-align: left;">1:114</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Bus :30</td>
+<td style="text-align: left;">1st Qu.: 0.00</td>
+<td style="text-align: left;">1st Qu.: 19.0</td>
+<td style="text-align: left;">1st Qu.: 180.0</td>
+<td style="text-align: left;">1st Qu.: 67.0</td>
+<td style="text-align: left;">1st Qu.:20.00</td>
+<td style="text-align: left;">2: 58</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Carro:59</td>
+<td style="text-align: left;">Median :20.00</td>
+<td style="text-align: left;">Median : 33.0</td>
+<td style="text-align: left;">Median : 305.0</td>
+<td style="text-align: left;">Median :102.5</td>
+<td style="text-align: left;">Median :34.50</td>
+<td style="text-align: left;">3: 20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Tren :63</td>
+<td style="text-align: left;">Mean :25.01</td>
+<td style="text-align: left;">Mean : 47.4</td>
+<td style="text-align: left;">Mean : 430.8</td>
+<td style="text-align: left;">Mean :103.8</td>
+<td style="text-align: left;">Mean :34.55</td>
+<td style="text-align: left;">4: 15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">3rd Qu.:40.00</td>
+<td style="text-align: left;">3rd Qu.: 70.0</td>
+<td style="text-align: left;">3rd Qu.: 720.0</td>
+<td style="text-align: left;">3rd Qu.:132.8</td>
+<td style="text-align: left;">3rd Qu.:50.00</td>
+<td style="text-align: left;">5: 2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Max. :99.00</td>
+<td style="text-align: left;">Max. :180.0</td>
+<td style="text-align: left;">Max. :1440.0</td>
+<td style="text-align: left;">Max. :238.0</td>
+<td style="text-align: left;">Max. :72.00</td>
+<td style="text-align: left;">6: 1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Analizar</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_Multinomial_files/figure-html/numericas-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_Multinomial_files/figure-html/numericas-2.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Poner hallazgos</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_Multinomial_files/figure-html/cualitativas-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Poner hallazgos</p>
+</section>
+<section id="análisis-bivariado" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-bivariado"><strong>1.3. Análisis bivariado</strong></h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_Multinomial_files/figure-html/bivariado-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Poner hallazgos</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_Multinomial_files/figure-html/correlacion-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Poner hallazgos</p>
+<p>Si bien no se presentan asociacones muy fuertes entre variables, excepto para tiempo de espera y costo de viaje que tiene una correlación Pearson de 0.63, el Costo generalizado es una combinación lineal del tiempo de transporte y el costo de viaje, por lo tanto, se va a eliminar del análsisi para evitar una posible multicolinealidad. Además, revisando las relación entre variables, se evidencia que tiempos de espera en cero corresponden a los carros, por ende, puede sesgar el modelo. Por este motivo, tampoco se tendrá en cuenta dicha variable para el análisis.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_Multinomial_files/figure-html/categoricas-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Poner hallazgos</p>
+</section>
+</section>
+<section id="modelo-multinomial" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-multinomial"><strong>2. Modelo multinomial</strong></h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># weights:  40 (27 variable)
+initial  value 291.121816 
+iter  10 value 147.782539
+iter  20 value 106.601389
+iter  30 value 103.150919
+iter  40 value 102.805410
+iter  50 value 102.803334
+final  value 102.803331 
+converged</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Coefientes</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      (Intercept) Costo_Viaje Tiempo_Viaje Ingresos_Hogar Tamano_Grupo.L
+Bus      46.15633   -4.112399    0.5617427     -0.1735036      -88.24744
+Carro    78.77012   -4.276600    0.5633502     -0.1358230      -30.83879
+Tren     69.46713   -4.081489    0.5594685     -0.2012959      -60.33678
+      Tamano_Grupo.Q Tamano_Grupo.C Tamano_Grupo^4 Tamano_Grupo^5
+Bus         24.42756       59.00828      -4.453353      -99.21981
+Carro       12.70779       36.21582      21.083529      -48.43903
+Tren       -10.30403       25.61379      19.218698      -47.75568</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+P-values</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      (Intercept) Costo_Viaje Tiempo_Viaje Ingresos_Hogar Tamano_Grupo.L
+Bus             0           0            0              0              0
+Carro           0           0            0              0              0
+Tren            0           0            0              0              0
+      Tamano_Grupo.Q Tamano_Grupo.C Tamano_Grupo^4 Tamano_Grupo^5
+Bus                0              0              0              0
+Carro              0              0              0              0
+Tren               0              0              0              0</code></pre>
+</div>
+</div>
+<section id="análisis-de-los-coeficientes-y-p-values" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-de-los-coeficientes-y-p-values"><strong>2.1. Análisis de los coeficientes y p-values</strong></h3>
+<p>Sale del summary del modelo, tener en cuenta el p-value</p>
+</section>
+<section id="odds-ratio" class="level3">
+<h3 class="anchored" data-anchor-id="odds-ratio"><strong>2.2. Odds Ratio</strong></h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>       (Intercept) Costo_Viaje Tiempo_Viaje Ingresos_Hogar Tamano_Grupo.L
+Bus   1.110297e+20  0.01636847     1.753726      0.8407142   4.727406e-39
+Carro 1.619677e+34  0.01388981     1.756547      0.8729972   4.044674e-14
+Tren  1.476355e+30  0.01688231     1.749742      0.8176705   6.252718e-27
+      Tamano_Grupo.Q Tamano_Grupo.C Tamano_Grupo^4 Tamano_Grupo^5
+Bus     4.062120e+10   4.236145e+25   1.163948e-02   8.116778e-44
+Carro   3.303097e+05   5.349701e+15   1.433706e+09   9.187510e-22
+Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
+</div>
+</div>
+<p>Análisis de los odds</p>
+</section>
+<section id="análisis-marginal" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-marginal"><strong>2.3. Análisis marginal</strong></h3>
+<div class="cell">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis marginal</caption>
+<thead>
+<tr class="header">
+<th style="text-align: center;" data-quarto-table-cell-role="th">term</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">group</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">contrast</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">estimate</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">std.error</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">statistic</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">p.value</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">s.value</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">conf.low</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">conf.high</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Costo_Viaje</td>
+<td style="text-align: center;">Avión</td>
+<td style="text-align: center;">dY/dX</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">1.835362e+00</td>
+<td style="text-align: center;">0.0664520</td>
+<td style="text-align: center;">3.9115433</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Costo_Viaje</td>
+<td style="text-align: center;">Bus</td>
+<td style="text-align: center;">dY/dX</td>
+<td style="text-align: center;">0.0034838</td>
+<td style="text-align: center;">0.0013013</td>
+<td style="text-align: center;">2.677195e+00</td>
+<td style="text-align: center;">0.0074242</td>
+<td style="text-align: center;">7.0735579</td>
+<td style="text-align: center;">0.0009333</td>
+<td style="text-align: center;">0.0060342</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Costo_Viaje</td>
+<td style="text-align: center;">Carro</td>
+<td style="text-align: center;">dY/dX</td>
+<td style="text-align: center;">-0.0144705</td>
+<td style="text-align: center;">0.0016538</td>
+<td style="text-align: center;">-8.749793e+00</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">58.6988235</td>
+<td style="text-align: center;">-0.0177119</td>
+<td style="text-align: center;">-0.0112291</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Costo_Viaje</td>
+<td style="text-align: center;">Tren</td>
+<td style="text-align: center;">dY/dX</td>
+<td style="text-align: center;">0.0109867</td>
+<td style="text-align: center;">0.0013141</td>
+<td style="text-align: center;">8.360844e+00</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">53.8342189</td>
+<td style="text-align: center;">0.0084112</td>
+<td style="text-align: center;">0.0135623</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Ingresos_Hogar</td>
+<td style="text-align: center;">Avión</td>
+<td style="text-align: center;">dY/dX</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">1.887397e+00</td>
+<td style="text-align: center;">0.0591069</td>
+<td style="text-align: center;">4.0805292</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ingresos_Hogar</td>
+<td style="text-align: center;">Bus</td>
+<td style="text-align: center;">dY/dX</td>
+<td style="text-align: center;">0.0005479</td>
+<td style="text-align: center;">0.0012306</td>
+<td style="text-align: center;">4.451836e-01</td>
+<td style="text-align: center;">0.6561871</td>
+<td style="text-align: center;">0.6078210</td>
+<td style="text-align: center;">-0.0018641</td>
+<td style="text-align: center;">0.0029598</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Ingresos_Hogar</td>
+<td style="text-align: center;">Carro</td>
+<td style="text-align: center;">dY/dX</td>
+<td style="text-align: center;">0.0042728</td>
+<td style="text-align: center;">0.0010796</td>
+<td style="text-align: center;">3.957651e+00</td>
+<td style="text-align: center;">0.0000757</td>
+<td style="text-align: center;">13.6895314</td>
+<td style="text-align: center;">0.0021568</td>
+<td style="text-align: center;">0.0063888</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ingresos_Hogar</td>
+<td style="text-align: center;">Tren</td>
+<td style="text-align: center;">dY/dX</td>
+<td style="text-align: center;">-0.0048207</td>
+<td style="text-align: center;">0.0012475</td>
+<td style="text-align: center;">-3.864394e+00</td>
+<td style="text-align: center;">0.0001114</td>
+<td style="text-align: center;">13.1324141</td>
+<td style="text-align: center;">-0.0072656</td>
+<td style="text-align: center;">-0.0023757</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Avión</td>
+<td style="text-align: center;">2 - 1</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">1.589138e+00</td>
+<td style="text-align: center;">0.1120293</td>
+<td style="text-align: center;">3.1580518</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Avión</td>
+<td style="text-align: center;">3 - 1</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">-1.519980e+00</td>
+<td style="text-align: center;">0.1285161</td>
+<td style="text-align: center;">2.9599793</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">0.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Avión</td>
+<td style="text-align: center;">4 - 1</td>
+<td style="text-align: center;">0.0095238</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">4.050173e+06</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">Inf</td>
+<td style="text-align: center;">0.0095238</td>
+<td style="text-align: center;">0.0095238</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Avión</td>
+<td style="text-align: center;">5 - 1</td>
+<td style="text-align: center;">0.0095238</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">2.487501e+07</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">Inf</td>
+<td style="text-align: center;">0.0095238</td>
+<td style="text-align: center;">0.0095238</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Avión</td>
+<td style="text-align: center;">6 - 1</td>
+<td style="text-align: center;">0.0000001</td>
+<td style="text-align: center;">0.0000001</td>
+<td style="text-align: center;">8.948997e-01</td>
+<td style="text-align: center;">0.3708407</td>
+<td style="text-align: center;">1.4311285</td>
+<td style="text-align: center;">-0.0000001</td>
+<td style="text-align: center;">0.0000003</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Bus</td>
+<td style="text-align: center;">2 - 1</td>
+<td style="text-align: center;">-0.0947621</td>
+<td style="text-align: center;">0.0480636</td>
+<td style="text-align: center;">-1.971598e+00</td>
+<td style="text-align: center;">0.0486555</td>
+<td style="text-align: center;">4.3612521</td>
+<td style="text-align: center;">-0.1889651</td>
+<td style="text-align: center;">-0.0005592</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Bus</td>
+<td style="text-align: center;">3 - 1</td>
+<td style="text-align: center;">-0.0156164</td>
+<td style="text-align: center;">0.0872240</td>
+<td style="text-align: center;">-1.790381e-01</td>
+<td style="text-align: center;">0.8579078</td>
+<td style="text-align: center;">0.2211055</td>
+<td style="text-align: center;">-0.1865724</td>
+<td style="text-align: center;">0.1553396</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Bus</td>
+<td style="text-align: center;">4 - 1</td>
+<td style="text-align: center;">-0.1746788</td>
+<td style="text-align: center;">0.0306286</td>
+<td style="text-align: center;">-5.703136e+00</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">26.3412501</td>
+<td style="text-align: center;">-0.2347097</td>
+<td style="text-align: center;">-0.1146480</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Bus</td>
+<td style="text-align: center;">5 - 1</td>
+<td style="text-align: center;">-0.1746788</td>
+<td style="text-align: center;">0.0306286</td>
+<td style="text-align: center;">-5.703136e+00</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">26.3412502</td>
+<td style="text-align: center;">-0.2347097</td>
+<td style="text-align: center;">-0.1146480</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Bus</td>
+<td style="text-align: center;">6 - 1</td>
+<td style="text-align: center;">-0.1746788</td>
+<td style="text-align: center;">0.0306286</td>
+<td style="text-align: center;">-5.703136e+00</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">26.3412501</td>
+<td style="text-align: center;">-0.2347097</td>
+<td style="text-align: center;">-0.1146480</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Carro</td>
+<td style="text-align: center;">2 - 1</td>
+<td style="text-align: center;">0.0174830</td>
+<td style="text-align: center;">0.0499041</td>
+<td style="text-align: center;">3.503322e-01</td>
+<td style="text-align: center;">0.7260894</td>
+<td style="text-align: center;">0.4617810</td>
+<td style="text-align: center;">-0.0803272</td>
+<td style="text-align: center;">0.1152932</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Carro</td>
+<td style="text-align: center;">3 - 1</td>
+<td style="text-align: center;">-0.0377621</td>
+<td style="text-align: center;">0.0805577</td>
+<td style="text-align: center;">-4.687580e-01</td>
+<td style="text-align: center;">0.6392426</td>
+<td style="text-align: center;">0.6455646</td>
+<td style="text-align: center;">-0.1956522</td>
+<td style="text-align: center;">0.1201281</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Carro</td>
+<td style="text-align: center;">4 - 1</td>
+<td style="text-align: center;">-0.0022215</td>
+<td style="text-align: center;">0.1142994</td>
+<td style="text-align: center;">-1.943610e-02</td>
+<td style="text-align: center;">0.9844932</td>
+<td style="text-align: center;">0.0225468</td>
+<td style="text-align: center;">-0.2262443</td>
+<td style="text-align: center;">0.2218013</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Carro</td>
+<td style="text-align: center;">5 - 1</td>
+<td style="text-align: center;">0.4207496</td>
+<td style="text-align: center;">0.0305122</td>
+<td style="text-align: center;">1.378956e+01</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">141.2844166</td>
+<td style="text-align: center;">0.3609468</td>
+<td style="text-align: center;">0.4805524</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Carro</td>
+<td style="text-align: center;">6 - 1</td>
+<td style="text-align: center;">0.4466213</td>
+<td style="text-align: center;">0.0255671</td>
+<td style="text-align: center;">1.746863e+01</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">224.5784558</td>
+<td style="text-align: center;">0.3965108</td>
+<td style="text-align: center;">0.4967318</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Tren</td>
+<td style="text-align: center;">2 - 1</td>
+<td style="text-align: center;">0.0772791</td>
+<td style="text-align: center;">0.0565179</td>
+<td style="text-align: center;">1.367339e+00</td>
+<td style="text-align: center;">0.1715190</td>
+<td style="text-align: center;">2.5435601</td>
+<td style="text-align: center;">-0.0334939</td>
+<td style="text-align: center;">0.1880521</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Tren</td>
+<td style="text-align: center;">3 - 1</td>
+<td style="text-align: center;">0.0533785</td>
+<td style="text-align: center;">0.0984097</td>
+<td style="text-align: center;">5.424111e-01</td>
+<td style="text-align: center;">0.5875354</td>
+<td style="text-align: center;">0.7672524</td>
+<td style="text-align: center;">-0.1395009</td>
+<td style="text-align: center;">0.2462579</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Tren</td>
+<td style="text-align: center;">4 - 1</td>
+<td style="text-align: center;">0.1673765</td>
+<td style="text-align: center;">0.1148847</td>
+<td style="text-align: center;">1.456909e+00</td>
+<td style="text-align: center;">0.1451415</td>
+<td style="text-align: center;">2.7844679</td>
+<td style="text-align: center;">-0.0577933</td>
+<td style="text-align: center;">0.3925464</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Tren</td>
+<td style="text-align: center;">5 - 1</td>
+<td style="text-align: center;">-0.2555946</td>
+<td style="text-align: center;">0.0324663</td>
+<td style="text-align: center;">-7.872622e+00</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">48.0328013</td>
+<td style="text-align: center;">-0.3192272</td>
+<td style="text-align: center;">-0.1919619</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Tamano_Grupo</td>
+<td style="text-align: center;">Tren</td>
+<td style="text-align: center;">6 - 1</td>
+<td style="text-align: center;">-0.2719425</td>
+<td style="text-align: center;">0.0294215</td>
+<td style="text-align: center;">-9.242992e+00</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">65.1773414</td>
+<td style="text-align: center;">-0.3296076</td>
+<td style="text-align: center;">-0.2142775</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Tiempo_Viaje</td>
+<td style="text-align: center;">Avión</td>
+<td style="text-align: center;">dY/dX</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">-1.844235e+00</td>
+<td style="text-align: center;">0.0651489</td>
+<td style="text-align: center;">3.9401152</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Tiempo_Viaje</td>
+<td style="text-align: center;">Bus</td>
+<td style="text-align: center;">dY/dX</td>
+<td style="text-align: center;">0.0000942</td>
+<td style="text-align: center;">0.0000926</td>
+<td style="text-align: center;">1.017842e+00</td>
+<td style="text-align: center;">0.3087532</td>
+<td style="text-align: center;">1.6954741</td>
+<td style="text-align: center;">-0.0000872</td>
+<td style="text-align: center;">0.0002757</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Tiempo_Viaje</td>
+<td style="text-align: center;">Carro</td>
+<td style="text-align: center;">dY/dX</td>
+<td style="text-align: center;">0.0002324</td>
+<td style="text-align: center;">0.0000856</td>
+<td style="text-align: center;">2.713883e+00</td>
+<td style="text-align: center;">0.0066500</td>
+<td style="text-align: center;">7.2324364</td>
+<td style="text-align: center;">0.0000645</td>
+<td style="text-align: center;">0.0004002</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Tiempo_Viaje</td>
+<td style="text-align: center;">Tren</td>
+<td style="text-align: center;">dY/dX</td>
+<td style="text-align: center;">-0.0003266</td>
+<td style="text-align: center;">0.0000990</td>
+<td style="text-align: center;">-3.298775e+00</td>
+<td style="text-align: center;">0.0009711</td>
+<td style="text-align: center;">10.0081259</td>
+<td style="text-align: center;">-0.0005206</td>
+<td style="text-align: center;">-0.0001325</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Análisis marginal</p>
+</section>
+<section id="análisis-de-las-predicciones" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-de-las-predicciones"><strong>2.4. Análisis de las predicciones</strong></h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Probabilidades medias por cada nivel de tamaño de grupo</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>pp.sim$Tamano_Grupo: 1
+       Avión          Bus        Carro         Tren 
+1.231788e-56 1.834502e-01 4.383172e-02 7.727181e-01 
+------------------------------------------------------------ 
+pp.sim$Tamano_Grupo: 2
+       Avión          Bus        Carro         Tren 
+5.021822e-49 7.040037e-02 4.285723e-02 8.867424e-01 
+------------------------------------------------------------ 
+pp.sim$Tamano_Grupo: 3
+       Avión          Bus        Carro         Tren 
+3.532199e-69 1.401616e-01 3.008804e-02 8.297503e-01 
+------------------------------------------------------------ 
+pp.sim$Tamano_Grupo: 4
+       Avión          Bus        Carro         Tren 
+4.451402e-30 3.236775e-41 3.127493e-02 9.687251e-01 
+------------------------------------------------------------ 
+pp.sim$Tamano_Grupo: 5
+       Avión          Bus        Carro         Tren 
+1.712114e-35 7.213883e-12 4.443178e-01 5.556822e-01 
+------------------------------------------------------------ 
+pp.sim$Tamano_Grupo: 6
+       Avión          Bus        Carro         Tren 
+7.264613e-49 1.982124e-17 1.000000e+00 3.172226e-10 </code></pre>
+</div>
+</div>
+<p>Poner hallazgos</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Gráfico de probabilidades</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_Multinomial_files/figure-html/analisis_probs2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_Multinomial_files/figure-html/analisis_probs2-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_Multinomial_files/figure-html/analisis_probs2-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Poner hallazgos</p>
+</section>
+<section id="diagnóstico" class="level3">
+<h3 class="anchored" data-anchor-id="diagnóstico"><strong>2.5. Diagnóstico</strong></h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># weights:  8 (3 variable)
+initial  value 291.121816 
+final  value 283.758768 
+converged</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Pseudo R²: 0.6377087 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Log-likelihood: -102.8033 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>AIC: 259.6067 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>BIC: 349.9786 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Matriz de confusión:</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_Multinomial_files/figure-html/diagnostico-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Reporte de clasificación:</code></pre>
+</div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Estadísticas generales</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Accuracy</td>
+<td style="text-align: right;">0.7904762</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Kappa</td>
+<td style="text-align: right;">0.7098081</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">AccuracyLower</td>
+<td style="text-align: right;">0.7291179</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AccuracyUpper</td>
+<td style="text-align: right;">0.8434390</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">AccuracyNull</td>
+<td style="text-align: right;">0.3000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AccuracyPValue</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">McnemarPValue</td>
+<td style="text-align: right;">NaN</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Estadisticas por clase</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Class: Avión</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Class: Bus</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Class: Carro</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Class: Tren</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Sensitivity</td>
+<td style="text-align: right;">1.0000000</td>
+<td style="text-align: right;">0.2666667</td>
+<td style="text-align: right;">0.8305085</td>
+<td style="text-align: right;">0.8095238</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Specificity</td>
+<td style="text-align: right;">1.0000000</td>
+<td style="text-align: right;">0.9722222</td>
+<td style="text-align: right;">0.9072848</td>
+<td style="text-align: right;">0.8299320</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pos Pred Value</td>
+<td style="text-align: right;">1.0000000</td>
+<td style="text-align: right;">0.6153846</td>
+<td style="text-align: right;">0.7777778</td>
+<td style="text-align: right;">0.6710526</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Neg Pred Value</td>
+<td style="text-align: right;">1.0000000</td>
+<td style="text-align: right;">0.8883249</td>
+<td style="text-align: right;">0.9319728</td>
+<td style="text-align: right;">0.9104478</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Precision</td>
+<td style="text-align: right;">1.0000000</td>
+<td style="text-align: right;">0.6153846</td>
+<td style="text-align: right;">0.7777778</td>
+<td style="text-align: right;">0.6710526</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Recall</td>
+<td style="text-align: right;">1.0000000</td>
+<td style="text-align: right;">0.2666667</td>
+<td style="text-align: right;">0.8305085</td>
+<td style="text-align: right;">0.8095238</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F1</td>
+<td style="text-align: right;">1.0000000</td>
+<td style="text-align: right;">0.3720930</td>
+<td style="text-align: right;">0.8032787</td>
+<td style="text-align: right;">0.7338129</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Prevalence</td>
+<td style="text-align: right;">0.2761905</td>
+<td style="text-align: right;">0.1428571</td>
+<td style="text-align: right;">0.2809524</td>
+<td style="text-align: right;">0.3000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Detection Rate</td>
+<td style="text-align: right;">0.2761905</td>
+<td style="text-align: right;">0.0380952</td>
+<td style="text-align: right;">0.2333333</td>
+<td style="text-align: right;">0.2428571</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Detection Prevalence</td>
+<td style="text-align: right;">0.2761905</td>
+<td style="text-align: right;">0.0619048</td>
+<td style="text-align: right;">0.3000000</td>
+<td style="text-align: right;">0.3619048</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Balanced Accuracy</td>
+<td style="text-align: right;">1.0000000</td>
+<td style="text-align: right;">0.6194444</td>
+<td style="text-align: right;">0.8688966</td>
+<td style="text-align: right;">0.8197279</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Calcular Pseudo-R², log-likelihood, tasa de acierto (matriz de confusión) y analizar</p>
+</section>
 </section>
 
 </main>
