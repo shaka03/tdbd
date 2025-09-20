@@ -308,7 +308,7 @@ barplots
 
 ## **2. Modelo multinomial**
 ```{r modelo, fig.width=10, fig.height=10, echo=FALSE}
-df = df_sel = df %>%
+df = df %>%
   dplyr::select(Costo_Viaje,
                 Tiempo_Viaje,
                 Ingresos_Hogar,
@@ -446,25 +446,7 @@ ggplot(lpp, aes(x = Ingresos_Hogar, y = probability, colour = Tamano_Grupo)) +
 
   - Impacto del Tamaño del Grupo: La faceta por Tamano_Grupo revela que la sensibilidad al costo varía según el número de viajeros. Se puede observar que para grupos más grandes, la probabilidad de elegir el Carro se mantiene relativamente alta incluso con un aumento en el costo, lo que sugiere que el costo por persona sigue siendo más atractivo. Por el contrario, los grupos pequeños son más propensos a cambiar de opción a medida que el costo aumenta.
 
-### **2.5. Verificación de la Hipótesis IIA**
-```{r hipotesis_IIA, iia_small_hsiao, echo=FALSE}
-# Convertir a formato largo (mlogit) — aunque no tengas atributos por alternativa
-df_mlogit <- mlogit.data(df_sel, choice = "Modo_Viaje", shape = "wide")
-
-# Estimar modelo EQUIVALENTE en mlogit:
-modelo_mlogit <- mlogit(Modo_Viaje ~ 1 | Ingresos_Hogar + Tamano_Grupo,
-                        data = df_mlogit,
-                        method = "nr",  
-                        print.level = 0) 
-
-# Realizar la prueba de IIA con iia()
-#iia_test_results <- iia(modelo_mlogit)
-
-# Mostrar los resultados
-#print(iia_test_results)
-```
-
-### **2.6. Diagnóstico**
+### **2.5. Diagnóstico**
 ```{r diagnostico, echo=FALSE}
 
 # 1. Pseudo R² (McFadden)

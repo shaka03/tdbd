@@ -946,6 +946,53 @@ pp.sim$Tamano_Grupo: 6
 </section>
 <section id="verificación-de-la-hipótesis-iia" class="level3">
 <h3 class="anchored" data-anchor-id="verificación-de-la-hipótesis-iia"><strong>2.5. Verificación de la Hipótesis IIA</strong></h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+mlogit(formula = choice ~ 0 | Ingresos_Hogar + Tamano_Grupo, 
+    data = ml, reflevel = base, method = "nr")
+
+Frequencies of alternatives:choice
+  Avión     Bus   Carro    Tren 
+0.27619 0.14286 0.28095 0.30000 
+
+nr method
+16 iterations, 0h:0m:0s 
+g'(-H)^-1g = 8.98E-07 
+gradient close to zero 
+
+Coefficients :
+                        Estimate  Std. Error z-value Pr(&gt;|z|)    
+(Intercept):Bus      -1.4915e+00  4.0299e+03 -0.0004 0.999705    
+(Intercept):Carro     6.7967e+00  2.8463e+03  0.0024 0.998095    
+(Intercept):Tren      2.6302e+00  3.9850e+03  0.0007 0.999473    
+Ingresos_Hogar:Bus   -3.5602e-02  1.3247e-02 -2.6876 0.007197 ** 
+Ingresos_Hogar:Carro -3.8890e-03  1.0268e-02 -0.3788 0.704869    
+Ingresos_Hogar:Tren  -6.1366e-02  1.1930e-02 -5.1440 2.69e-07 ***
+Tamano_Grupo.L:Bus   -6.5741e-01  1.2790e+04 -0.0001 0.999959    
+Tamano_Grupo.L:Carro  1.8546e+01  9.0505e+03  0.0020 0.998365    
+Tamano_Grupo.L:Tren   1.0427e+00  1.2741e+04  0.0001 0.999935    
+Tamano_Grupo.Q:Bus    6.9134e+00  1.0892e+04  0.0006 0.999494    
+Tamano_Grupo.Q:Carro  7.2164e+00  7.6805e+03  0.0009 0.999250    
+Tamano_Grupo.Q:Tren  -4.7883e-01  1.0855e+04  0.0000 0.999965    
+Tamano_Grupo.C:Bus    3.9500e+00  1.0329e+04  0.0004 0.999695    
+Tamano_Grupo.C:Carro -2.7072e+00  7.3132e+03 -0.0004 0.999705    
+Tamano_Grupo.C:Tren  -3.5114e-01  1.0189e+04  0.0000 0.999973    
+Tamano_Grupo^4:Bus   -5.6448e+00  8.7323e+03 -0.0006 0.999484    
+Tamano_Grupo^4:Carro -6.5875e+00  6.1826e+03 -0.0011 0.999150    
+Tamano_Grupo^4:Tren  -2.2563e-01  8.5276e+03  0.0000 0.999979    
+Tamano_Grupo^5:Bus   -1.0961e+01  4.6949e+03 -0.0023 0.998137    
+Tamano_Grupo^5:Carro -4.8081e+00  3.2291e+03 -0.0015 0.998812    
+Tamano_Grupo^5:Tren  -9.0617e-01  4.4388e+03 -0.0002 0.999837    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Log-Likelihood: -249.83
+McFadden R^2:  0.11956 
+Likelihood ratio test : chisq = 67.854 (p.value = 1.0391e-07)</code></pre>
+</div>
+</div>
 </section>
 <section id="diagnóstico" class="level3">
 <h3 class="anchored" data-anchor-id="diagnóstico"><strong>2.6. Diagnóstico</strong></h3>
