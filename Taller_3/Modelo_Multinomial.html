@@ -37,11 +37,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="Modelo_Multinomial_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Modelo_Multinomial_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Modelo_Multinomial_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Modelo_Multinomial_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Modelo_Multinomial_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="Modelo_Multinomial_files/libs/kePrint-0.0.1/kePrint.js"></script>
-
 <link href="Modelo_Multinomial_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
-
 
 
 </head>
@@ -283,7 +281,9 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p><strong><em>Conversión a factores:</em></strong> Las variables Tamano_Grupo y Modo_Viaje se convirtieron a factores. Se aclara que Tamano_Grupo es ordinal (los grupos tienen un orden de tamaño) y Modo_Viaje es nominal (sin orden).</p>
-<p><strong><em>Hallazgos Clave:</em></strong> Existe una alta correlación entre Costo_Generalizado y (Costo_Viaje y Tiempo_Viaje), Costo_Generalizado es una variable compuesta de Costo_Viaje y Tiempo_Viaje, lo que genera una multicolinealidad perfecta que sesgaría el modelo. Por lo tanto, se eliminará esta variable. De forma similar.</p>
+<p><strong><em>Hallazgos Clave:</em></strong> Existe una alta correlación entre Costo_Generalizado y (Costo_Viaje y Tiempo_Viaje), Costo_Generalizado es una variable compuesta de Costo_Viaje y Tiempo_Viaje, lo que genera una multicolinealidad que sesgaría el modelo. Por lo tanto, se eliminará esta variable.</p>
+<section id="variables-numéricas" class="level4">
+<h4 class="anchored" data-anchor-id="variables-numéricas"><strong>Variables numéricas</strong></h4>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -300,18 +300,16 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p><strong><em>Los histogramas permite observar que:</em></strong></p>
+<p><strong><em>Los histogramas y boxplots permiten observar que:</em></strong></p>
 <ul>
 <li><p>Tiempo_Espera: La distribución de esta variable probablemente estará sesgada a la derecha, con la mayoría de los valores concentrados en tiempos de espera bajos y algunos viajes con tiempos de espera significativamente más largos.</p></li>
 <li><p>Costo_Viaje: De manera similar, se espera una distribución sesgada a la derecha, con muchos viajes de bajo costo y una cola de viajes más caros (probablemente los aéreos).</p></li>
 <li><p>Tiempo_Viaje: La distribución de esta variable podría ser bimodal, con un pico para los viajes cortos (en carro o bus) y otro para los viajes largos (en avión).</p></li>
 <li><p>Ingresos_Hogar: La distribución de los ingresos suele estar sesgada positivamente, con la mayoría de los hogares en rangos de ingresos medios y bajos, y una pequeña fracción de hogares con ingresos muy altos.</p></li>
 </ul>
-<p><strong><em>Los boxplots permite observar que:</em></strong></p>
-<ul>
-<li><p>Modo_Viaje: Este gráfico mostrará la cantidad de individuos que prefieren cada modo de transporte. Podría haber un modo de transporte dominante.</p></li>
-<li><p>Tamano_Grupo: Este gráfico revelará la frecuencia de cada tamaño de grupo (por ejemplo, 1, 2, 3 o más personas), lo que puede ser un factor relevante en la elección del medio de transporte (por ejemplo, los grupos grandes podrían preferir el carro).</p></li>
-</ul>
+</section>
+<section id="variables-cualitativas" class="level4">
+<h4 class="anchored" data-anchor-id="variables-cualitativas"><strong>Variables cualitativas</strong></h4>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -321,15 +319,18 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p><strong>Hallazgos del Análisis de Variables Cualitativas:</strong></p>
+<p><strong><em>Hallazgos del Análisis de Variables Cualitativas:</em></strong></p>
 <ul>
 <li><p>Dominio de Grupos Pequeños: La mayoría de las observaciones en el dataset corresponden a grupos de viaje pequeños. Se puede observar que los grupos de 1 o 2 personas son los más frecuentes en la muestra, representando la mayor proporción de los datos.</p></li>
 <li><p>Frecuencia Decreciente: A medida que el tamaño del grupo aumenta, su frecuencia en el dataset disminuye significativamente. Los grupos de 5 o 6 personas son considerablemente menos comunes.</p></li>
 <li><p>Relevancia para el Modelo: Este análisis exploratorio es crucial, ya que la variable Tamano_Grupo es un factor clave en el modelo de regresión multinomial. La distribución de esta variable indica que el modelo tendrá más información para estimar la probabilidad de elección de transporte para grupos pequeños que para grupos grandes.</p></li>
 </ul>
 </section>
+</section>
 <section id="análisis-bivariado" class="level3">
 <h3 class="anchored" data-anchor-id="análisis-bivariado"><strong>1.3. Análisis bivariado</strong></h3>
+<section id="variables-numéricas-vs.-modo-de-viaje" class="level4">
+<h4 class="anchored" data-anchor-id="variables-numéricas-vs.-modo-de-viaje"><strong>Variables numéricas vs.&nbsp;Modo de viaje</strong></h4>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -343,7 +344,7 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><p>Relación Costo-Tiempo vs.&nbsp;Modo de Viaje: Los boxplots muestran que los viajeros que eligen avión tienen los costos más altos y los tiempos más cortos, mientras que los que eligen carro tienen los costos más bajos y los tiempos más largos. Esto es consistente con la idea de que los viajeros balancean el costo y la eficiencia.</p></li>
 <li><p>Impacto de los Ingresos: Los ingresos del hogar son notablemente más altos para quienes eligen el avión, lo que sugiere que una mayor capacidad económica se asocia con una preferencia por opciones de viaje más rápidas.</p></li>
-<li><p>Problema de Multicolinealidad: La matriz de correlación revela una correlación extremadamente alta entre Costo_Generalizado y Tiempo_Viaje (r&gt;0.9). Para evitar sesgos en el modelo, el Costo_Generalizado debe ser eliminado del análisis de regresión</p></li>
+<li><p>Relación Tiempo de espera vs Modo de viaje: se evidencia que las personas que viajan en avión tienen mayores tiempos de espera vs los otros medios de transporte. Además, los carros no tienen tiempo de espeera. Esto úlitmo podría sesgar el modelo, por ende, no se utilizará esta variable.</p></li>
 </ul>
 <div class="cell">
 <div class="cell-output-display">
@@ -356,10 +357,13 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p><strong>Hallazgos de la Matriz de Correlación:</strong></p>
 <ul>
-<li><p>Multicolinealidad Crítica: El hallazgo más importante es la correlación casi perfecta entre el Costo_Generalizado y el Tiempo_Viaje. Esta relación, cercana a 1, confirma una multicolinealidad severa. Por lo tanto, el Costo_Generalizado debe ser excluido del modelo de regresión para evitar estimaciones sesgadas y una interpretación incorrecta de los resultados.</p></li>
+<li><p>Multicolinealidad Crítica: El hallazgo más importante es la correlación media-alta entre el Costo_Generalizado y el Tiempo_Viaje. Esta relación podría confirma una multicolinealidad. Por lo tanto, el Costo_Generalizado debe ser excluido del modelo de regresión para evitar estimaciones sesgadas y una interpretación incorrecta de los resultados.</p></li>
 <li><p>Relaciones Intuitivas: Existe una correlación moderada entre Costo_Viaje y Tiempo_Espera (r=0.63). Esto tiene sentido, ya que los viajes más costosos (como los vuelos) suelen requerir más tiempo de espera en la terminal.</p></li>
 <li><p>Ausencia de Correlaciones Fuertes: Fuera de la multicolinealidad detectada, no hay otras correlaciones fuertes entre las variables. Esto es positivo, ya que permite que el modelo estime los efectos individuales de cada variable de manera más limpia.</p></li>
 </ul>
+</section>
+<section id="varables-cualitativas-vs.-modo-de-viaje" class="level4">
+<h4 class="anchored" data-anchor-id="varables-cualitativas-vs.-modo-de-viaje"><strong>Varables cualitativas vs.&nbsp;Modo de viaje</strong></h4>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -375,6 +379,7 @@ ul.task-list li input[type="checkbox"] {
 <li><p>Avión y Tren para grupos pequeños: El avión y el tren son opciones más populares para grupos de una o dos personas. La frecuencia de estas opciones disminuye drásticamente a medida que el grupo se hace más grande, lo que sugiere que son menos atractivas o más costosas para viajes en grupo.</p></li>
 <li><p>El Bus es una opción de nicho: El bus tiene una presencia relativamente baja en todos los tamaños de grupo, lo que lo posiciona como una opción menos preferida en comparación con las demás.</p></li>
 </ul>
+</section>
 </section>
 </section>
 <section id="modelo-multinomial" class="level2">
@@ -403,7 +408,7 @@ Tren     69.46713   -4.081489    0.5594685     -0.2012959      -60.33678
       Tamano_Grupo.Q Tamano_Grupo.C Tamano_Grupo^4 Tamano_Grupo^5
 Bus         24.42756       59.00828      -4.453353      -99.21981
 Carro       12.70779       36.21582      21.083529      -48.43903
-Tren       -10.30403       25.61379      19.218699      -47.75568</code></pre>
+Tren       -10.30403       25.61379      19.218698      -47.75568</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -422,28 +427,35 @@ Tren               0              0              0              0</code></pre>
 </div>
 <section id="análisis-de-los-coeficientes-y-p-values" class="level3">
 <h3 class="anchored" data-anchor-id="análisis-de-los-coeficientes-y-p-values"><strong>2.1. Análisis de los coeficientes y p-values</strong></h3>
-<p>Se estima el modelo con las variables predictoras Costo_Viaje, Tiempo_Viaje, Ingresos_Hogar y Tamano_Grupo, y Avión como la categoría base. Sale del summary del modelo, tener en cuenta el p-value</p>
+<p>Se estima el modelo con las variables predictoras Costo_Viaje, Tiempo_Viaje, Ingresos_Hogar y Tamano_Grupo, y Avión como la categoría base. Con base en el modelo, y el resultado de los p-values, todas las variables son significativas (menores a 0.05).</p>
+<ul>
+<li><strong><em>Costo de viaje:</em></strong> Un aumento en una unidad del costo de viaje, se asocia con una disminución en las probabilidades logarítimicas de escoger bus versus avión en una cantidad de 4.11, carro versus avión de 4.28 y tren versus avión de 4.08.</li>
+<li><strong><em>Tiempo de viaje:</em></strong> Un aumento en una unidad del tiempo de viaje, aumenta la probabilidad logarítimica de escoger bus versus avión en una cantidad de 0.56, carro versus avión de 0.56 y avión versus tren de 0.56.</li>
+<li><strong><em>Ingresos del hogar:</em></strong> En cuanto a los ingresos del hogar, un aumento en una unidad de este factor se asocia con una disminución en las probabilidades logarítimicas de escoger bus versus avión en una cantidad de 0.17, carro versus avión de 0.14 y tren versus avión de 0.20.</li>
+<li><strong><em>Tamaño del grupo:</em></strong> Por último, un aumento en una unidad del tamaño del grupo a viajar disminuye las probabilidades logarítimicas de escoger bus versus avión enm una cantidad de 88.25, carro versus avión en una cantidad de 30.84 y tren versus avión de 60.34.</li>
+</ul>
 </section>
 <section id="odds-ratio" class="level3">
 <h3 class="anchored" data-anchor-id="odds-ratio"><strong>2.2. Odds Ratio</strong></h3>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>       (Intercept) Costo_Viaje Tiempo_Viaje Ingresos_Hogar Tamano_Grupo.L
-Bus   1.110299e+20  0.01636847     1.753726      0.8407142   4.727394e-39
-Carro 1.619680e+34  0.01388981     1.756548      0.8729971   4.044671e-14
-Tren  1.476357e+30  0.01688231     1.749742      0.8176705   6.252708e-27
+Bus   1.110297e+20  0.01636847     1.753726      0.8407142   4.727406e-39
+Carro 1.619677e+34  0.01388981     1.756547      0.8729972   4.044674e-14
+Tren  1.476355e+30  0.01688231     1.749742      0.8176705   6.252718e-27
       Tamano_Grupo.Q Tamano_Grupo.C Tamano_Grupo^4 Tamano_Grupo^5
-Bus     4.062122e+10   4.236152e+25   1.163948e-02   8.116756e-44
-Carro   3.303098e+05   5.349706e+15   1.433707e+09   9.187498e-22
-Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
+Bus     4.062120e+10   4.236145e+25   1.163948e-02   8.116778e-44
+Carro   3.303097e+05   5.349701e+15   1.433706e+09   9.187510e-22
+Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 </div>
 </div>
 <p><strong>Hallazgos del Modelo</strong></p>
-<p>Los coeficientes y Odds Ratios nos permiten entender el impacto de cada variable en la elección del modo de viaje en comparación con el avión.</p>
+<p>Los Odds Ratios nos permiten entender el impacto de cada variable en la elección del modo de viaje en comparación con el avión.</p>
 <ul>
-<li><p>Costo de Viaje: Por cada dólar adicional en el costo, las odds de elegir Tren sobre Avión disminuyen en un 24%. Este patrón se repite para Bus y Carro, lo que indica que a medida que el viaje se encarece, las personas son más propensas a elegir el Avión, que ya se considera la opción más cara.</p></li>
-<li><p>Ingresos del Hogar: Por cada mil dólares adicionales en los ingresos, las odds de elegir Carro sobre Avión disminuyen en un 6%. Esto sugiere que a mayor ingreso, las personas se inclinan más por el transporte aéreo, quizás valorando más el tiempo que el costo.</p></li>
-<li><p>Tamaño del Grupo: Por cada persona adicional en el grupo de viaje, las odds de elegir Carro sobre Avión aumentan significativamente (OR=2.68). Esto es intuitivo, ya que el costo por persona en un carro disminuye a medida que el grupo crece.</p></li>
+<li><p><strong><em>Costo de Viaje:</em></strong> en todos los casos, los odds son mneores a 1. Esto indica que por cada unidad adicional en el costo, las odds de elegir Tren, Bus y Carro sobre Avión disminuyen, lo que indica que a medida que el viaje se encarece, las personas son más propensas a elegir el Avión, que ya se considera la opción más cara. Específicamente, las probabilidades de elegir bus son un 98.4% menores que las de elegir avión, las probabilidades de elegir carro son un 98.6% menores y las probabilidades de elegir tren son un 98.3% menores.</p></li>
+<li><p><strong><em>Tiempo del Viaje:</em></strong> Todos los valores son mayores que 1. Esto significa que por cada unidad que aumenta el tiempo de viaje, la probabilidad de elegir un modo de transporte terrestre sobre el avión aumenta. Las probabilidades para los tres modos de transporte son parecidas, y son aproximadamente 75% mayores que las de elegir avión.</p></li>
+<li><p><strong><em>Ingresos del Hogar:</em></strong> Por cada mil dólares adicionales en los ingresos, las odds de elegir Bus sobre Avión disminuyen en un 16%. Esto sugiere que a mayor ingreso, las personas se inclinan más por el transporte aéreo, quizás valorando más el tiempo que el costo. Y de manera similar, por cada mil dólares adicionales en los ingresos, los odds de elegir los otros medios de transporte disminuyen sobre elegir avión: el del carro disminuyen un 13% y el de elergir tren disminuyen un 18%.</p></li>
+<li><p><strong><em>Tamaño del Grupo:</em></strong> viajar en grupo hace que las opciones terrestres, especialmente el carro, sean mucho más atractivas en comparación con el avión.</p></li>
 </ul>
 </section>
 <section id="análisis-marginal" class="level3">
@@ -475,8 +487,8 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">1.835362e+00</td>
-<td style="text-align: center;">0.0664521</td>
-<td style="text-align: center;">3.9115423</td>
+<td style="text-align: center;">0.0664520</td>
+<td style="text-align: center;">3.9115433</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">0.0000000</td>
 </tr>
@@ -486,9 +498,9 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">0.0034838</td>
 <td style="text-align: center;">0.0013013</td>
-<td style="text-align: center;">2.677200e+00</td>
-<td style="text-align: center;">0.0074240</td>
-<td style="text-align: center;">7.0735820</td>
+<td style="text-align: center;">2.677195e+00</td>
+<td style="text-align: center;">0.0074242</td>
+<td style="text-align: center;">7.0735579</td>
 <td style="text-align: center;">0.0009333</td>
 <td style="text-align: center;">0.0060342</td>
 </tr>
@@ -498,9 +510,9 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">-0.0144705</td>
 <td style="text-align: center;">0.0016538</td>
-<td style="text-align: center;">-8.749754e+00</td>
+<td style="text-align: center;">-8.749793e+00</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">58.6983233</td>
+<td style="text-align: center;">58.6988235</td>
 <td style="text-align: center;">-0.0177119</td>
 <td style="text-align: center;">-0.0112291</td>
 </tr>
@@ -510,9 +522,9 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">0.0109867</td>
 <td style="text-align: center;">0.0013141</td>
-<td style="text-align: center;">8.360850e+00</td>
+<td style="text-align: center;">8.360844e+00</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">53.8342832</td>
+<td style="text-align: center;">53.8342189</td>
 <td style="text-align: center;">0.0084112</td>
 <td style="text-align: center;">0.0135623</td>
 </tr>
@@ -522,9 +534,9 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">1.887400e+00</td>
-<td style="text-align: center;">0.0591065</td>
-<td style="text-align: center;">4.0805388</td>
+<td style="text-align: center;">1.887397e+00</td>
+<td style="text-align: center;">0.0591069</td>
+<td style="text-align: center;">4.0805292</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">0.0000000</td>
 </tr>
@@ -533,36 +545,36 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">Bus</td>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">0.0005479</td>
-<td style="text-align: center;">0.0012300</td>
-<td style="text-align: center;">4.454073e-01</td>
-<td style="text-align: center;">0.6560254</td>
-<td style="text-align: center;">0.6081763</td>
-<td style="text-align: center;">-0.0018629</td>
-<td style="text-align: center;">0.0029586</td>
+<td style="text-align: center;">0.0012306</td>
+<td style="text-align: center;">4.451836e-01</td>
+<td style="text-align: center;">0.6561871</td>
+<td style="text-align: center;">0.6078210</td>
+<td style="text-align: center;">-0.0018641</td>
+<td style="text-align: center;">0.0029598</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">Ingresos_Hogar</td>
 <td style="text-align: center;">Carro</td>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">0.0042728</td>
-<td style="text-align: center;">0.0010795</td>
-<td style="text-align: center;">3.958250e+00</td>
-<td style="text-align: center;">0.0000755</td>
-<td style="text-align: center;">13.6931441</td>
-<td style="text-align: center;">0.0021571</td>
-<td style="text-align: center;">0.0063885</td>
+<td style="text-align: center;">0.0010796</td>
+<td style="text-align: center;">3.957651e+00</td>
+<td style="text-align: center;">0.0000757</td>
+<td style="text-align: center;">13.6895314</td>
+<td style="text-align: center;">0.0021568</td>
+<td style="text-align: center;">0.0063888</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">Ingresos_Hogar</td>
 <td style="text-align: center;">Tren</td>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">-0.0048207</td>
-<td style="text-align: center;">0.0012472</td>
-<td style="text-align: center;">-3.865284e+00</td>
-<td style="text-align: center;">0.0001110</td>
-<td style="text-align: center;">13.1376711</td>
-<td style="text-align: center;">-0.0072651</td>
-<td style="text-align: center;">-0.0023763</td>
+<td style="text-align: center;">0.0012475</td>
+<td style="text-align: center;">-3.864394e+00</td>
+<td style="text-align: center;">0.0001114</td>
+<td style="text-align: center;">13.1324141</td>
+<td style="text-align: center;">-0.0072656</td>
+<td style="text-align: center;">-0.0023757</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">Tamano_Grupo</td>
@@ -582,9 +594,9 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">3 - 1</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">-1.521924e+00</td>
-<td style="text-align: center;">0.1280282</td>
-<td style="text-align: center;">2.9654665</td>
+<td style="text-align: center;">-1.519980e+00</td>
+<td style="text-align: center;">0.1285161</td>
+<td style="text-align: center;">2.9599793</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">0.0000000</td>
 </tr>
@@ -594,7 +606,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">4 - 1</td>
 <td style="text-align: center;">0.0095238</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">4.148272e+06</td>
+<td style="text-align: center;">4.050173e+06</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">Inf</td>
 <td style="text-align: center;">0.0095238</td>
@@ -606,7 +618,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">5 - 1</td>
 <td style="text-align: center;">0.0095238</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">2.636262e+07</td>
+<td style="text-align: center;">2.487501e+07</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">Inf</td>
 <td style="text-align: center;">0.0095238</td>
@@ -632,7 +644,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">0.0480636</td>
 <td style="text-align: center;">-1.971598e+00</td>
 <td style="text-align: center;">0.0486555</td>
-<td style="text-align: center;">4.3612524</td>
+<td style="text-align: center;">4.3612521</td>
 <td style="text-align: center;">-0.1889651</td>
 <td style="text-align: center;">-0.0005592</td>
 </tr>
@@ -644,7 +656,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">0.0872240</td>
 <td style="text-align: center;">-1.790381e-01</td>
 <td style="text-align: center;">0.8579078</td>
-<td style="text-align: center;">0.2211054</td>
+<td style="text-align: center;">0.2211055</td>
 <td style="text-align: center;">-0.1865724</td>
 <td style="text-align: center;">0.1553396</td>
 </tr>
@@ -656,7 +668,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">0.0306286</td>
 <td style="text-align: center;">-5.703136e+00</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">26.3412498</td>
+<td style="text-align: center;">26.3412501</td>
 <td style="text-align: center;">-0.2347097</td>
 <td style="text-align: center;">-0.1146480</td>
 </tr>
@@ -668,7 +680,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">0.0306286</td>
 <td style="text-align: center;">-5.703136e+00</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">26.3412498</td>
+<td style="text-align: center;">26.3412502</td>
 <td style="text-align: center;">-0.2347097</td>
 <td style="text-align: center;">-0.1146480</td>
 </tr>
@@ -680,7 +692,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">0.0306286</td>
 <td style="text-align: center;">-5.703136e+00</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">26.3412498</td>
+<td style="text-align: center;">26.3412501</td>
 <td style="text-align: center;">-0.2347097</td>
 <td style="text-align: center;">-0.1146480</td>
 </tr>
@@ -690,7 +702,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">2 - 1</td>
 <td style="text-align: center;">0.0174830</td>
 <td style="text-align: center;">0.0499041</td>
-<td style="text-align: center;">3.503323e-01</td>
+<td style="text-align: center;">3.503322e-01</td>
 <td style="text-align: center;">0.7260894</td>
 <td style="text-align: center;">0.4617810</td>
 <td style="text-align: center;">-0.0803272</td>
@@ -704,7 +716,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">0.0805577</td>
 <td style="text-align: center;">-4.687580e-01</td>
 <td style="text-align: center;">0.6392426</td>
-<td style="text-align: center;">0.6455645</td>
+<td style="text-align: center;">0.6455646</td>
 <td style="text-align: center;">-0.1956522</td>
 <td style="text-align: center;">0.1201281</td>
 </tr>
@@ -728,7 +740,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">0.0305122</td>
 <td style="text-align: center;">1.378956e+01</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">141.2844116</td>
+<td style="text-align: center;">141.2844166</td>
 <td style="text-align: center;">0.3609468</td>
 <td style="text-align: center;">0.4805524</td>
 </tr>
@@ -740,7 +752,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">0.0255671</td>
 <td style="text-align: center;">1.746863e+01</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">224.5784466</td>
+<td style="text-align: center;">224.5784558</td>
 <td style="text-align: center;">0.3965108</td>
 <td style="text-align: center;">0.4967318</td>
 </tr>
@@ -752,7 +764,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">0.0565179</td>
 <td style="text-align: center;">1.367339e+00</td>
 <td style="text-align: center;">0.1715190</td>
-<td style="text-align: center;">2.5435600</td>
+<td style="text-align: center;">2.5435601</td>
 <td style="text-align: center;">-0.0334939</td>
 <td style="text-align: center;">0.1880521</td>
 </tr>
@@ -776,7 +788,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">0.1148847</td>
 <td style="text-align: center;">1.456909e+00</td>
 <td style="text-align: center;">0.1451415</td>
-<td style="text-align: center;">2.7844678</td>
+<td style="text-align: center;">2.7844679</td>
 <td style="text-align: center;">-0.0577933</td>
 <td style="text-align: center;">0.3925464</td>
 </tr>
@@ -788,8 +800,8 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">0.0324663</td>
 <td style="text-align: center;">-7.872622e+00</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">48.0328002</td>
-<td style="text-align: center;">-0.3192273</td>
+<td style="text-align: center;">48.0328013</td>
+<td style="text-align: center;">-0.3192272</td>
 <td style="text-align: center;">-0.1919619</td>
 </tr>
 <tr class="even">
@@ -800,7 +812,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">0.0294215</td>
 <td style="text-align: center;">-9.242992e+00</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">65.1773385</td>
+<td style="text-align: center;">65.1773414</td>
 <td style="text-align: center;">-0.3296076</td>
 <td style="text-align: center;">-0.2142775</td>
 </tr>
@@ -812,7 +824,7 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">-1.844235e+00</td>
 <td style="text-align: center;">0.0651489</td>
-<td style="text-align: center;">3.9401150</td>
+<td style="text-align: center;">3.9401152</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">0.0000000</td>
 </tr>
@@ -822,9 +834,9 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">0.0000942</td>
 <td style="text-align: center;">0.0000926</td>
-<td style="text-align: center;">1.017850e+00</td>
-<td style="text-align: center;">0.3087494</td>
-<td style="text-align: center;">1.6954917</td>
+<td style="text-align: center;">1.017842e+00</td>
+<td style="text-align: center;">0.3087532</td>
+<td style="text-align: center;">1.6954741</td>
 <td style="text-align: center;">-0.0000872</td>
 <td style="text-align: center;">0.0002757</td>
 </tr>
@@ -834,9 +846,9 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">0.0002324</td>
 <td style="text-align: center;">0.0000856</td>
-<td style="text-align: center;">2.713834e+00</td>
-<td style="text-align: center;">0.0066509</td>
-<td style="text-align: center;">7.2322250</td>
+<td style="text-align: center;">2.713883e+00</td>
+<td style="text-align: center;">0.0066500</td>
+<td style="text-align: center;">7.2324364</td>
 <td style="text-align: center;">0.0000645</td>
 <td style="text-align: center;">0.0004002</td>
 </tr>
@@ -846,9 +858,9 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">-0.0003266</td>
 <td style="text-align: center;">0.0000990</td>
-<td style="text-align: center;">-3.298747e+00</td>
-<td style="text-align: center;">0.0009712</td>
-<td style="text-align: center;">10.0079800</td>
+<td style="text-align: center;">-3.298775e+00</td>
+<td style="text-align: center;">0.0009711</td>
+<td style="text-align: center;">10.0081259</td>
 <td style="text-align: center;">-0.0005206</td>
 <td style="text-align: center;">-0.0001325</td>
 </tr>
@@ -870,27 +882,27 @@ Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>pp.sim$Tamano_Grupo: 1
        Avión          Bus        Carro         Tren 
-1.231784e-56 1.834502e-01 4.383172e-02 7.727181e-01 
+1.231788e-56 1.834502e-01 4.383172e-02 7.727181e-01 
 ------------------------------------------------------------ 
 pp.sim$Tamano_Grupo: 2
        Avión          Bus        Carro         Tren 
-5.021808e-49 7.040037e-02 4.285723e-02 8.867424e-01 
+5.021822e-49 7.040037e-02 4.285723e-02 8.867424e-01 
 ------------------------------------------------------------ 
 pp.sim$Tamano_Grupo: 3
        Avión          Bus        Carro         Tren 
-3.532184e-69 1.401616e-01 3.008804e-02 8.297503e-01 
+3.532199e-69 1.401616e-01 3.008804e-02 8.297503e-01 
 ------------------------------------------------------------ 
 pp.sim$Tamano_Grupo: 4
        Avión          Bus        Carro         Tren 
-4.451394e-30 3.236767e-41 3.127493e-02 9.687251e-01 
+4.451402e-30 3.236775e-41 3.127493e-02 9.687251e-01 
 ------------------------------------------------------------ 
 pp.sim$Tamano_Grupo: 5
        Avión          Bus        Carro         Tren 
-1.712110e-35 7.213877e-12 4.443178e-01 5.556822e-01 
+1.712114e-35 7.213883e-12 4.443178e-01 5.556822e-01 
 ------------------------------------------------------------ 
 pp.sim$Tamano_Grupo: 6
        Avión          Bus        Carro         Tren 
-7.264590e-49 1.982121e-17 1.000000e+00 3.172222e-10 </code></pre>
+7.264613e-49 1.982124e-17 1.000000e+00 3.172226e-10 </code></pre>
 </div>
 </div>
 <p><strong>Hallazgos Clave de las Predicciones por Costo de Viaje:</strong></p>
@@ -899,10 +911,6 @@ pp.sim$Tamano_Grupo: 6
 <li><p>Impacto Negativo en Opciones Terrestres: A medida que el costo del viaje aumenta, la probabilidad de elegir el Carro, el Bus o el Tren disminuye de forma constante. Este hallazgo confirma que los viajeros son sensibles al precio y tienden a evitar las opciones más económicas cuando estas se encarecen.</p></li>
 <li><p>Impacto Positivo en el Transporte Aéreo: Por el contrario, la probabilidad de elegir el Avión aumenta a medida que el costo del viaje se incrementa. Esto se debe a que el avión es la alternativa más costosa del conjunto de datos. El modelo predice que cuando los costos de viaje son elevados (por ejemplo, debido a largas distancias), la probabilidad de que el viajero se decida por la opción aérea es mayor.</p></li>
 </ul>
-</section>
-<section id="verificación-de-la-hipótesis-iia" class="level3">
-<h3 class="anchored" data-anchor-id="verificación-de-la-hipótesis-iia"><strong>2.5. Verificación de la Hipótesis IIA</strong></h3>
-<p>Poner hallazgos</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>Gráfico de probabilidades</code></pre>
@@ -929,12 +937,15 @@ pp.sim$Tamano_Grupo: 6
 </div>
 </div>
 </div>
-<p><strong>Hallazgos Grafico probabilidades predichasCosto_Viaje</strong></p>
+<p><strong>Hallazgos Grafico probabilidades predichas Costo_Viaje</strong></p>
 <ul>
 <li><p>Relación Inversa para el Carro, Tren y Bus: La probabilidad de elegir el Carro, el Bus o el Tren muestra una clara relación inversa con el Costo_Viaje. A medida que el costo del viaje aumenta, la probabilidad de que un individuo elija cualquiera de estas tres opciones disminuye de forma constante. Este hallazgo es intuitivo: los viajeros son sensibles al precio y prefieren opciones más baratas.</p></li>
 <li><p>Relación Directa para el Avión: En contraste, la probabilidad de elegir el Avión tiene una relación directa con el Costo_Viaje. A medida que el costo aumenta, la probabilidad de elegir el Avión también se incrementa. Este resultado, aunque pueda parecer contraintuitivo a primera vista, se explica por el hecho de que, en el contexto de este conjunto de datos, el Avión es la alternativa de viaje más costosa. El modelo reconoce que, si un viaje tiene un costo elevado (por ejemplo, debido a la distancia), es más probable que la elección sea el Avión que un viaje en Carro o Bus.</p></li>
 <li><p>Impacto del Tamaño del Grupo: La faceta por Tamano_Grupo revela que la sensibilidad al costo varía según el número de viajeros. Se puede observar que para grupos más grandes, la probabilidad de elegir el Carro se mantiene relativamente alta incluso con un aumento en el costo, lo que sugiere que el costo por persona sigue siendo más atractivo. Por el contrario, los grupos pequeños son más propensos a cambiar de opción a medida que el costo aumenta.</p></li>
 </ul>
+</section>
+<section id="verificación-de-la-hipótesis-iia" class="level3">
+<h3 class="anchored" data-anchor-id="verificación-de-la-hipótesis-iia"><strong>2.5. Verificación de la Hipótesis IIA</strong></h3>
 </section>
 <section id="diagnóstico" class="level3">
 <h3 class="anchored" data-anchor-id="diagnóstico"><strong>2.6. Diagnóstico</strong></h3>
@@ -949,13 +960,22 @@ converged</code></pre>
 <pre><code>Pseudo R²: 0.6377087 </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Log-likelihood: -102.8033 </code></pre>
+<pre><code>Log-likelihood modelo nulo: -283.7588 </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>AIC: 259.6067 </code></pre>
+<pre><code>Log-likelihood modelo propuesto: -102.8033 </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>BIC: 349.9786 </code></pre>
+<pre><code>AIC del modelo nulo: 573.5175 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>AIC del modelo propuesto: 259.6067 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>BIC del modelo nulo: 583.5589 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>BIC del modelo propuesto: 349.9786 </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Matriz de confusión:</code></pre>
@@ -1107,8 +1127,23 @@ Reporte de clasificación:</code></pre>
 </div>
 </div>
 <p><strong>Hallazgos Clave:</strong></p>
-<p>El Pseudo R2 de McFadden de 0.384 indica un ajuste del modelo moderadamente bueno, ya que valores entre 0.2 y 0.4 son considerados satisfactorios para modelos de elección discreta. Esto significa que las variables predictoras explican una parte significativa de la variabilidad en la elección del modo de viaje.</p>
-<p>La tasa de acierto global del modelo es del 77.14%, lo que demuestra una buena capacidad predictiva. Sin embargo, el modelo es particularmente efectivo para predecir las categorías más frecuentes (Avión y Carro), mientras que tiene un rendimiento menor para Bus y Tren.</p>
+<ul>
+<li><p>El Pseudo R² de McFadden de 0.6378 indica un ajuste del modelo bueno. Por lo tanto, las variables que estamos analizando (costo de viaje, tiempo de viaje, ingresos y tamaño del grupo) explican aproximadamente el 63.8% de la variación en la elección de un modo de viaje.</p></li>
+<li><p>En cuanto al log-likelihood, que también es una meida que indica qué tan bien se ajusta el modelo a los datos, se comparó con el modelo nulo (no hacer nada). Con base en las métricas, el modelo propuesto es mejor que que el modelo nulo, ya que su valor es menor (en valor abosluto), o más cercano a cero, por lo que el modelo propuesto tiene mejor ajuste.</p></li>
+<li><p>Tanto el AIC como el BIC evalúan la calidad del modelo, balanceando el ajuste con la complejidad (número de variables). Para ambos criterios, el valor más bajo es el mejor. El modelo propuesto tiene valores de AIC y BIC que son significativamente más bajos que los del modelo nulo. Esto confirma que la complejidad añadida por las variables está más que justificada por la mejora en el ajuste del modelo.</p></li>
+<li><p>Revisando la matriz de confusión, se puede decir que:</p>
+<ul>
+<li>El modelo es excelente para identificar viajes en avión.</li>
+<li>En cuanto al bus, el modelono es muy bueno, ya que de los 13 datos para bus, el modelo fue capaz de clasificar correctamente 8.</li>
+<li>El modelo presenta un rendimiento muy buen en decir si las personas escogen carro, ya que de 59 registros, el modelo acertó en 49 de ellos. Los fallos se dan principalmente con el Tren (7 casos) y en menor medida con Bus (3 casos).</li>
+<li>Analizando los viajes en tren, el rendimiento del modelo también es bueno. De 63 casos, el modelo acertó en 51 de ellos. El modelo falla confundiéndo las mediciones principalmente con Carro (10 casos) y un poco con Bus (2 casos).</li>
+</ul></li>
+</ul>
+<p>Por último, existe una notable confusión entre los tres medios de transporte terrestre. El modelo tiende a favorecer la predicción de “Tren” cuando tiene dudas entre bus, carro y tren.</p>
+<ul>
+<li><p>En términos gloables, la tasa de acierto del modelo es del 79.04%, lo que demuestra una buena capacidad predictiva y es significativa (p-value menor a 0.05). En cuánto al valor de Kappa (0.71), indica que el modelo es robusto.</p></li>
+<li><p>Por clase, como se vio en la matriz de confusión, el modelo el capaz de predecir perfectamente la clase de avión. Para el carro, el rendimiento es bueno y equilibrado, teniendo un recall (proporción de casos verdaderos acertados) es del 83%, una precisión del 78% y un F1-Score del 80%. En cuánto al tren, el modelo es capaz de decir en un 81% los casos reales de tren, pero cuando el modelo dice que es “Tren”, sólo acierta el 67% de las veces, lo que se concluye que el modelo tiende a “sobre-predecir” esta clase. Por último, el rendimiento para predecir la clase “Bus” no es bueno, tiene un recall de 27%, una precisión del 62% y un F1-Score del 37%.</p></li>
+</ul>
 </section>
 </section>
 

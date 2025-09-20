@@ -120,8 +120,9 @@ kable(resumen, caption = "Descripción del conjunto de datos") %>%
 ***Conversión a factores:*** Las variables Tamano_Grupo y Modo_Viaje se convirtieron a factores. Se aclara que Tamano_Grupo es ordinal (los grupos tienen un orden de tamaño) y Modo_Viaje es nominal (sin orden).
 
 ***Hallazgos Clave:***
-Existe una alta correlación entre Costo_Generalizado y (Costo_Viaje y Tiempo_Viaje), Costo_Generalizado es una variable compuesta de Costo_Viaje y Tiempo_Viaje, lo que genera una multicolinealidad perfecta que sesgaría el modelo. Por lo tanto, se eliminará esta variable. De forma similar.
+Existe una alta correlación entre Costo_Generalizado y (Costo_Viaje y Tiempo_Viaje), Costo_Generalizado es una variable compuesta de Costo_Viaje y Tiempo_Viaje, lo que genera una multicolinealidad que sesgaría el modelo. Por lo tanto, se eliminará esta variable.
 
+#### **Variables numéricas**
 ```{r numericas, fig.width=10, fig.height=10, echo=FALSE, message=FALSE}
 cat("\n")
 # Crear boxplots con facetas
@@ -162,7 +163,7 @@ boxplots = ggplot(df_long, aes(y = Valor, fill = Variable)) +
 boxplots
 ```
 
-***Los histogramas permite observar que:***
+***Los histogramas y boxplots permiten observar que:***
 
   - Tiempo_Espera: La distribución de esta variable probablemente estará sesgada a la derecha, con la mayoría de los valores concentrados en tiempos de espera bajos y algunos viajes con tiempos de espera significativamente más largos.
 
@@ -172,11 +173,7 @@ boxplots
 
   - Ingresos_Hogar: La distribución de los ingresos suele estar sesgada positivamente, con la mayoría de los hogares en rangos de ingresos medios y bajos, y una pequeña fracción de hogares con ingresos muy altos.
 
-***Los boxplots permite observar que:***
-
-  - Modo_Viaje: Este gráfico mostrará la cantidad de individuos que prefieren cada modo de transporte. Podría haber un modo de transporte dominante.
-
-  - Tamano_Grupo: Este gráfico revelará la frecuencia de cada tamaño de grupo (por ejemplo, 1, 2, 3 o más personas), lo que puede ser un factor relevante en la elección del medio de transporte (por ejemplo, los grupos grandes podrían preferir el carro).
+#### **Variables cualitativas**
 ```{r cualitativas, echo=FALSE}
 
 cat("\n")
@@ -211,7 +208,7 @@ ggplot(df_prop, aes(x = Categoria, y = Proporcion, fill = Categoria)) +
     )
 ```
 
-**Hallazgos del Análisis de Variables Cualitativas:**
+***Hallazgos del Análisis de Variables Cualitativas:***
 
   - Dominio de Grupos Pequeños: La mayoría de las observaciones en el dataset corresponden a grupos de viaje pequeños. Se puede observar que los grupos de 1 o 2 personas son los más frecuentes en la muestra, representando la mayor proporción de los datos.
 
@@ -220,6 +217,8 @@ ggplot(df_prop, aes(x = Categoria, y = Proporcion, fill = Categoria)) +
   - Relevancia para el Modelo: Este análisis exploratorio es crucial, ya que la variable Tamano_Grupo es un factor clave en el modelo de regresión multinomial. La distribución de esta variable indica que el modelo tendrá más información para estimar la probabilidad de elección de transporte para grupos pequeños que para grupos grandes.
 
 ### **1.3. Análisis bivariado**
+
+#### **Variables numéricas vs. Modo de viaje**
 ```{r bivariado, echo=FALSE}
 
 cat("\n")
@@ -257,7 +256,7 @@ boxplots
 
   - Impacto de los Ingresos: Los ingresos del hogar son notablemente más altos para quienes eligen el avión, lo que sugiere que una mayor capacidad económica se asocia con una preferencia por opciones de viaje más rápidas.
 
-  - Problema de Multicolinealidad: La matriz de correlación  revela una correlación extremadamente alta entre Costo_Generalizado y Tiempo_Viaje (r>0.9). Para evitar sesgos en el modelo, el Costo_Generalizado debe ser eliminado del análisis de regresión
+  - Relación Tiempo de espera vs Modo de viaje: se evidencia que las personas que viajan en avión tienen mayores tiempos de espera vs los otros medios de transporte. Además, los carros no tienen tiempo de espeera. Esto úlitmo podría sesgar el modelo, por ende, no se utilizará esta variable.
 
 ```{r correlacion, echo=FALSE}
 df_sel = df %>%
@@ -282,12 +281,13 @@ labs(title = "Matriz de Correlación")
 
 **Hallazgos de la Matriz de Correlación:**
 
-  - Multicolinealidad Crítica: El hallazgo más importante es la correlación casi perfecta entre el Costo_Generalizado y el Tiempo_Viaje. Esta relación, cercana a 1, confirma una multicolinealidad severa. Por lo tanto, el Costo_Generalizado debe ser excluido del modelo de regresión para evitar estimaciones sesgadas y una interpretación incorrecta de los resultados.
+  - Multicolinealidad Crítica: El hallazgo más importante es la correlación media-alta entre el Costo_Generalizado y el Tiempo_Viaje. Esta relación podría confirma una multicolinealidad. Por lo tanto, el Costo_Generalizado debe ser excluido del modelo de regresión para evitar estimaciones sesgadas y una interpretación incorrecta de los resultados.
 
   - Relaciones Intuitivas: Existe una correlación moderada entre Costo_Viaje y Tiempo_Espera (r=0.63). Esto tiene sentido, ya que los viajes más costosos (como los vuelos) suelen requerir más tiempo de espera en la terminal.
 
   - Ausencia de Correlaciones Fuertes: Fuera de la multicolinealidad detectada, no hay otras correlaciones fuertes entre las variables. Esto es positivo, ya que permite que el modelo estime los efectos individuales de cada variable de manera más limpia.
 
+#### **Varables cualitativas vs. Modo de viaje**
 ```{r categoricas, echo=FALSE, message=FALSE}
 barplots = ggplot(df, aes(x = Tamano_Grupo, fill = Modo_Viaje)) +
   geom_bar(position = "stack") +
@@ -314,6 +314,7 @@ df = df_sel = df %>%
                 Ingresos_Hogar,
                 Tamano_Grupo,
                 Modo_Viaje)
+df$Modo_Viaje = relevel(df$Modo_Viaje, ref = "Avión")
 modelo = multinom(Modo_Viaje ~ ., data = df)
 
 # Coeficientes
@@ -329,7 +330,12 @@ p
 
 ### **2.1. Análisis de los coeficientes y p-values**
 
-Se estima el modelo con las variables predictoras Costo_Viaje, Tiempo_Viaje, Ingresos_Hogar y Tamano_Grupo, y Avión como la categoría base. Sale del summary del modelo, tener en cuenta el p-value
+Se estima el modelo con las variables predictoras Costo_Viaje, Tiempo_Viaje, Ingresos_Hogar y Tamano_Grupo, y Avión como la categoría base. Con base en el modelo, y el resultado de los p-values, todas las variables son significativas (menores a 0.05).
+
+- ***Costo de viaje:*** Un aumento en una unidad del costo de viaje, se asocia con una disminución en las probabilidades logarítimicas de escoger bus versus avión en una cantidad de 4.11, carro versus avión de 4.28 y tren versus avión de 4.08.
+- ***Tiempo de viaje:*** Un aumento en una unidad del tiempo de viaje, aumenta la probabilidad logarítimica de escoger bus versus avión en una cantidad de 0.56, carro versus avión de 0.56 y avión versus tren de 0.56.
+- ***Ingresos del hogar:*** En cuanto a los ingresos del hogar, un aumento en una unidad de este factor se asocia con una disminución en las probabilidades logarítimicas de escoger bus versus avión en una cantidad de 0.17, carro versus avión de 0.14 y tren versus avión de 0.20.
+- ***Tamaño del grupo:*** Por último, un aumento en una unidad del tamaño del grupo a viajar disminuye las probabilidades logarítimicas de escoger bus versus avión enm una cantidad de 88.25, carro versus avión en una cantidad de 30.84 y tren versus avión de 60.34.
 
 ### **2.2. Odds Ratio**
 ```{r odds, fig.width=10, fig.height=10, echo=FALSE}
@@ -339,13 +345,15 @@ odds
 
 **Hallazgos del Modelo**
 
-Los coeficientes y Odds Ratios nos permiten entender el impacto de cada variable en la elección del modo de viaje en comparación con el avión.
+Los Odds Ratios nos permiten entender el impacto de cada variable en la elección del modo de viaje en comparación con el avión.
 
-  - Costo de Viaje: Por cada dólar adicional en el costo, las odds de elegir Tren sobre Avión disminuyen en un 24%. Este patrón se repite para Bus y Carro, lo que indica que a medida que el viaje se encarece, las personas son más propensas a elegir el Avión, que ya se considera la opción más cara.
+  - ***Costo de Viaje:*** en todos los casos, los odds son mneores a 1. Esto indica que por cada unidad adicional en el costo, las odds de elegir Tren, Bus y Carro sobre Avión disminuyen, lo que indica que a medida que el viaje se encarece, las personas son más propensas a elegir el Avión, que ya se considera la opción más cara. Específicamente, las probabilidades de elegir bus son un 98.4% menores que las de elegir avión, las probabilidades de elegir carro son un 98.6% menores y las probabilidades de elegir tren son un 98.3% menores.
 
-  - Ingresos del Hogar: Por cada mil dólares adicionales en los ingresos, las odds de elegir Carro sobre Avión disminuyen en un 6%. Esto sugiere que a mayor ingreso, las personas se inclinan más por el transporte aéreo, quizás valorando más el tiempo que el costo.
+  - ***Tiempo del Viaje:*** Todos los valores son mayores que 1. Esto significa que por cada unidad que aumenta el tiempo de viaje, la probabilidad de elegir un modo de transporte terrestre sobre el avión aumenta. Las probabilidades para los tres modos de transporte son parecidas, y son aproximadamente 75% mayores que las de elegir avión.
 
-  - Tamaño del Grupo: Por cada persona adicional en el grupo de viaje, las odds de elegir Carro sobre Avión aumentan significativamente (OR=2.68). Esto es intuitivo, ya que el costo por persona en un carro disminuye a medida que el grupo crece.
+  - ***Ingresos del Hogar:*** Por cada mil dólares adicionales en los ingresos, las odds de elegir Bus sobre Avión disminuyen en un 16%. Esto sugiere que a mayor ingreso, las personas se inclinan más por el transporte aéreo, quizás valorando más el tiempo que el costo. Y de manera similar, por cada mil dólares adicionales en los ingresos, los odds de elegir los otros medios de transporte disminuyen sobre elegir avión: el del carro disminuyen un 13% y el de elergir tren disminuyen un 18%.
+
+  - ***Tamaño del Grupo:*** viajar en grupo hace que las opciones terrestres, especialmente el carro, sean mucho más atractivas en comparación con el avión.
 
 ### **2.3. Análisis marginal**
 ```{r marginal, echo=FALSE}
@@ -404,26 +412,6 @@ by(pp.sim[, 5:8], pp.sim$Tamano_Grupo, colMeans)
 
   - Impacto Positivo en el Transporte Aéreo: Por el contrario, la probabilidad de elegir el Avión aumenta a medida que el costo del viaje se incrementa. Esto se debe a que el avión es la alternativa más costosa del conjunto de datos. El modelo predice que cuando los costos de viaje son elevados (por ejemplo, debido a largas distancias), la probabilidad de que el viajero se decida por la opción aérea es mayor.
 
-### **2.5. Verificación de la Hipótesis IIA**
-```{r hipotesis_IIA, iia_small_hsiao, echo=FALSE}
-# Convertir a formato largo (mlogit) — aunque no tengas atributos por alternativa
-df_mlogit <- mlogit.data(df_sel, choice = "Modo_Viaje", shape = "wide")
-
-# Estimar modelo EQUIVALENTE en mlogit:
-modelo_mlogit <- mlogit(Modo_Viaje ~ 1 | Ingresos_Hogar + Tamano_Grupo,
-                        data = df_mlogit,
-                        method = "nr",  
-                        print.level = 0) 
-
-# Realizar la prueba de IIA con iia()
-#iia_test_results <- iia(modelo_mlogit)
-
-# Mostrar los resultados
-#print(iia_test_results)
-```
-
-Poner hallazgos
-
 ```{r analisis_probs2, echo=FALSE}
 # Grafico probabilidades predichasCosto_Viaje
 # Pasar la base a formato long para utilizar ggplot
@@ -450,7 +438,7 @@ ggplot(lpp, aes(x = Ingresos_Hogar, y = probability, colour = Tamano_Grupo)) +
   labs(title="Ingresos del hogar")
 ```
 
-**Hallazgos Grafico probabilidades predichasCosto_Viaje**
+**Hallazgos Grafico probabilidades predichas Costo_Viaje**
 
   - Relación Inversa para el Carro, Tren y Bus: La probabilidad de elegir el Carro, el Bus o el Tren muestra una clara relación inversa con el Costo_Viaje. A medida que el costo del viaje aumenta, la probabilidad de que un individuo elija cualquiera de estas tres opciones disminuye de forma constante. Este hallazgo es intuitivo: los viajeros son sensibles al precio y prefieren opciones más baratas.
 
@@ -458,22 +446,44 @@ ggplot(lpp, aes(x = Ingresos_Hogar, y = probability, colour = Tamano_Grupo)) +
 
   - Impacto del Tamaño del Grupo: La faceta por Tamano_Grupo revela que la sensibilidad al costo varía según el número de viajeros. Se puede observar que para grupos más grandes, la probabilidad de elegir el Carro se mantiene relativamente alta incluso con un aumento en el costo, lo que sugiere que el costo por persona sigue siendo más atractivo. Por el contrario, los grupos pequeños son más propensos a cambiar de opción a medida que el costo aumenta.
 
+### **2.5. Verificación de la Hipótesis IIA**
+```{r hipotesis_IIA, iia_small_hsiao, echo=FALSE}
+# Convertir a formato largo (mlogit) — aunque no tengas atributos por alternativa
+df_mlogit <- mlogit.data(df_sel, choice = "Modo_Viaje", shape = "wide")
+
+# Estimar modelo EQUIVALENTE en mlogit:
+modelo_mlogit <- mlogit(Modo_Viaje ~ 1 | Ingresos_Hogar + Tamano_Grupo,
+                        data = df_mlogit,
+                        method = "nr",  
+                        print.level = 0) 
+
+# Realizar la prueba de IIA con iia()
+#iia_test_results <- iia(modelo_mlogit)
+
+# Mostrar los resultados
+#print(iia_test_results)
+```
+
 ### **2.6. Diagnóstico**
 ```{r diagnostico, echo=FALSE}
 
 # 1. Pseudo R² (McFadden)
-logLik_null = logLik(multinom(Modo_Viaje ~ 1, data = df))
+modelo_nulo = multinom(Modo_Viaje ~ 1, data = df)
+logLik_null = logLik(modelo_nulo)
 logLik_modelo = logLik(modelo)
 pseudo_r2 = 1 - (as.numeric(logLik_modelo) / as.numeric(logLik_null))
 cat("Pseudo R²:", pseudo_r2, "\n")
 
 # 2. Log-likelihood
-cat("Log-likelihood:", logLik_modelo, "\n")
+cat("Log-likelihood modelo nulo:", logLik_null, "\n")
+cat("Log-likelihood modelo propuesto:", logLik_modelo, "\n")
 
 # 3. AIC y BIC
-cat("AIC:", AIC(modelo), "\n")
-cat("BIC:", BIC(modelo), "\n")
+cat("AIC del modelo nulo:", AIC(modelo_nulo), "\n")
+cat("AIC del modelo propuesto:", AIC(modelo), "\n")
 
+cat("BIC del modelo nulo:", BIC(modelo_nulo), "\n")
+cat("BIC del modelo propuesto:", BIC(modelo), "\n")
 
 # 4. Matriz de confusión
 cat("Matriz de confusión:")
@@ -502,6 +512,20 @@ kable(t(reporte$byClass), caption = "Estadisticas por clase") %>%
 
 **Hallazgos Clave:**
 
-El Pseudo R2 de McFadden de 0.384 indica un ajuste del modelo moderadamente bueno, ya que valores entre 0.2 y 0.4 son considerados satisfactorios para modelos de elección discreta. Esto significa que las variables predictoras explican una parte significativa de la variabilidad en la elección del modo de viaje.
+- El Pseudo R² de McFadden de 0.6378 indica un ajuste del modelo bueno. Por lo tanto, las variables que estamos analizando (costo de viaje, tiempo de viaje, ingresos y tamaño del grupo) explican aproximadamente el 63.8% de la variación en la elección de un modo de viaje.
 
-La tasa de acierto global del modelo es del 77.14%, lo que demuestra una buena capacidad predictiva. Sin embargo, el modelo es particularmente efectivo para predecir las categorías más frecuentes (Avión y Carro), mientras que tiene un rendimiento menor para Bus y Tren.
+- En cuanto al log-likelihood, que también es una meida que indica qué tan bien se ajusta el modelo a los datos, se comparó con el modelo nulo (no hacer nada). Con base en las métricas, el modelo propuesto es mejor que que el modelo nulo, ya que su valor es menor (en valor abosluto), o más cercano a cero, por lo que el modelo propuesto tiene mejor ajuste.
+
+- Tanto el AIC como el BIC evalúan la calidad del modelo, balanceando el ajuste con la complejidad (número de variables). Para ambos criterios, el valor más bajo es el mejor. El modelo propuesto tiene valores de AIC y BIC que son significativamente más bajos que los del modelo nulo. Esto confirma que la complejidad añadida por las variables está más que justificada por la mejora en el ajuste del modelo.
+
+- Revisando la matriz de confusión, se puede decir que:
+  - El modelo es excelente para identificar viajes en avión.
+  - En cuanto al bus, el modelono es muy bueno, ya que de los 13 datos para bus, el modelo fue capaz de clasificar correctamente 8.
+  - El modelo presenta un rendimiento muy buen en decir si las personas escogen carro, ya que de 59 registros, el modelo acertó en 49 de ellos. Los fallos se dan principalmente con el Tren (7 casos) y en menor medida con Bus (3 casos).
+  - Analizando los viajes en tren, el rendimiento del modelo también es bueno. De 63 casos, el modelo acertó en 51 de ellos. El modelo falla confundiéndo las mediciones principalmente con Carro (10 casos) y un poco con Bus (2 casos).
+
+Por último, existe una notable confusión entre los tres medios de transporte terrestre. El modelo tiende a favorecer la predicción de "Tren" cuando tiene dudas entre bus, carro y tren.
+
+- En términos gloables, la tasa de acierto del modelo es del 79.04%, lo que demuestra una buena capacidad predictiva y es significativa (p-value menor a 0.05). En cuánto al valor de Kappa (0.71), indica que el modelo es robusto.
+
+- Por clase, como se vio en la matriz de confusión, el modelo el capaz de predecir perfectamente la clase de avión. Para el carro, el rendimiento es bueno y equilibrado, teniendo un recall (proporción de casos verdaderos acertados) es del 83%, una precisión del 78% y un F1-Score del 80%. En cuánto al tren, el modelo es capaz de decir en un 81% los casos reales de tren, pero cuando el modelo dice que es "Tren", sólo acierta el 67% de las veces, lo que se concluye que el modelo tiende a "sobre-predecir" esta clase. Por último, el rendimiento para predecir la clase "Bus" no es bueno, tiene un recall de 27%, una precisión del 62% y un F1-Score del 37%.
