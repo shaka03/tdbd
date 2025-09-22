@@ -158,11 +158,11 @@ histogramas
 
 ***Los histogramas permiten observar que:***
 
-  - Tiempo_Espera: Distribución fuertemente sesgada a la derecha. La mayoría de los viajes presentan tiempos de espera muy bajos, con una cola larga que indica la presencia de pocos viajes con tiempos de espera excepcionalmente altos.
-  - Costo_Viaje: También presenta un sesgo positivo marcado. La mayor concentración de datos se encuentra en costos bajos, mientras que una pequeña proporción de viajes (probablemente aéreos o de larga distancia) generan una cola con costos significativamente más elevados.
-  - Tiempo_Viaje: Posible distribución bimodal, sugiriendo dos grupos distintos: viajes cortos (por ejemplo, en transporte terrestre) y viajes largos (como los aéreos). La ausencia de valores intermedios refuerza esta hipótesis.
-  - Costo_Generalizado: Refleja una combinación del costo y el tiempo del viaje. Su distribución también está sesgada a la derecha, con la mayoría de los viajes concentrados en valores bajos y una cola de valores altos que representan viajes más costosos en términos generales.
-  - Ingresos_Hogar: Presenta un sesgo positivo típico de variables de ingresos: la mayoría de los hogares se ubican en rangos medios o bajos, mientras que una minoría reporta ingresos muy superiores, generando una cola larga hacia la derecha.
+- ***Tiempo_Espera:*** Distribución fuertemente sesgada a la derecha. La mayoría de los viajes presentan tiempos de espera muy bajos, con una cola larga que indica la presencia de pocos viajes con tiempos de espera excepcionalmente altos.
+- ***Costo_Viaje:*** También presenta un sesgo positivo marcado. La mayor concentración de datos se encuentra en costos bajos, mientras que una pequeña proporción de viajes (probablemente aéreos o de larga distancia) generan una cola con costos significativamente más elevados.
+- ***Tiempo_Viaje:*** Posible distribución bimodal, sugiriendo dos grupos distintos: viajes cortos (por ejemplo, en transporte terrestre) y viajes largos (como los aéreos). La ausencia de valores intermedios refuerza esta hipótesis.
+- ***Costo_Generalizado:*** Refleja una combinación del costo y el tiempo del viaje. Su distribución también está sesgada a la derecha, con la mayoría de los viajes concentrados en valores bajos y una cola de valores altos que representan viajes más costosos en términos generales.
+- ***Ingresos_Hogar:*** Presenta un sesgo positivo típico de variables de ingresos: la mayoría de los hogares se ubican en rangos medios o bajos, mientras que una minoría reporta ingresos muy superiores, generando una cola larga hacia la derecha.
 
 ```{r numericas_2, fig.width=10, fig.height=10, fig.align='center', echo=FALSE, message=FALSE}
 boxplots = ggplot(df_long, aes(y = Valor, fill = Variable)) +
@@ -177,11 +177,11 @@ boxplots
 
 ***Los boxplots permiten observar que:***
 
-  - Tiempo_Espera: Mediana muy cercana al primer cuartil (Q1), confirmando el sesgo positivo. La caja es estrecha, y se observan numerosos valores atípicos en la parte superior, correspondientes a tiempos de espera extremadamente largos.
-  - Costo_Viaje Similar al Tiempo_Espera: mediana baja, caja compacta y muchos outliers en la cola superior, que representan viajes con costos inusualmente altos.
-  - Tiempo_Viaje: Aunque el boxplot no evidencia claramente la bimodalidad, muestra una dispersión amplia y posiblemente una mediana intermedia. La presencia de outliers en la parte superior sugiere viajes de duración extrema (muy largos).
-  - Costo_Generalizado: Refleja el mismo patrón de sesgo positivo: mediana baja, caja asimétrica hacia abajo y gran cantidad de valores atípicos en la parte superior, indicando viajes con costos generalizados elevados.
-  - Ingresos_Hogar: La mediana y la caja se concentran en el rango inferior, mientras que múltiples puntos se extienden más allá del bigote superior. Estos outliers representan hogares con ingresos muy superiores al promedio, reforzando el sesgo positivo de la distribución.
+- ***Tiempo_Espera:*** Mediana muy cercana al primer cuartil (Q1), confirmando el sesgo positivo. La caja es estrecha, y se observan numerosos valores atípicos en la parte superior, correspondientes a tiempos de espera extremadamente largos.
+- ***Costo_Viaje:*** Similar al Tiempo_Espera, mediana baja, caja compacta y muchos outliers en la cola superior, que representan viajes con costos inusualmente altos.
+- ***Tiempo_Viaje:*** Aunque el boxplot no evidencia claramente la bimodalidad, muestra una dispersión amplia y posiblemente una mediana intermedia. La presencia de outliers en la parte superior sugiere viajes de duración extrema (muy largos).
+- ***Costo_Generalizado:*** Refleja el mismo patrón de sesgo positivo: mediana baja, caja asimétrica hacia abajo y gran cantidad de valores atípicos en la parte superior, indicando viajes con costos generalizados elevados.
+- ***Ingresos_Hogar:*** La mediana y la caja se concentran en el rango inferior, mientras que múltiples puntos se extienden más allá del bigote superior. Estos outliers representan hogares con ingresos muy superiores al promedio, reforzando el sesgo positivo de la distribución.
 
 #### **Variables cualitativas**
 
@@ -221,11 +221,11 @@ ggplot(df_prop, aes(x = Categoria, y = Proporcion, fill = Categoria)) +
 
 ***Hallazgos del Análisis de Variables Cualitativas:***
 
--   Dominio de Grupos Pequeños: La mayoría de las observaciones en el dataset corresponden a grupos de viaje pequeños. Se puede observar que los grupos de 1 o 2 personas son los más frecuentes en la muestra, representando la mayor proporción de los datos.
+-   ***Dominio de Grupos Pequeños:*** La mayoría de las observaciones en el dataset corresponden a grupos de viaje pequeños. Se puede observar que los grupos de 1 o 2 personas son los más frecuentes en la muestra, representando la mayor proporción de los datos.
 
--   Frecuencia Decreciente: A medida que el tamaño del grupo aumenta, su frecuencia en el dataset disminuye significativamente. Los grupos de 5 o 6 personas son considerablemente menos comunes.
+-   ***Frecuencia Decreciente:*** A medida que el tamaño del grupo aumenta, su frecuencia en el dataset disminuye significativamente. Los grupos de 5 o 6 personas son considerablemente menos comunes.
 
--   Relevancia para el Modelo: Este análisis exploratorio es crucial, ya que la variable Tamano_Grupo es un factor clave en el modelo de regresión multinomial. La distribución de esta variable indica que el modelo tendrá más información para estimar la probabilidad de elección de transporte para grupos pequeños que para grupos grandes.
+-   ***Relevancia para el Modelo:*** Este análisis exploratorio es crucial, ya que la variable Tamano_Grupo es un factor clave en el modelo de regresión multinomial. La distribución de esta variable indica que el modelo tendrá más información para estimar la probabilidad de elección de transporte para grupos pequeños que para grupos grandes.
 
 ### **1.3. Análisis bivariado**
 
@@ -264,11 +264,11 @@ boxplots
 
 **Hallazgos del Análisis Bivariado:**
 
--   Relación Costo-Tiempo vs. Modo de Viaje: Los boxplots muestran que los viajeros que eligen avión tienen los costos más altos y los tiempos más cortos, mientras que los que eligen carro tienen los costos más bajos y los tiempos más largos. Esto es consistente con la idea de que los viajeros balancean el costo y la eficiencia.
+-   ***Relación Costo-Tiempo vs. Modo de Viaje:*** Los boxplots muestran que los viajeros que eligen avión tienen los costos más altos y los tiempos más cortos, mientras que los que eligen carro tienen los costos más bajos y los tiempos más largos. Esto es consistente con la idea de que los viajeros balancean el costo y la eficiencia.
 
--   Impacto de los Ingresos: Los ingresos del hogar son notablemente más altos para quienes eligen el avión, lo que sugiere que una mayor capacidad económica se asocia con una preferencia por opciones de viaje más rápidas.
+-   ***Impacto de los Ingresos:*** Los ingresos del hogar son notablemente más altos para quienes eligen el avión, lo que sugiere que una mayor capacidad económica se asocia con una preferencia por opciones de viaje más rápidas.
 
--   Relación Tiempo de espera vs Modo de viaje: se evidencia que las personas que viajan en avión tienen mayores tiempos de espera vs los otros medios de transporte. Además, los carros no tienen tiempo de espeera. Esto úlitmo podría sesgar el modelo, por ende, no se utilizará esta variable.
+-   ***Relación Tiempo de espera vs Modo de viaje:*** se evidencia que las personas que viajan en avión tienen mayores tiempos de espera vs los otros medios de transporte. Además, los carros no tienen tiempo de espeera. Esto úlitmo podría sesgar el modelo, por ende, no se utilizará esta variable.
 
 ```{r correlacion, fig.align='center', echo=FALSE}
 df_sel = df %>%
@@ -297,11 +297,11 @@ theme(
 
 **Hallazgos de la Matriz de Correlación:**
 
--   Multicolinealidad Crítica: El hallazgo más importante es la correlación media-alta entre el Costo_Generalizado y el Tiempo_Viaje. Esta relación podría confirma una multicolinealidad. Por lo tanto, el Costo_Generalizado debe ser excluido del modelo de regresión para evitar estimaciones sesgadas y una interpretación incorrecta de los resultados.
+-   ***Multicolinealidad Crítica:*** El hallazgo más importante es la correlación media-alta entre el Costo_Generalizado y el Tiempo_Viaje. Esta relación podría confirma una multicolinealidad. Por lo tanto, el Costo_Generalizado debe ser excluido del modelo de regresión para evitar estimaciones sesgadas y una interpretación incorrecta de los resultados.
 
--   Relaciones Intuitivas: Existe una correlación moderada entre Costo_Viaje y Tiempo_Espera (r=0.63). Esto tiene sentido, ya que los viajes más costosos (como los vuelos) suelen requerir más tiempo de espera en la terminal.
+-   ***Relaciones Intuitivas:*** Existe una correlación moderada entre Costo_Viaje y Tiempo_Espera (r=0.63). Esto tiene sentido, ya que los viajes más costosos (como los vuelos) suelen requerir más tiempo de espera en la terminal.
 
--   Ausencia de Correlaciones Fuertes: Fuera de la multicolinealidad detectada, no hay otras correlaciones fuertes entre las variables. Esto es positivo, ya que permite que el modelo estime los efectos individuales de cada variable de manera más limpia.
+-   ***Ausencia de Correlaciones Fuertes:*** Fuera de la multicolinealidad detectada, no hay otras correlaciones fuertes entre las variables. Esto es positivo, ya que permite que el modelo estime los efectos individuales de cada variable de manera más limpia.
 
 #### **Varables cualitativas vs. Modo de viaje**
 
@@ -356,11 +356,11 @@ barplots
 
 **Hallazgos Clave de la Relación entre Tamaño del grupo y Modo de transporte:**
 
--   El Carro domina para grupos grandes: El hallazgo más significativo es que, a medida que el tamaño del grupo aumenta, el carro se convierte en el modo de transporte abrumadoramente predominante. Esto se debe a la eficiencia logística y la reducción del costo por persona.
+-   ***El Carro domina para grupos grandes:*** El hallazgo más significativo es que, a medida que el tamaño del grupo aumenta, el carro se convierte en el modo de transporte abrumadoramente predominante. Esto se debe a la eficiencia logística y la reducción del costo por persona.
 
--   Avión y Tren para grupos pequeños: El avión y el tren son opciones más populares para grupos de una o dos personas. La frecuencia de estas opciones disminuye drásticamente a medida que el grupo se hace más grande, lo que sugiere que son menos atractivas o más costosas para viajes en grupo.
+-   ***Avión y Tren para grupos pequeños:*** El avión y el tren son opciones más populares para grupos de una o dos personas. La frecuencia de estas opciones disminuye drásticamente a medida que el grupo se hace más grande, lo que sugiere que son menos atractivas o más costosas para viajes en grupo.
 
--   El Bus es una opción de nicho: El bus tiene una presencia relativamente baja en todos los tamaños de grupo, lo que lo posiciona como una opción menos preferida en comparación con las demás.
+-   ***El Bus es una opción de nicho:*** El bus tiene una presencia relativamente baja en todos los tamaños de grupo, lo que lo posiciona como una opción menos preferida en comparación con las demás.
 
 ## **2. Modelo multinomial**
 
@@ -493,19 +493,19 @@ by(pp.sim[, 5:8], pp.sim$Tamano_Grupo, colMeans)
 
 **Hallazgos Clave de las Predicciones por Costo de Viaje:**
 
--   Los gráficos de probabilidades predichas revelan que el costo del viaje es un factor determinante en la elección del modo de transporte, con efectos opuestos en las opciones de viaje.
+-   Los gráficos de probabilidades predichas revelan que el costo del viaje es un factor determinante en la elección del modo de transporte, con efectos opuestos en las opciones de viaje:
 
--   Impacto Negativo en Opciones Terrestres: A medida que el costo del viaje aumenta, la probabilidad de elegir el Carro, el Bus o el Tren disminuye de forma constante. Este hallazgo confirma que los viajeros son sensibles al precio y tienden a evitar las opciones más económicas cuando estas se encarecen.
+-   ***Impacto Negativo en Opciones Terrestres:*** A medida que el costo del viaje aumenta, la probabilidad de elegir el Carro, el Bus o el Tren disminuye de forma constante. Este hallazgo confirma que los viajeros son sensibles al precio y tienden a evitar las opciones más económicas cuando estas se encarecen.
 
--   Impacto Positivo en el Transporte Aéreo: Por el contrario, la probabilidad de elegir el Avión aumenta a medida que el costo del viaje se incrementa. Esto se debe a que el avión es la alternativa más costosa del conjunto de datos. El modelo predice que cuando los costos de viaje son elevados (por ejemplo, debido a largas distancias), la probabilidad de que el viajero se decida por la opción aérea es mayor.
+-   ***Impacto Positivo en el Transporte Aéreo:*** Por el contrario, la probabilidad de elegir el Avión aumenta a medida que el costo del viaje se incrementa. Esto se debe a que el avión es la alternativa más costosa del conjunto de datos. El modelo predice que cuando los costos de viaje son elevados (por ejemplo, debido a largas distancias), la probabilidad de que el viajero se decida por la opción aérea es mayor.
 
--   Segmentación por Sensibilidad al Costo: El modelo muestra que los usuarios de transporte terrestre son más sensibles al costo, mientras que quienes eligen el avión parecen menos afectados por aumentos en el precio, lo cual podría relacionarse con un perfil de mayor capacidad adquisitiva o con viajes en los que el tiempo cobra más relevancia que el dinero.  
+-   ***Segmentación por Sensibilidad al Costo:*** El modelo muestra que los usuarios de transporte terrestre son más sensibles al costo, mientras que quienes eligen el avión parecen menos afectados por aumentos en el precio, lo cual podría relacionarse con un perfil de mayor capacidad adquisitiva o con viajes en los que el tiempo cobra más relevancia que el dinero.  
 
--   Relación Implícita con la Distancia: Dado que los mayores costos suelen asociarse con viajes más largos, es lógico que la opción aérea gane participación en esos escenarios, mientras que los modos terrestres resultan menos competitivos.  
+-   ***Relación Implícita con la Distancia:*** Dado que los mayores costos suelen asociarse con viajes más largos, es lógico que la opción aérea gane participación en esos escenarios, mientras que los modos terrestres resultan menos competitivos.  
 
--   Evidencia de Sustitución entre Modos: La caída en la probabilidad de carro, bus y tren se compensa directamente con el aumento del avión, lo que refleja un patrón de sustitución: a medida que un viaje se vuelve más costoso, los viajeros no lo abandonan, sino que cambian de modo de transporte.  
+-   ***Evidencia de Sustitución entre Modos:*** La caída en la probabilidad de carro, bus y tren se compensa directamente con el aumento del avión, lo que refleja un patrón de sustitución: a medida que un viaje se vuelve más costoso, los viajeros no lo abandonan, sino que cambian de modo de transporte.  
 
--   Polarización en la Elección: Se observa que el incremento en el costo del viaje polariza las decisiones: los viajeros se alejan progresivamente de las alternativas más económicas y se concentran en la opción aérea, reduciendo la diversidad en las elecciones disponibles.  
+-   ***Polarización en la Elección:*** Se observa que el incremento en el costo del viaje polariza las decisiones: los viajeros se alejan progresivamente de las alternativas más económicas y se concentran en la opción aérea, reduciendo la diversidad en las elecciones disponibles.  
 
 ```{r analisis_probs2, echo=FALSE}
 # Grafico probabilidades predichasCosto_Viaje
@@ -591,11 +591,11 @@ ggplot(lpp, aes(x = Ingresos_Hogar, y = probability, colour = factor(Tamano_Grup
 
 **Hallazgos Grafico probabilidades predichas Costo_Viaje**
 
--   Relación Inversa para el Carro, Tren y Bus: La probabilidad de elegir el Carro, el Bus o el Tren muestra una clara relación inversa con el Costo_Viaje. A medida que el costo del viaje aumenta, la probabilidad de que un individuo elija cualquiera de estas tres opciones disminuye de forma constante. Este hallazgo es intuitivo: los viajeros son sensibles al precio y prefieren opciones más baratas.
+-   ***Relación Inversa para el Carro, Tren y Bus:*** La probabilidad de elegir el Carro, el Bus o el Tren muestra una clara relación inversa con el Costo_Viaje. A medida que el costo del viaje aumenta, la probabilidad de que un individuo elija cualquiera de estas tres opciones disminuye de forma constante. Este hallazgo es intuitivo: los viajeros son sensibles al precio y prefieren opciones más baratas.
 
--   Relación Directa para el Avión: En contraste, la probabilidad de elegir el Avión tiene una relación directa con el Costo_Viaje. A medida que el costo aumenta, la probabilidad de elegir el Avión también se incrementa. Este resultado, aunque pueda parecer contraintuitivo a primera vista, se explica por el hecho de que, en el contexto de este conjunto de datos, el Avión es la alternativa de viaje más costosa. El modelo reconoce que, si un viaje tiene un costo elevado (por ejemplo, debido a la distancia), es más probable que la elección sea el Avión que un viaje en Carro o Bus.
+-   ***Relación Directa para el Avión:*** En contraste, la probabilidad de elegir el Avión tiene una relación directa con el Costo_Viaje. A medida que el costo aumenta, la probabilidad de elegir el Avión también se incrementa. Este resultado, aunque pueda parecer contraintuitivo a primera vista, se explica por el hecho de que, en el contexto de este conjunto de datos, el Avión es la alternativa de viaje más costosa. El modelo reconoce que, si un viaje tiene un costo elevado (por ejemplo, debido a la distancia), es más probable que la elección sea el Avión que un viaje en Carro o Bus.
 
--   Impacto del Tamaño del Grupo: La faceta por Tamano_Grupo revela que la sensibilidad al costo varía según el número de viajeros. Se puede observar que para grupos más grandes, la probabilidad de elegir el Carro se mantiene relativamente alta incluso con un aumento en el costo, lo que sugiere que el costo por persona sigue siendo más atractivo. Por el contrario, los grupos pequeños son más propensos a cambiar de opción a medida que el costo aumenta.
+-   ***Impacto del Tamaño del Grupo:*** La faceta por Tamano_Grupo revela que la sensibilidad al costo varía según el número de viajeros. Se puede observar que para grupos más grandes, la probabilidad de elegir el Carro se mantiene relativamente alta incluso con un aumento en el costo, lo que sugiere que el costo por persona sigue siendo más atractivo. Por el contrario, los grupos pequeños son más propensos a cambiar de opción a medida que el costo aumenta.
 
 ### **2.5. Diagnóstico**
 
