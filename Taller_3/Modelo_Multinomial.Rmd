@@ -158,9 +158,9 @@ histogramas
 
 ***Los histogramas permiten observar que:***
 
-  - Tiempo_Espera:Distribución fuertemente sesgada a la derecha. La mayoría de los viajes presentan tiempos de espera muy bajos, con una cola larga que indica la presencia de pocos viajes con tiempos de espera excepcionalmente altos.
-  - Costo_Viaje:También presenta un sesgo positivo marcado. La mayor concentración de datos se encuentra en costos bajos, mientras que una pequeña proporción de viajes (probablemente aéreos o de larga distancia) generan una cola con costos significativamente más elevados.
-  - Tiempo_Viaje:Posible distribución bimodal, sugiriendo dos grupos distintos: viajes cortos (por ejemplo, en transporte terrestre) y viajes largos (como los aéreos). La ausencia de valores intermedios refuerza esta hipótesis.
+  - Tiempo_Espera: Distribución fuertemente sesgada a la derecha. La mayoría de los viajes presentan tiempos de espera muy bajos, con una cola larga que indica la presencia de pocos viajes con tiempos de espera excepcionalmente altos.
+  - Costo_Viaje: También presenta un sesgo positivo marcado. La mayor concentración de datos se encuentra en costos bajos, mientras que una pequeña proporción de viajes (probablemente aéreos o de larga distancia) generan una cola con costos significativamente más elevados.
+  - Tiempo_Viaje: Posible distribución bimodal, sugiriendo dos grupos distintos: viajes cortos (por ejemplo, en transporte terrestre) y viajes largos (como los aéreos). La ausencia de valores intermedios refuerza esta hipótesis.
   - Costo_Generalizado: Refleja una combinación del costo y el tiempo del viaje. Su distribución también está sesgada a la derecha, con la mayoría de los viajes concentrados en valores bajos y una cola de valores altos que representan viajes más costosos en términos generales.
   - Ingresos_Hogar: Presenta un sesgo positivo típico de variables de ingresos: la mayoría de los hogares se ubican en rangos medios o bajos, mientras que una minoría reporta ingresos muy superiores, generando una cola larga hacia la derecha.
 
@@ -177,11 +177,11 @@ boxplots
 
 ***Los boxplots permiten observar que:***
 
-  - Tiempo_Espera:Mediana muy cercana al primer cuartil (Q1), confirmando el sesgo positivo. La caja es estrecha, y se observan numerosos valores atípicos en la parte superior, correspondientes a tiempos de espera extremadamente largos.
-  - Costo_Viaje:Similar al Tiempo_Espera: mediana baja, caja compacta y muchos outliers en la cola superior, que representan viajes con costos inusualmente altos.
-  - Tiempo_Viaje:Aunque el boxplot no evidencia claramente la bimodalidad, muestra una dispersión amplia y posiblemente una mediana intermedia. La presencia de outliers en la parte superior sugiere viajes de duración extrema (muy largos).
-  - Costo_Generalizado:Refleja el mismo patrón de sesgo positivo: mediana baja, caja asimétrica hacia abajo y gran cantidad de valores atípicos en la parte superior, indicando viajes con costos generalizados elevados.
-  - Ingresos_Hogar:La mediana y la caja se concentran en el rango inferior, mientras que múltiples puntos se extienden más allá del bigote superior. Estos outliers representan hogares con ingresos muy superiores al promedio, reforzando el sesgo positivo de la distribución.
+  - Tiempo_Espera: Mediana muy cercana al primer cuartil (Q1), confirmando el sesgo positivo. La caja es estrecha, y se observan numerosos valores atípicos en la parte superior, correspondientes a tiempos de espera extremadamente largos.
+  - Costo_Viaje Similar al Tiempo_Espera: mediana baja, caja compacta y muchos outliers en la cola superior, que representan viajes con costos inusualmente altos.
+  - Tiempo_Viaje: Aunque el boxplot no evidencia claramente la bimodalidad, muestra una dispersión amplia y posiblemente una mediana intermedia. La presencia de outliers en la parte superior sugiere viajes de duración extrema (muy largos).
+  - Costo_Generalizado: Refleja el mismo patrón de sesgo positivo: mediana baja, caja asimétrica hacia abajo y gran cantidad de valores atípicos en la parte superior, indicando viajes con costos generalizados elevados.
+  - Ingresos_Hogar: La mediana y la caja se concentran en el rango inferior, mientras que múltiples puntos se extienden más allá del bigote superior. Estos outliers representan hogares con ingresos muy superiores al promedio, reforzando el sesgo positivo de la distribución.
 
 #### **Variables cualitativas**
 
