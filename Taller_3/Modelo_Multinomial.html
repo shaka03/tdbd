@@ -37,9 +37,11 @@ ul.task-list li input[type="checkbox"] {
 <link href="Modelo_Multinomial_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Modelo_Multinomial_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Modelo_Multinomial_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Modelo_Multinomial_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Modelo_Multinomial_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="Modelo_Multinomial_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
 <link href="Modelo_Multinomial_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
 
 
 </head>
@@ -292,20 +294,31 @@ ul.task-list li input[type="checkbox"] {
 </figure>
 </div>
 </div>
+</div>
+<p><strong><em>Los histogramas permiten observar que:</em></strong></p>
+<ul>
+<li>Tiempo_Espera:Distribución fuertemente sesgada a la derecha. La mayoría de los viajes presentan tiempos de espera muy bajos, con una cola larga que indica la presencia de pocos viajes con tiempos de espera excepcionalmente altos.</li>
+<li>Costo_Viaje:También presenta un sesgo positivo marcado. La mayor concentración de datos se encuentra en costos bajos, mientras que una pequeña proporción de viajes (probablemente aéreos o de larga distancia) generan una cola con costos significativamente más elevados.</li>
+<li>Tiempo_Viaje:Posible distribución bimodal, sugiriendo dos grupos distintos: viajes cortos (por ejemplo, en transporte terrestre) y viajes largos (como los aéreos). La ausencia de valores intermedios refuerza esta hipótesis.</li>
+<li>Costo_Generalizado: Refleja una combinación del costo y el tiempo del viaje. Su distribución también está sesgada a la derecha, con la mayoría de los viajes concentrados en valores bajos y una cola de valores altos que representan viajes más costosos en términos generales.</li>
+<li>Ingresos_Hogar: Presenta un sesgo positivo típico de variables de ingresos: la mayoría de los hogares se ubican en rangos medios o bajos, mientras que una minoría reporta ingresos muy superiores, generando una cola larga hacia la derecha.</li>
+</ul>
+<div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Modelo_Multinomial_files/figure-html/numericas-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="Modelo_Multinomial_files/figure-html/numericas_2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
-<p><strong><em>Los histogramas y boxplots permiten observar que:</em></strong></p>
+<p><strong><em>Los boxplots permiten observar que:</em></strong></p>
 <ul>
-<li><p>Tiempo_Espera: La distribución de esta variable está sesgada a la derecha, con la mayoría de los valores concentrados en tiempos de espera bajos y algunos viajes con tiempos de espera significativamente más largos.</p></li>
-<li><p>Costo_Viaje: De manera similar, se espera una distribución sesgada a la derecha, con muchos viajes de bajo costo y una cola de viajes más caros (probablemente los aéreos).</p></li>
-<li><p>Tiempo_Viaje: La distribución de esta variable podría ser bimodal, con un pico para los viajes cortos (en carro o bus) y otro para los viajes largos (en avión).</p></li>
-<li><p>Ingresos_Hogar: La distribución de los ingresos suele estar sesgada positivamente, con la mayoría de los hogares en rangos de ingresos medios y bajos, y una pequeña fracción de hogares con ingresos muy altos.</p></li>
+<li>Tiempo_Espera:Mediana muy cercana al primer cuartil (Q1), confirmando el sesgo positivo. La caja es estrecha, y se observan numerosos valores atípicos en la parte superior, correspondientes a tiempos de espera extremadamente largos.</li>
+<li>Costo_Viaje:Similar al Tiempo_Espera: mediana baja, caja compacta y muchos outliers en la cola superior, que representan viajes con costos inusualmente altos.</li>
+<li>Tiempo_Viaje:Aunque el boxplot no evidencia claramente la bimodalidad, muestra una dispersión amplia y posiblemente una mediana intermedia. La presencia de outliers en la parte superior sugiere viajes de duración extrema (muy largos).</li>
+<li>Costo_Generalizado:Refleja el mismo patrón de sesgo positivo: mediana baja, caja asimétrica hacia abajo y gran cantidad de valores atípicos en la parte superior, indicando viajes con costos generalizados elevados.</li>
+<li>Ingresos_Hogar:La mediana y la caja se concentran en el rango inferior, mientras que múltiples puntos se extienden más allá del bigote superior. Estos outliers representan hogares con ingresos muy superiores al promedio, reforzando el sesgo positivo de la distribución.</li>
 </ul>
 </section>
 <section id="variables-cualitativas" class="level4">
@@ -408,7 +421,7 @@ Tren     69.46713   -4.081489    0.5594685     -0.2012959      -60.33678
       Tamano_Grupo.Q Tamano_Grupo.C Tamano_Grupo^4 Tamano_Grupo^5
 Bus         24.42756       59.00828      -4.453353      -99.21981
 Carro       12.70779       36.21582      21.083529      -48.43903
-Tren       -10.30403       25.61379      19.218698      -47.75568</code></pre>
+Tren       -10.30403       25.61379      19.218699      -47.75568</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -440,13 +453,13 @@ Tren               0              0              0              0</code></pre>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>       (Intercept) Costo_Viaje Tiempo_Viaje Ingresos_Hogar Tamano_Grupo.L
-Bus   1.110297e+20  0.01636847     1.753726      0.8407142   4.727406e-39
-Carro 1.619677e+34  0.01388981     1.756547      0.8729972   4.044674e-14
-Tren  1.476355e+30  0.01688231     1.749742      0.8176705   6.252718e-27
+Bus   1.110299e+20  0.01636847     1.753726      0.8407142   4.727394e-39
+Carro 1.619680e+34  0.01388981     1.756548      0.8729971   4.044671e-14
+Tren  1.476357e+30  0.01688231     1.749742      0.8176705   6.252708e-27
       Tamano_Grupo.Q Tamano_Grupo.C Tamano_Grupo^4 Tamano_Grupo^5
-Bus     4.062120e+10   4.236145e+25   1.163948e-02   8.116778e-44
-Carro   3.303097e+05   5.349701e+15   1.433706e+09   9.187510e-22
-Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
+Bus     4.062122e+10   4.236152e+25   1.163948e-02   8.116756e-44
+Carro   3.303098e+05   5.349706e+15   1.433707e+09   9.187498e-22
+Tren    3.349776e-05   1.330238e+11   2.221134e+08   1.819586e-21</code></pre>
 </div>
 </div>
 <p><strong>Hallazgos del Modelo</strong></p>
@@ -487,8 +500,8 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">1.835362e+00</td>
-<td style="text-align: center;">0.0664520</td>
-<td style="text-align: center;">3.9115433</td>
+<td style="text-align: center;">0.0664521</td>
+<td style="text-align: center;">3.9115423</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">0.0000000</td>
 </tr>
@@ -498,9 +511,9 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">0.0034838</td>
 <td style="text-align: center;">0.0013013</td>
-<td style="text-align: center;">2.677195e+00</td>
-<td style="text-align: center;">0.0074242</td>
-<td style="text-align: center;">7.0735579</td>
+<td style="text-align: center;">2.677200e+00</td>
+<td style="text-align: center;">0.0074240</td>
+<td style="text-align: center;">7.0735820</td>
 <td style="text-align: center;">0.0009333</td>
 <td style="text-align: center;">0.0060342</td>
 </tr>
@@ -510,9 +523,9 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">-0.0144705</td>
 <td style="text-align: center;">0.0016538</td>
-<td style="text-align: center;">-8.749793e+00</td>
+<td style="text-align: center;">-8.749754e+00</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">58.6988235</td>
+<td style="text-align: center;">58.6983233</td>
 <td style="text-align: center;">-0.0177119</td>
 <td style="text-align: center;">-0.0112291</td>
 </tr>
@@ -522,9 +535,9 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">0.0109867</td>
 <td style="text-align: center;">0.0013141</td>
-<td style="text-align: center;">8.360844e+00</td>
+<td style="text-align: center;">8.360850e+00</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">53.8342189</td>
+<td style="text-align: center;">53.8342832</td>
 <td style="text-align: center;">0.0084112</td>
 <td style="text-align: center;">0.0135623</td>
 </tr>
@@ -534,9 +547,9 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">1.887397e+00</td>
-<td style="text-align: center;">0.0591069</td>
-<td style="text-align: center;">4.0805292</td>
+<td style="text-align: center;">1.887400e+00</td>
+<td style="text-align: center;">0.0591065</td>
+<td style="text-align: center;">4.0805388</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">0.0000000</td>
 </tr>
@@ -545,36 +558,36 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">Bus</td>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">0.0005479</td>
-<td style="text-align: center;">0.0012306</td>
-<td style="text-align: center;">4.451836e-01</td>
-<td style="text-align: center;">0.6561871</td>
-<td style="text-align: center;">0.6078210</td>
-<td style="text-align: center;">-0.0018641</td>
-<td style="text-align: center;">0.0029598</td>
+<td style="text-align: center;">0.0012300</td>
+<td style="text-align: center;">4.454073e-01</td>
+<td style="text-align: center;">0.6560254</td>
+<td style="text-align: center;">0.6081763</td>
+<td style="text-align: center;">-0.0018629</td>
+<td style="text-align: center;">0.0029586</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">Ingresos_Hogar</td>
 <td style="text-align: center;">Carro</td>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">0.0042728</td>
-<td style="text-align: center;">0.0010796</td>
-<td style="text-align: center;">3.957651e+00</td>
-<td style="text-align: center;">0.0000757</td>
-<td style="text-align: center;">13.6895314</td>
-<td style="text-align: center;">0.0021568</td>
-<td style="text-align: center;">0.0063888</td>
+<td style="text-align: center;">0.0010795</td>
+<td style="text-align: center;">3.958250e+00</td>
+<td style="text-align: center;">0.0000755</td>
+<td style="text-align: center;">13.6931441</td>
+<td style="text-align: center;">0.0021571</td>
+<td style="text-align: center;">0.0063885</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">Ingresos_Hogar</td>
 <td style="text-align: center;">Tren</td>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">-0.0048207</td>
-<td style="text-align: center;">0.0012475</td>
-<td style="text-align: center;">-3.864394e+00</td>
-<td style="text-align: center;">0.0001114</td>
-<td style="text-align: center;">13.1324141</td>
-<td style="text-align: center;">-0.0072656</td>
-<td style="text-align: center;">-0.0023757</td>
+<td style="text-align: center;">0.0012472</td>
+<td style="text-align: center;">-3.865284e+00</td>
+<td style="text-align: center;">0.0001110</td>
+<td style="text-align: center;">13.1376711</td>
+<td style="text-align: center;">-0.0072651</td>
+<td style="text-align: center;">-0.0023763</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">Tamano_Grupo</td>
@@ -594,9 +607,9 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">3 - 1</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">-1.519980e+00</td>
-<td style="text-align: center;">0.1285161</td>
-<td style="text-align: center;">2.9599793</td>
+<td style="text-align: center;">-1.521924e+00</td>
+<td style="text-align: center;">0.1280282</td>
+<td style="text-align: center;">2.9654665</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">0.0000000</td>
 </tr>
@@ -606,7 +619,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">4 - 1</td>
 <td style="text-align: center;">0.0095238</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">4.050173e+06</td>
+<td style="text-align: center;">4.148272e+06</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">Inf</td>
 <td style="text-align: center;">0.0095238</td>
@@ -618,7 +631,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">5 - 1</td>
 <td style="text-align: center;">0.0095238</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">2.487501e+07</td>
+<td style="text-align: center;">2.636262e+07</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">Inf</td>
 <td style="text-align: center;">0.0095238</td>
@@ -644,7 +657,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">0.0480636</td>
 <td style="text-align: center;">-1.971598e+00</td>
 <td style="text-align: center;">0.0486555</td>
-<td style="text-align: center;">4.3612521</td>
+<td style="text-align: center;">4.3612524</td>
 <td style="text-align: center;">-0.1889651</td>
 <td style="text-align: center;">-0.0005592</td>
 </tr>
@@ -656,7 +669,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">0.0872240</td>
 <td style="text-align: center;">-1.790381e-01</td>
 <td style="text-align: center;">0.8579078</td>
-<td style="text-align: center;">0.2211055</td>
+<td style="text-align: center;">0.2211054</td>
 <td style="text-align: center;">-0.1865724</td>
 <td style="text-align: center;">0.1553396</td>
 </tr>
@@ -668,7 +681,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">0.0306286</td>
 <td style="text-align: center;">-5.703136e+00</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">26.3412501</td>
+<td style="text-align: center;">26.3412498</td>
 <td style="text-align: center;">-0.2347097</td>
 <td style="text-align: center;">-0.1146480</td>
 </tr>
@@ -680,7 +693,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">0.0306286</td>
 <td style="text-align: center;">-5.703136e+00</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">26.3412502</td>
+<td style="text-align: center;">26.3412498</td>
 <td style="text-align: center;">-0.2347097</td>
 <td style="text-align: center;">-0.1146480</td>
 </tr>
@@ -692,7 +705,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">0.0306286</td>
 <td style="text-align: center;">-5.703136e+00</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">26.3412501</td>
+<td style="text-align: center;">26.3412498</td>
 <td style="text-align: center;">-0.2347097</td>
 <td style="text-align: center;">-0.1146480</td>
 </tr>
@@ -702,7 +715,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">2 - 1</td>
 <td style="text-align: center;">0.0174830</td>
 <td style="text-align: center;">0.0499041</td>
-<td style="text-align: center;">3.503322e-01</td>
+<td style="text-align: center;">3.503323e-01</td>
 <td style="text-align: center;">0.7260894</td>
 <td style="text-align: center;">0.4617810</td>
 <td style="text-align: center;">-0.0803272</td>
@@ -716,7 +729,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">0.0805577</td>
 <td style="text-align: center;">-4.687580e-01</td>
 <td style="text-align: center;">0.6392426</td>
-<td style="text-align: center;">0.6455646</td>
+<td style="text-align: center;">0.6455645</td>
 <td style="text-align: center;">-0.1956522</td>
 <td style="text-align: center;">0.1201281</td>
 </tr>
@@ -740,7 +753,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">0.0305122</td>
 <td style="text-align: center;">1.378956e+01</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">141.2844166</td>
+<td style="text-align: center;">141.2844116</td>
 <td style="text-align: center;">0.3609468</td>
 <td style="text-align: center;">0.4805524</td>
 </tr>
@@ -752,7 +765,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">0.0255671</td>
 <td style="text-align: center;">1.746863e+01</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">224.5784558</td>
+<td style="text-align: center;">224.5784466</td>
 <td style="text-align: center;">0.3965108</td>
 <td style="text-align: center;">0.4967318</td>
 </tr>
@@ -764,7 +777,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">0.0565179</td>
 <td style="text-align: center;">1.367339e+00</td>
 <td style="text-align: center;">0.1715190</td>
-<td style="text-align: center;">2.5435601</td>
+<td style="text-align: center;">2.5435600</td>
 <td style="text-align: center;">-0.0334939</td>
 <td style="text-align: center;">0.1880521</td>
 </tr>
@@ -788,7 +801,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">0.1148847</td>
 <td style="text-align: center;">1.456909e+00</td>
 <td style="text-align: center;">0.1451415</td>
-<td style="text-align: center;">2.7844679</td>
+<td style="text-align: center;">2.7844678</td>
 <td style="text-align: center;">-0.0577933</td>
 <td style="text-align: center;">0.3925464</td>
 </tr>
@@ -800,8 +813,8 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">0.0324663</td>
 <td style="text-align: center;">-7.872622e+00</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">48.0328013</td>
-<td style="text-align: center;">-0.3192272</td>
+<td style="text-align: center;">48.0328002</td>
+<td style="text-align: center;">-0.3192273</td>
 <td style="text-align: center;">-0.1919619</td>
 </tr>
 <tr class="even">
@@ -812,7 +825,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">0.0294215</td>
 <td style="text-align: center;">-9.242992e+00</td>
 <td style="text-align: center;">0.0000000</td>
-<td style="text-align: center;">65.1773414</td>
+<td style="text-align: center;">65.1773385</td>
 <td style="text-align: center;">-0.3296076</td>
 <td style="text-align: center;">-0.2142775</td>
 </tr>
@@ -824,7 +837,7 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">-1.844235e+00</td>
 <td style="text-align: center;">0.0651489</td>
-<td style="text-align: center;">3.9401152</td>
+<td style="text-align: center;">3.9401150</td>
 <td style="text-align: center;">0.0000000</td>
 <td style="text-align: center;">0.0000000</td>
 </tr>
@@ -834,9 +847,9 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">0.0000942</td>
 <td style="text-align: center;">0.0000926</td>
-<td style="text-align: center;">1.017842e+00</td>
-<td style="text-align: center;">0.3087532</td>
-<td style="text-align: center;">1.6954741</td>
+<td style="text-align: center;">1.017850e+00</td>
+<td style="text-align: center;">0.3087494</td>
+<td style="text-align: center;">1.6954917</td>
 <td style="text-align: center;">-0.0000872</td>
 <td style="text-align: center;">0.0002757</td>
 </tr>
@@ -846,9 +859,9 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">0.0002324</td>
 <td style="text-align: center;">0.0000856</td>
-<td style="text-align: center;">2.713883e+00</td>
-<td style="text-align: center;">0.0066500</td>
-<td style="text-align: center;">7.2324364</td>
+<td style="text-align: center;">2.713834e+00</td>
+<td style="text-align: center;">0.0066509</td>
+<td style="text-align: center;">7.2322250</td>
 <td style="text-align: center;">0.0000645</td>
 <td style="text-align: center;">0.0004002</td>
 </tr>
@@ -858,9 +871,9 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <td style="text-align: center;">dY/dX</td>
 <td style="text-align: center;">-0.0003266</td>
 <td style="text-align: center;">0.0000990</td>
-<td style="text-align: center;">-3.298775e+00</td>
-<td style="text-align: center;">0.0009711</td>
-<td style="text-align: center;">10.0081259</td>
+<td style="text-align: center;">-3.298747e+00</td>
+<td style="text-align: center;">0.0009712</td>
+<td style="text-align: center;">10.0079800</td>
 <td style="text-align: center;">-0.0005206</td>
 <td style="text-align: center;">-0.0001325</td>
 </tr>
@@ -930,27 +943,27 @@ Tren    3.349776e-05   1.330237e+11   2.221133e+08   1.819588e-21</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>pp.sim$Tamano_Grupo: 1
        Avión          Bus        Carro         Tren 
-1.231788e-56 1.834502e-01 4.383172e-02 7.727181e-01 
+1.231784e-56 1.834502e-01 4.383172e-02 7.727181e-01 
 ------------------------------------------------------------ 
 pp.sim$Tamano_Grupo: 2
        Avión          Bus        Carro         Tren 
-5.021822e-49 7.040037e-02 4.285723e-02 8.867424e-01 
+5.021808e-49 7.040037e-02 4.285723e-02 8.867424e-01 
 ------------------------------------------------------------ 
 pp.sim$Tamano_Grupo: 3
        Avión          Bus        Carro         Tren 
-3.532199e-69 1.401616e-01 3.008804e-02 8.297503e-01 
+3.532184e-69 1.401616e-01 3.008804e-02 8.297503e-01 
 ------------------------------------------------------------ 
 pp.sim$Tamano_Grupo: 4
        Avión          Bus        Carro         Tren 
-4.451402e-30 3.236775e-41 3.127493e-02 9.687251e-01 
+4.451394e-30 3.236767e-41 3.127493e-02 9.687251e-01 
 ------------------------------------------------------------ 
 pp.sim$Tamano_Grupo: 5
        Avión          Bus        Carro         Tren 
-1.712114e-35 7.213883e-12 4.443178e-01 5.556822e-01 
+1.712110e-35 7.213877e-12 4.443178e-01 5.556822e-01 
 ------------------------------------------------------------ 
 pp.sim$Tamano_Grupo: 6
        Avión          Bus        Carro         Tren 
-7.264613e-49 1.982124e-17 1.000000e+00 3.172226e-10 </code></pre>
+7.264590e-49 1.982121e-17 1.000000e+00 3.172222e-10 </code></pre>
 </div>
 </div>
 <p><strong>Hallazgos Clave de las Predicciones por Costo de Viaje:</strong></p>
