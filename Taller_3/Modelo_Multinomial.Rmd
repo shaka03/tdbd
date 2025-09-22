@@ -167,7 +167,7 @@ boxplots
 
 ***Los histogramas y boxplots permiten observar que:***
 
--   Tiempo_Espera: La distribución de esta variable probablemente estará sesgada a la derecha, con la mayoría de los valores concentrados en tiempos de espera bajos y algunos viajes con tiempos de espera significativamente más largos.
+-   Tiempo_Espera: La distribución de esta variable está sesgada a la derecha, con la mayoría de los valores concentrados en tiempos de espera bajos y algunos viajes con tiempos de espera significativamente más largos.
 
 -   Costo_Viaje: De manera similar, se espera una distribución sesgada a la derecha, con muchos viajes de bajo costo y una cola de viajes más caros (probablemente los aéreos).
 
@@ -441,13 +441,12 @@ kable(marginals, format = "html", caption = "Análisis marginal", align = "c") %
    - Avión: Efectos marginales pequeños, con aumentos leves en grupos de 4 y 5 (+0.0095 pp).  
    **Conclusión:** El carro es el gran ganador en grupos grandes, mientras que bus y tren pierden atractivo.
 
----
 **Síntesis:**  
+
 - El costo del viaje afecta negativamente al carro, favoreciendo bus y tren.  
 - El ingreso del hogar inclina las preferencias hacia el carro.  
 - El tiempo de viaje penaliza al tren.  
 - El tamaño del grupo refuerza fuertemente el uso del carro frente al bus y al tren.
-")
 
 ### **2.4. Análisis de las predicciones**
 
@@ -658,9 +657,9 @@ kable(t(reporte$byClass), caption = "Estadisticas por clase") %>%
     -   El modelo presenta un rendimiento muy buen en decir si las personas escogen carro, ya que de 59 registros, el modelo acertó en 49 de ellos. Los fallos se dan principalmente con el Tren (7 casos) y en menor medida con Bus (3 casos).
     -   Analizando los viajes en tren, el rendimiento del modelo también es bueno. De 63 casos, el modelo acertó en 51 de ellos. El modelo falla confundiéndo las mediciones principalmente con Carro (10 casos) y un poco con Bus (2 casos).
 
-Por último, existe una notable confusión entre los tres medios de transporte terrestre. El modelo tiende a favorecer la predicción de "Tren" cuando tiene dudas entre bus, carro y tren.
+- Existe una notable confusión entre los tres medios de transporte terrestre. El modelo tiende a favorecer la predicción de "Tren" cuando tiene dudas entre bus, carro y tren.
 
--   En términos gloables, la tasa de acierto del modelo es del 79.04%, lo que demuestra una buena capacidad predictiva y es significativa (p-value menor a 0.05). En cuánto al valor de Kappa (0.71), indica que el modelo es robusto.
+-   En términos globales, la tasa de acierto del modelo es del 79.04%, lo que demuestra una buena capacidad predictiva y es significativa (p-value menor a 0.05). En cuánto al valor de Kappa (0.71), indica que el modelo es robusto.
 
 -   Por clase, como se vio en la matriz de confusión, el modelo el capaz de predecir perfectamente la clase de avión. Para el carro, el rendimiento es bueno y equilibrado, teniendo un recall (proporción de casos verdaderos acertados) es del 83%, una precisión del 78% y un F1-Score del 80%. En cuánto al tren, el modelo es capaz de decir en un 81% los casos reales de tren, pero cuando el modelo dice que es "Tren", sólo acierta el 67% de las veces, lo que se concluye que el modelo tiende a "sobre-predecir" esta clase. Por último, el rendimiento para predecir la clase "Bus" no es bueno, tiene un recall de 27%, una precisión del 62% y un F1-Score del 37%.
 
