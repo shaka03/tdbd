@@ -85,7 +85,7 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="información-general" class="level2">
 <h2 class="anchored" data-anchor-id="información-general"><strong>0. Información general</strong></h2>
-<p>En este trabajo se realizará un análisis factorial multiple con el fin de examinar trayectorias y agrupamientos de diferentes variables económicas, para identificar factores latentes, similitudes y diferencias a lo largo de los últimos cinco años (2020 al 2024), desagregado por regiones geográficas. Los datos están a nivel país, pero se realizó un procedimiento para agrupar los países en 14 regiones, con base en sus similitudes geográficas y étnicas. Las regiones son: Asia del Sur, Oriente Medio, Asia del Este y Pacífico, Asia Central, Balcanes, Europa Occidental, Europa del Este, Europa Central y los bálticos, África Central y Occidental, Norte de África, África Oriental y Sur, Latinoamérica y el Caribe, Norteamérica y Oceanía.</p>
+<p>En este trabajo se realizará un análisis factorial multiple con el fin de examinar trayectorias y agrupamientos de diferentes variables económicas, para identificar factores latentes, similitudes y diferencias a lo largo de los últimos cinco años (2019 al 2023), desagregado por regiones geográficas. Los datos están a nivel país, pero se realizó un procedimiento para agrupar los países en 14 regiones, con base en sus similitudes geográficas y étnicas. Las regiones son: Asia Central y del Sur, Oriente Medio, Asia del Este, Pacífico y Oceanía, Europa Occidental, Europa del Este, Norte de África, África Subsahariana, Latinoamérica y el Caribe y Norteamérica.</p>
 <p>Las variables a analizar son las siguientes:</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -116,24 +116,14 @@ ul.task-list li input[type="checkbox"] {
 <td style="text-align: center;">Región</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">Gasto_Salud</td>
+<td style="text-align: center;">Servicios</td>
 <td style="text-align: center;">Cuantitativa</td>
-<td style="text-align: center;">Gato en salud (% PIB)</td>
+<td style="text-align: center;">Servicios, valor agregado (% PIB)</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">Gasto_ID</td>
+<td style="text-align: center;">Gastos</td>
 <td style="text-align: center;">Cuantitativa</td>
-<td style="text-align: center;">Gasto en Investigación y desarrollo (% PIB)</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Gasto_Militar</td>
-<td style="text-align: center;">Cuantitativa</td>
-<td style="text-align: center;">Gasto militar (% PIB)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">Gasto_Educacion</td>
-<td style="text-align: center;">Cuantitativa</td>
-<td style="text-align: center;">Gasto en Educación (% PIB)</td>
+<td style="text-align: center;">Gastos (% PIB)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">Ahorro</td>
@@ -151,9 +141,9 @@ ul.task-list li input[type="checkbox"] {
 <td style="text-align: center;">Importaciones de bienes y servicios (% PIB)</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">Industria</td>
+<td style="text-align: center;">Produccion</td>
 <td style="text-align: center;">Cuantitativa</td>
-<td style="text-align: center;">Industria, valor agregado (% PIB)</td>
+<td style="text-align: center;">Producción, valor agregado (% PIB)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">Inversion_Extranjera_Entrada</td>
@@ -185,6 +175,11 @@ ul.task-list li input[type="checkbox"] {
 <td style="text-align: center;">Cuantitativa</td>
 <td style="text-align: center;">Remesas de trabajdores y compensación de empleados recibidas (% PIB)</td>
 </tr>
+<tr class="even">
+<td style="text-align: center;">Gastos_Militares</td>
+<td style="text-align: center;">Cuantitativa</td>
+<td style="text-align: center;">Gastos militares (%PIB)</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -211,68 +206,68 @@ ul.task-list li input[type="checkbox"] {
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Country Code</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">Año</td>
 <td style="text-align: right;">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Region</td>
 <td style="text-align: right;">0</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">Gasto_Salud</td>
-<td style="text-align: right;">489</td>
-</tr>
 <tr class="odd">
-<td style="text-align: left;">Gasto_ID</td>
-<td style="text-align: right;">812</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Gasto_Militar</td>
-<td style="text-align: right;">487</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Gasto_Educacion</td>
-<td style="text-align: right;">554</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Ahorro</td>
-<td style="text-align: right;">386</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Exportaciones</td>
-<td style="text-align: right;">236</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Importaciones</td>
-<td style="text-align: right;">236</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Industria</td>
-<td style="text-align: right;">148</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
-<td style="text-align: right;">216</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Inversion_Extranjera_Salida</td>
-<td style="text-align: right;">313</td>
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: right;">113</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Deuda</td>
-<td style="text-align: right;">614</td>
+<td style="text-align: right;">809</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Recaudacion_Impuestos</td>
-<td style="text-align: right;">624</td>
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: right;">489</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Agricultura</td>
-<td style="text-align: right;">158</td>
+<td style="text-align: left;">Exportaciones</td>
+<td style="text-align: right;">190</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
+<td style="text-align: right;">132</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversion_Extranjera_Salida</td>
+<td style="text-align: right;">243</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Importaciones</td>
+<td style="text-align: right;">190</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Produccion</td>
+<td style="text-align: right;">162</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Remesas</td>
-<td style="text-align: right;">197</td>
+<td style="text-align: right;">103</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Recaudacion_Impuestos</td>
+<td style="text-align: right;">488</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Servicios</td>
+<td style="text-align: right;">100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gastos_Militares</td>
+<td style="text-align: right;">337</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ahorro</td>
+<td style="text-align: right;">310</td>
 </tr>
 </tbody>
 </table>
@@ -282,31 +277,9 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>Interpolación de variables, usando el método na.spline.</li>
 <li>Exclusión de registros, en los casos en los que todos los datos sean faltantes para las series numéricas.</li>
-<li>Eliminación de variables, si la cantidad sigue siendo significativa.</li>
+<li>Eliminación de variables, si la cantidad sigue siendo significativa: una cantidad mayor a 40% de datos faltantes serán eliminadas.</li>
+<li>Si quedan faltantes en algunos países, se imputarán los registros con base en la mediana de la región al que pertenecen y el año.</li>
 </ul>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1,085 × 17
-# Groups:   Pais [217]
-   Pais     Año Region Gasto_Salud Gasto_ID Gasto_Militar Gasto_Educacion Ahorro
-   &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;         &lt;dbl&gt;           &lt;dbl&gt;  &lt;dbl&gt;
- 1 Afgan…  2020 Asia …       15.5    NA             1.36            NA     -2.74
- 2 Alban…  2020 Balca…        7.50   NA             1.30             3.34  17.7 
- 3 Alema…  2020 Europ…       12.7     3.13          1.37             5.59  28.0 
- 4 Andor…  2020 Europ…        8.79   NA            NA                2.63  NA   
- 5 Angola  2020 Áfric…        3.27   NA             1.74             2.67  28.1 
- 6 Antig…  2020 Latin…        5.73   NA            NA                2.99  NA   
- 7 Arabi…  2020 Orien…        6.65    0.498         8.79             5.11  20.0 
- 8 Argel…  2020 Norte…        5.64   NA             6.66             6.19  33.3 
- 9 Argen…  2020 Latin…       10.5     0.541         0.734            5.28  15.0 
-10 Armen…  2020 Europ…       12.2     0.209         4.98             2.71  15.7 
-# ℹ 1,075 more rows
-# ℹ 9 more variables: Exportaciones &lt;dbl&gt;, Importaciones &lt;dbl&gt;,
-#   Industria &lt;dbl&gt;, Inversion_Extranjera_Entrada &lt;dbl&gt;,
-#   Inversion_Extranjera_Salida &lt;dbl&gt;, Deuda &lt;dbl&gt;,
-#   Recaudacion_Impuestos &lt;dbl&gt;, Agricultura &lt;dbl&gt;, Remesas &lt;dbl&gt;</code></pre>
-</div>
-</div>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
@@ -323,94 +296,2267 @@ ul.task-list li input[type="checkbox"] {
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Country Code</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">Año</td>
 <td style="text-align: right;">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Region</td>
 <td style="text-align: right;">0</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">Gasto_Salud</td>
-<td style="text-align: right;">125</td>
-</tr>
 <tr class="odd">
-<td style="text-align: left;">Gasto_ID</td>
-<td style="text-align: right;">585</td>
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Gasto_Militar</td>
-<td style="text-align: right;">330</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Gasto_Educacion</td>
-<td style="text-align: right;">200</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Ahorro</td>
-<td style="text-align: right;">285</td>
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Exportaciones</td>
-<td style="text-align: right;">175</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Importaciones</td>
-<td style="text-align: right;">175</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Industria</td>
-<td style="text-align: right;">85</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Inversion_Extranjera_Entrada</td>
-<td style="text-align: right;">125</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Inversion_Extranjera_Salida</td>
-<td style="text-align: right;">230</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Deuda</td>
-<td style="text-align: right;">495</td>
+<td style="text-align: left;">Importaciones</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Produccion</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Recaudacion_Impuestos</td>
-<td style="text-align: right;">395</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Agricultura</td>
-<td style="text-align: right;">100</td>
+<td style="text-align: left;">Servicios</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Remesas</td>
-<td style="text-align: right;">100</td>
+<td style="text-align: left;">Gastos_Militares</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ahorro</td>
+<td style="text-align: right;">0</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
+<p>Ya la data está limpia para poder ser usada en los análisis posteriores.</p>
 </section>
 <section id="resumen-de-las-variables" class="level3">
 <h3 class="anchored" data-anchor-id="resumen-de-las-variables"><strong>1.2. Resumen de las variables</strong></h3>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Descripción del conjunto de datos</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Pais</td>
+<td style="text-align: left;">Length:1060</td>
+<td style="text-align: left;">Class :character</td>
+<td style="text-align: left;">Mode :character</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Country Code</td>
+<td style="text-align: left;">Length:1060</td>
+<td style="text-align: left;">Class :character</td>
+<td style="text-align: left;">Mode :character</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Año</td>
+<td style="text-align: left;">Length:1060</td>
+<td style="text-align: left;">Class :character</td>
+<td style="text-align: left;">Mode :character</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Region</td>
+<td style="text-align: left;">Length:1060</td>
+<td style="text-align: left;">Class :character</td>
+<td style="text-align: left;">Mode :character</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: left;">Min. :-0.03915</td>
+<td style="text-align: left;">1st Qu.: 1.91786</td>
+<td style="text-align: left;">Median : 6.44714</td>
+<td style="text-align: left;">Mean : 9.69659</td>
+<td style="text-align: left;">3rd Qu.:15.35606</td>
+<td style="text-align: left;">Max. :43.05999</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: left;">Min. :-29.68</td>
+<td style="text-align: left;">1st Qu.: 18.14</td>
+<td style="text-align: left;">Median : 25.71</td>
+<td style="text-align: left;">Mean : 27.30</td>
+<td style="text-align: left;">3rd Qu.: 33.66</td>
+<td style="text-align: left;">Max. :145.68</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Exportaciones</td>
+<td style="text-align: left;">Min. :-53.96</td>
+<td style="text-align: left;">1st Qu.: 23.69</td>
+<td style="text-align: left;">Median : 35.51</td>
+<td style="text-align: left;">Mean : 42.21</td>
+<td style="text-align: left;">3rd Qu.: 50.61</td>
+<td style="text-align: left;">Max. :222.31</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
+<td style="text-align: left;">Min. :-444.7069</td>
+<td style="text-align: left;">1st Qu.: 0.9518</td>
+<td style="text-align: left;">Median : 2.3204</td>
+<td style="text-align: left;">Mean : 4.4524</td>
+<td style="text-align: left;">3rd Qu.: 4.4333</td>
+<td style="text-align: left;">Max. : 433.7510</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inversion_Extranjera_Salida</td>
+<td style="text-align: left;">Min. :-382.68662</td>
+<td style="text-align: left;">1st Qu.: 0.06023</td>
+<td style="text-align: left;">Median : 0.32504</td>
+<td style="text-align: left;">Mean : 2.05555</td>
+<td style="text-align: left;">3rd Qu.: 1.32329</td>
+<td style="text-align: left;">Max. : 424.86749</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Importaciones</td>
+<td style="text-align: left;">Min. :-63.51</td>
+<td style="text-align: left;">1st Qu.: 30.10</td>
+<td style="text-align: left;">Median : 42.60</td>
+<td style="text-align: left;">Mean : 48.51</td>
+<td style="text-align: left;">3rd Qu.: 60.04</td>
+<td style="text-align: left;">Max. :198.45</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Produccion</td>
+<td style="text-align: left;">Min. : 0.3311</td>
+<td style="text-align: left;">1st Qu.: 6.3978</td>
+<td style="text-align: left;">Median :10.7039</td>
+<td style="text-align: left;">Mean :11.3437</td>
+<td style="text-align: left;">3rd Qu.:14.8118</td>
+<td style="text-align: left;">Max. :47.7695</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: left;">Min. : 0.0000</td>
+<td style="text-align: left;">1st Qu.: 0.3729</td>
+<td style="text-align: left;">Median : 2.0253</td>
+<td style="text-align: left;">Mean : 4.7862</td>
+<td style="text-align: left;">3rd Qu.: 5.6622</td>
+<td style="text-align: left;">Max. :49.9757</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recaudacion_Impuestos</td>
+<td style="text-align: left;">Min. :-31.62</td>
+<td style="text-align: left;">1st Qu.: 12.24</td>
+<td style="text-align: left;">Median : 15.05</td>
+<td style="text-align: left;">Mean : 16.00</td>
+<td style="text-align: left;">3rd Qu.: 19.92</td>
+<td style="text-align: left;">Max. : 74.93</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Servicios</td>
+<td style="text-align: left;">Min. : 6.448</td>
+<td style="text-align: left;">1st Qu.: 48.781</td>
+<td style="text-align: left;">Median : 56.960</td>
+<td style="text-align: left;">Mean : 57.616</td>
+<td style="text-align: left;">3rd Qu.: 65.984</td>
+<td style="text-align: left;">Max. :102.873</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos_Militares</td>
+<td style="text-align: left;">Min. : 0.05409</td>
+<td style="text-align: left;">1st Qu.: 1.11769</td>
+<td style="text-align: left;">Median : 1.43530</td>
+<td style="text-align: left;">Mean : 1.87469</td>
+<td style="text-align: left;">3rd Qu.: 2.18326</td>
+<td style="text-align: left;">Max. :36.65311</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ahorro</td>
+<td style="text-align: left;">Min. :-44.99</td>
+<td style="text-align: left;">1st Qu.: 17.24</td>
+<td style="text-align: left;">Median : 21.26</td>
+<td style="text-align: left;">Mean : 22.48</td>
+<td style="text-align: left;">3rd Qu.: 28.15</td>
+<td style="text-align: left;">Max. : 64.31</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Hallazgos</p>
-<section id="variables-numéricas" class="level4">
-<h4 class="anchored" data-anchor-id="variables-numéricas"><strong>Variables numéricas</strong></h4>
+<section id="análisis-univariado-de-las-variables-numéricas" class="level4">
+<h4 class="anchored" data-anchor-id="análisis-univariado-de-las-variables-numéricas"><strong>Análisis univariado de las variables numéricas</strong></h4>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Modelo_DUAL_files/figure-html/numericas-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>Hallazgos</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Modelo_DUAL_files/figure-html/numericas_2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>Hallazgos</p>
 </section>
 </section>
-<section id="análisis-bivariado" class="level3">
-<h3 class="anchored" data-anchor-id="análisis-bivariado"><strong>1.3. Análisis bivariado</strong></h3>
+<section id="análisis-multivariado" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-multivariado"><strong>1.3. Análisis multivariado</strong></h3>
 <section id="variables-numéricas-vs.-año-y-región" class="level4">
 <h4 class="anchored" data-anchor-id="variables-numéricas-vs.-año-y-región"><strong>Variables numéricas vs.&nbsp;Año y Región</strong></h4>
+<section id="año-2019" class="level5">
+<h5 class="anchored" data-anchor-id="año-2019"><strong>Año 2019</strong></h5>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Mediana por Región - Año 2019</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Region</td>
+<td style="text-align: center;">América - Latinoamérica y el Caribe</td>
+<td style="text-align: center;">América - Norteamérica</td>
+<td style="text-align: center;">Asia - Asia Central y del Sur</td>
+<td style="text-align: center;">Asia - Oriente Medio</td>
+<td style="text-align: center;">Asia del Este, Pacífico y Oceanía</td>
+<td style="text-align: center;">Europa - Europa Occidental</td>
+<td style="text-align: center;">Europa - Europa del Este</td>
+<td style="text-align: center;">África - Norte de África</td>
+<td style="text-align: center;">África - África Subsahariana</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: center;">4.68</td>
+<td style="text-align: center;">0.76</td>
+<td style="text-align: center;">12.45</td>
+<td style="text-align: center;">2.45</td>
+<td style="text-align: center;">10.20</td>
+<td style="text-align: center;">1.24</td>
+<td style="text-align: center;">4.53</td>
+<td style="text-align: center;">10.23</td>
+<td style="text-align: center;">19.96</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: center;">23.85</td>
+<td style="text-align: center;">20.31</td>
+<td style="text-align: center;">16.63</td>
+<td style="text-align: center;">26.48</td>
+<td style="text-align: center;">26.18</td>
+<td style="text-align: center;">37.50</td>
+<td style="text-align: center;">32.72</td>
+<td style="text-align: center;">23.39</td>
+<td style="text-align: center;">16.42</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Produccion</td>
+<td style="text-align: center;">10.41</td>
+<td style="text-align: center;">3.32</td>
+<td style="text-align: center;">13.43</td>
+<td style="text-align: center;">10.05</td>
+<td style="text-align: center;">7.36</td>
+<td style="text-align: center;">10.70</td>
+<td style="text-align: center;">12.88</td>
+<td style="text-align: center;">14.32</td>
+<td style="text-align: center;">10.16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Exportaciones</td>
+<td style="text-align: center;">34.33</td>
+<td style="text-align: center;">36.70</td>
+<td style="text-align: center;">23.28</td>
+<td style="text-align: center;">36.33</td>
+<td style="text-align: center;">37.90</td>
+<td style="text-align: center;">52.01</td>
+<td style="text-align: center;">51.55</td>
+<td style="text-align: center;">38.22</td>
+<td style="text-align: center;">26.53</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Importaciones</td>
+<td style="text-align: center;">33.81</td>
+<td style="text-align: center;">53.48</td>
+<td style="text-align: center;">34.87</td>
+<td style="text-align: center;">37.86</td>
+<td style="text-align: center;">50.56</td>
+<td style="text-align: center;">48.30</td>
+<td style="text-align: center;">59.73</td>
+<td style="text-align: center;">39.27</td>
+<td style="text-align: center;">33.19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: center;">3.03</td>
+<td style="text-align: center;">0.03</td>
+<td style="text-align: center;">4.82</td>
+<td style="text-align: center;">0.14</td>
+<td style="text-align: center;">2.99</td>
+<td style="text-align: center;">0.46</td>
+<td style="text-align: center;">3.17</td>
+<td style="text-align: center;">3.42</td>
+<td style="text-align: center;">2.53</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Servicios</td>
+<td style="text-align: center;">61.74</td>
+<td style="text-align: center;">78.28</td>
+<td style="text-align: center;">51.44</td>
+<td style="text-align: center;">54.60</td>
+<td style="text-align: center;">58.28</td>
+<td style="text-align: center;">67.18</td>
+<td style="text-align: center;">56.55</td>
+<td style="text-align: center;">54.81</td>
+<td style="text-align: center;">48.03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recaudacion_Impuestos</td>
+<td style="text-align: center;">14.71</td>
+<td style="text-align: center;">11.31</td>
+<td style="text-align: center;">11.79</td>
+<td style="text-align: center;">10.71</td>
+<td style="text-align: center;">18.37</td>
+<td style="text-align: center;">23.28</td>
+<td style="text-align: center;">18.98</td>
+<td style="text-align: center;">19.91</td>
+<td style="text-align: center;">12.24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
+<td style="text-align: center;">3.71</td>
+<td style="text-align: center;">1.97</td>
+<td style="text-align: center;">1.52</td>
+<td style="text-align: center;">1.20</td>
+<td style="text-align: center;">2.30</td>
+<td style="text-align: center;">2.29</td>
+<td style="text-align: center;">3.88</td>
+<td style="text-align: center;">2.26</td>
+<td style="text-align: center;">2.57</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inversion_Extranjera_Salida</td>
+<td style="text-align: center;">0.47</td>
+<td style="text-align: center;">2.44</td>
+<td style="text-align: center;">0.11</td>
+<td style="text-align: center;">0.38</td>
+<td style="text-align: center;">0.47</td>
+<td style="text-align: center;">1.86</td>
+<td style="text-align: center;">0.91</td>
+<td style="text-align: center;">0.02</td>
+<td style="text-align: center;">0.17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ahorro</td>
+<td style="text-align: center;">19.68</td>
+<td style="text-align: center;">19.98</td>
+<td style="text-align: center;">29.33</td>
+<td style="text-align: center;">28.90</td>
+<td style="text-align: center;">31.33</td>
+<td style="text-align: center;">24.80</td>
+<td style="text-align: center;">23.25</td>
+<td style="text-align: center;">18.43</td>
+<td style="text-align: center;">17.81</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos_Militares</td>
+<td style="text-align: center;">1.25</td>
+<td style="text-align: center;">2.35</td>
+<td style="text-align: center;">1.36</td>
+<td style="text-align: center;">4.83</td>
+<td style="text-align: center;">1.44</td>
+<td style="text-align: center;">1.30</td>
+<td style="text-align: center;">1.74</td>
+<td style="text-align: center;">2.38</td>
+<td style="text-align: center;">1.35</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Desviación estándar por Región - Año 2019</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Region</td>
+<td style="text-align: center;">América - Latinoamérica y el Caribe</td>
+<td style="text-align: center;">América - Norteamérica</td>
+<td style="text-align: center;">Asia - Asia Central y del Sur</td>
+<td style="text-align: center;">Asia - Oriente Medio</td>
+<td style="text-align: center;">Asia del Este, Pacífico y Oceanía</td>
+<td style="text-align: center;">Europa - Europa Occidental</td>
+<td style="text-align: center;">Europa - Europa del Este</td>
+<td style="text-align: center;">África - Norte de África</td>
+<td style="text-align: center;">África - África Subsahariana</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: center;">4.73</td>
+<td style="text-align: center;">6.28</td>
+<td style="text-align: center;">7.18</td>
+<td style="text-align: center;">11.00</td>
+<td style="text-align: center;">8.18</td>
+<td style="text-align: center;">3.18</td>
+<td style="text-align: center;">3.84</td>
+<td style="text-align: center;">4.64</td>
+<td style="text-align: center;">10.91</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: center;">4.45</td>
+<td style="text-align: center;">1.18</td>
+<td style="text-align: center;">6.53</td>
+<td style="text-align: center;">6.98</td>
+<td style="text-align: center;">16.79</td>
+<td style="text-align: center;">6.63</td>
+<td style="text-align: center;">5.08</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">6.83</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Produccion</td>
+<td style="text-align: center;">8.26</td>
+<td style="text-align: center;">3.53</td>
+<td style="text-align: center;">5.46</td>
+<td style="text-align: center;">4.73</td>
+<td style="text-align: center;">8.92</td>
+<td style="text-align: center;">8.78</td>
+<td style="text-align: center;">4.82</td>
+<td style="text-align: center;">5.17</td>
+<td style="text-align: center;">4.73</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Exportaciones</td>
+<td style="text-align: center;">14.81</td>
+<td style="text-align: center;">13.12</td>
+<td style="text-align: center;">15.05</td>
+<td style="text-align: center;">23.93</td>
+<td style="text-align: center;">37.29</td>
+<td style="text-align: center;">42.56</td>
+<td style="text-align: center;">18.43</td>
+<td style="text-align: center;">56.26</td>
+<td style="text-align: center;">14.95</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Importaciones</td>
+<td style="text-align: center;">13.09</td>
+<td style="text-align: center;">24.50</td>
+<td style="text-align: center;">21.49</td>
+<td style="text-align: center;">14.82</td>
+<td style="text-align: center;">34.42</td>
+<td style="text-align: center;">36.51</td>
+<td style="text-align: center;">14.97</td>
+<td style="text-align: center;">49.21</td>
+<td style="text-align: center;">16.39</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: center;">6.41</td>
+<td style="text-align: center;">0.02</td>
+<td style="text-align: center;">10.51</td>
+<td style="text-align: center;">6.44</td>
+<td style="text-align: center;">7.32</td>
+<td style="text-align: center;">1.06</td>
+<td style="text-align: center;">4.96</td>
+<td style="text-align: center;">3.10</td>
+<td style="text-align: center;">5.07</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Servicios</td>
+<td style="text-align: center;">10.54</td>
+<td style="text-align: center;">9.68</td>
+<td style="text-align: center;">8.20</td>
+<td style="text-align: center;">10.43</td>
+<td style="text-align: center;">13.95</td>
+<td style="text-align: center;">9.23</td>
+<td style="text-align: center;">6.03</td>
+<td style="text-align: center;">9.97</td>
+<td style="text-align: center;">9.85</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recaudacion_Impuestos</td>
+<td style="text-align: center;">2.87</td>
+<td style="text-align: center;">0.76</td>
+<td style="text-align: center;">3.93</td>
+<td style="text-align: center;">6.41</td>
+<td style="text-align: center;">5.69</td>
+<td style="text-align: center;">5.10</td>
+<td style="text-align: center;">3.30</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">6.05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
+<td style="text-align: center;">8.63</td>
+<td style="text-align: center;">0.37</td>
+<td style="text-align: center;">4.25</td>
+<td style="text-align: center;">1.91</td>
+<td style="text-align: center;">6.68</td>
+<td style="text-align: center;">98.29</td>
+<td style="text-align: center;">11.49</td>
+<td style="text-align: center;">1.73</td>
+<td style="text-align: center;">4.90</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inversion_Extranjera_Salida</td>
+<td style="text-align: center;">2.12</td>
+<td style="text-align: center;">1.02</td>
+<td style="text-align: center;">0.43</td>
+<td style="text-align: center;">1.73</td>
+<td style="text-align: center;">3.86</td>
+<td style="text-align: center;">98.79</td>
+<td style="text-align: center;">12.01</td>
+<td style="text-align: center;">0.35</td>
+<td style="text-align: center;">0.94</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ahorro</td>
+<td style="text-align: center;">4.76</td>
+<td style="text-align: center;">0.15</td>
+<td style="text-align: center;">11.44</td>
+<td style="text-align: center;">12.67</td>
+<td style="text-align: center;">12.37</td>
+<td style="text-align: center;">8.22</td>
+<td style="text-align: center;">5.55</td>
+<td style="text-align: center;">16.70</td>
+<td style="text-align: center;">7.64</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos_Militares</td>
+<td style="text-align: center;">0.54</td>
+<td style="text-align: center;">0.57</td>
+<td style="text-align: center;">0.74</td>
+<td style="text-align: center;">1.50</td>
+<td style="text-align: center;">0.55</td>
+<td style="text-align: center;">0.50</td>
+<td style="text-align: center;">1.15</td>
+<td style="text-align: center;">1.72</td>
+<td style="text-align: center;">0.81</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Modelo_DUAL_files/figure-html/multivariado_2019-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>Hallazgos</p>
+</section>
+<section id="año-2020" class="level5">
+<h5 class="anchored" data-anchor-id="año-2020"><strong>Año 2020</strong></h5>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Mediana por Región - Año 2020</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Region</td>
+<td style="text-align: center;">América - Latinoamérica y el Caribe</td>
+<td style="text-align: center;">América - Norteamérica</td>
+<td style="text-align: center;">Asia - Asia Central y del Sur</td>
+<td style="text-align: center;">Asia - Oriente Medio</td>
+<td style="text-align: center;">Asia del Este, Pacífico y Oceanía</td>
+<td style="text-align: center;">Europa - Europa Occidental</td>
+<td style="text-align: center;">Europa - Europa del Este</td>
+<td style="text-align: center;">África - Norte de África</td>
+<td style="text-align: center;">África - África Subsahariana</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: center;">5.35</td>
+<td style="text-align: center;">0.76</td>
+<td style="text-align: center;">13.94</td>
+<td style="text-align: center;">2.96</td>
+<td style="text-align: center;">11.42</td>
+<td style="text-align: center;">1.20</td>
+<td style="text-align: center;">4.57</td>
+<td style="text-align: center;">10.53</td>
+<td style="text-align: center;">20.32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: center;">26.50</td>
+<td style="text-align: center;">30.20</td>
+<td style="text-align: center;">19.07</td>
+<td style="text-align: center;">27.89</td>
+<td style="text-align: center;">30.26</td>
+<td style="text-align: center;">43.02</td>
+<td style="text-align: center;">37.43</td>
+<td style="text-align: center;">27.21</td>
+<td style="text-align: center;">17.18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Produccion</td>
+<td style="text-align: center;">10.20</td>
+<td style="text-align: center;">2.88</td>
+<td style="text-align: center;">13.16</td>
+<td style="text-align: center;">10.67</td>
+<td style="text-align: center;">7.72</td>
+<td style="text-align: center;">10.85</td>
+<td style="text-align: center;">13.30</td>
+<td style="text-align: center;">13.69</td>
+<td style="text-align: center;">10.03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Exportaciones</td>
+<td style="text-align: center;">31.33</td>
+<td style="text-align: center;">22.13</td>
+<td style="text-align: center;">18.25</td>
+<td style="text-align: center;">27.17</td>
+<td style="text-align: center;">29.20</td>
+<td style="text-align: center;">45.84</td>
+<td style="text-align: center;">43.69</td>
+<td style="text-align: center;">25.58</td>
+<td style="text-align: center;">22.78</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Importaciones</td>
+<td style="text-align: center;">29.49</td>
+<td style="text-align: center;">51.98</td>
+<td style="text-align: center;">33.17</td>
+<td style="text-align: center;">38.30</td>
+<td style="text-align: center;">52.93</td>
+<td style="text-align: center;">44.18</td>
+<td style="text-align: center;">54.07</td>
+<td style="text-align: center;">34.33</td>
+<td style="text-align: center;">29.42</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: center;">3.53</td>
+<td style="text-align: center;">0.03</td>
+<td style="text-align: center;">4.88</td>
+<td style="text-align: center;">0.15</td>
+<td style="text-align: center;">1.99</td>
+<td style="text-align: center;">0.48</td>
+<td style="text-align: center;">3.27</td>
+<td style="text-align: center;">3.70</td>
+<td style="text-align: center;">2.48</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Servicios</td>
+<td style="text-align: center;">61.46</td>
+<td style="text-align: center;">75.47</td>
+<td style="text-align: center;">52.04</td>
+<td style="text-align: center;">56.86</td>
+<td style="text-align: center;">58.01</td>
+<td style="text-align: center;">67.55</td>
+<td style="text-align: center;">56.94</td>
+<td style="text-align: center;">56.69</td>
+<td style="text-align: center;">47.90</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recaudacion_Impuestos</td>
+<td style="text-align: center;">13.97</td>
+<td style="text-align: center;">11.83</td>
+<td style="text-align: center;">12.28</td>
+<td style="text-align: center;">8.39</td>
+<td style="text-align: center;">14.86</td>
+<td style="text-align: center;">22.40</td>
+<td style="text-align: center;">18.61</td>
+<td style="text-align: center;">20.02</td>
+<td style="text-align: center;">12.28</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
+<td style="text-align: center;">2.97</td>
+<td style="text-align: center;">1.76</td>
+<td style="text-align: center;">0.86</td>
+<td style="text-align: center;">1.13</td>
+<td style="text-align: center;">1.69</td>
+<td style="text-align: center;">0.55</td>
+<td style="text-align: center;">2.68</td>
+<td style="text-align: center;">1.50</td>
+<td style="text-align: center;">1.46</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inversion_Extranjera_Salida</td>
+<td style="text-align: center;">0.21</td>
+<td style="text-align: center;">2.09</td>
+<td style="text-align: center;">0.30</td>
+<td style="text-align: center;">0.09</td>
+<td style="text-align: center;">0.36</td>
+<td style="text-align: center;">0.41</td>
+<td style="text-align: center;">0.50</td>
+<td style="text-align: center;">0.09</td>
+<td style="text-align: center;">0.09</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ahorro</td>
+<td style="text-align: center;">19.09</td>
+<td style="text-align: center;">19.18</td>
+<td style="text-align: center;">28.59</td>
+<td style="text-align: center;">21.47</td>
+<td style="text-align: center;">28.15</td>
+<td style="text-align: center;">24.99</td>
+<td style="text-align: center;">21.89</td>
+<td style="text-align: center;">10.95</td>
+<td style="text-align: center;">18.35</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos_Militares</td>
+<td style="text-align: center;">1.35</td>
+<td style="text-align: center;">2.53</td>
+<td style="text-align: center;">1.47</td>
+<td style="text-align: center;">5.01</td>
+<td style="text-align: center;">1.59</td>
+<td style="text-align: center;">1.38</td>
+<td style="text-align: center;">1.78</td>
+<td style="text-align: center;">2.71</td>
+<td style="text-align: center;">1.48</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Desviación estándar por Región - Año 2020</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Region</td>
+<td style="text-align: center;">América - Latinoamérica y el Caribe</td>
+<td style="text-align: center;">América - Norteamérica</td>
+<td style="text-align: center;">Asia - Asia Central y del Sur</td>
+<td style="text-align: center;">Asia - Oriente Medio</td>
+<td style="text-align: center;">Asia del Este, Pacífico y Oceanía</td>
+<td style="text-align: center;">Europa - Europa Occidental</td>
+<td style="text-align: center;">Europa - Europa del Este</td>
+<td style="text-align: center;">África - Norte de África</td>
+<td style="text-align: center;">África - África Subsahariana</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: center;">4.99</td>
+<td style="text-align: center;">5.29</td>
+<td style="text-align: center;">7.55</td>
+<td style="text-align: center;">9.09</td>
+<td style="text-align: center;">8.40</td>
+<td style="text-align: center;">2.60</td>
+<td style="text-align: center;">3.92</td>
+<td style="text-align: center;">4.33</td>
+<td style="text-align: center;">11.12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: center;">4.70</td>
+<td style="text-align: center;">0.87</td>
+<td style="text-align: center;">7.29</td>
+<td style="text-align: center;">8.51</td>
+<td style="text-align: center;">18.17</td>
+<td style="text-align: center;">7.76</td>
+<td style="text-align: center;">5.76</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">8.08</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Produccion</td>
+<td style="text-align: center;">8.56</td>
+<td style="text-align: center;">3.40</td>
+<td style="text-align: center;">5.72</td>
+<td style="text-align: center;">5.43</td>
+<td style="text-align: center;">8.80</td>
+<td style="text-align: center;">8.46</td>
+<td style="text-align: center;">4.41</td>
+<td style="text-align: center;">4.97</td>
+<td style="text-align: center;">4.47</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Exportaciones</td>
+<td style="text-align: center;">11.92</td>
+<td style="text-align: center;">11.67</td>
+<td style="text-align: center;">11.25</td>
+<td style="text-align: center;">25.30</td>
+<td style="text-align: center;">38.84</td>
+<td style="text-align: center;">45.29</td>
+<td style="text-align: center;">19.66</td>
+<td style="text-align: center;">39.43</td>
+<td style="text-align: center;">13.61</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Importaciones</td>
+<td style="text-align: center;">12.16</td>
+<td style="text-align: center;">19.31</td>
+<td style="text-align: center;">14.26</td>
+<td style="text-align: center;">17.78</td>
+<td style="text-align: center;">33.59</td>
+<td style="text-align: center;">37.10</td>
+<td style="text-align: center;">14.37</td>
+<td style="text-align: center;">32.71</td>
+<td style="text-align: center;">17.76</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: center;">7.39</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">10.72</td>
+<td style="text-align: center;">7.28</td>
+<td style="text-align: center;">7.83</td>
+<td style="text-align: center;">1.10</td>
+<td style="text-align: center;">5.27</td>
+<td style="text-align: center;">3.11</td>
+<td style="text-align: center;">5.99</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Servicios</td>
+<td style="text-align: center;">11.12</td>
+<td style="text-align: center;">8.97</td>
+<td style="text-align: center;">8.29</td>
+<td style="text-align: center;">10.78</td>
+<td style="text-align: center;">13.49</td>
+<td style="text-align: center;">9.05</td>
+<td style="text-align: center;">5.32</td>
+<td style="text-align: center;">15.28</td>
+<td style="text-align: center;">9.75</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recaudacion_Impuestos</td>
+<td style="text-align: center;">2.83</td>
+<td style="text-align: center;">0.90</td>
+<td style="text-align: center;">3.96</td>
+<td style="text-align: center;">6.62</td>
+<td style="text-align: center;">6.86</td>
+<td style="text-align: center;">5.11</td>
+<td style="text-align: center;">3.20</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">6.31</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
+<td style="text-align: center;">19.65</td>
+<td style="text-align: center;">0.72</td>
+<td style="text-align: center;">3.60</td>
+<td style="text-align: center;">2.47</td>
+<td style="text-align: center;">10.55</td>
+<td style="text-align: center;">69.57</td>
+<td style="text-align: center;">21.13</td>
+<td style="text-align: center;">1.56</td>
+<td style="text-align: center;">6.03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inversion_Extranjera_Salida</td>
+<td style="text-align: center;">5.47</td>
+<td style="text-align: center;">0.41</td>
+<td style="text-align: center;">0.57</td>
+<td style="text-align: center;">1.74</td>
+<td style="text-align: center;">4.76</td>
+<td style="text-align: center;">97.84</td>
+<td style="text-align: center;">21.08</td>
+<td style="text-align: center;">0.28</td>
+<td style="text-align: center;">1.49</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ahorro</td>
+<td style="text-align: center;">5.53</td>
+<td style="text-align: center;">0.15</td>
+<td style="text-align: center;">12.22</td>
+<td style="text-align: center;">9.65</td>
+<td style="text-align: center;">11.17</td>
+<td style="text-align: center;">7.10</td>
+<td style="text-align: center;">5.87</td>
+<td style="text-align: center;">14.71</td>
+<td style="text-align: center;">8.65</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos_Militares</td>
+<td style="text-align: center;">0.57</td>
+<td style="text-align: center;">0.60</td>
+<td style="text-align: center;">0.75</td>
+<td style="text-align: center;">1.90</td>
+<td style="text-align: center;">0.63</td>
+<td style="text-align: center;">0.56</td>
+<td style="text-align: center;">1.28</td>
+<td style="text-align: center;">2.01</td>
+<td style="text-align: center;">0.84</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Modelo_DUAL_files/figure-html/multivariado_2020-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>Hallazgos</p>
+</section>
+<section id="año-2021" class="level5">
+<h5 class="anchored" data-anchor-id="año-2021"><strong>Año 2021</strong></h5>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Mediana por Región - Año 2021</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Region</td>
+<td style="text-align: center;">América - Latinoamérica y el Caribe</td>
+<td style="text-align: center;">América - Norteamérica</td>
+<td style="text-align: center;">Asia - Asia Central y del Sur</td>
+<td style="text-align: center;">Asia - Oriente Medio</td>
+<td style="text-align: center;">Asia del Este, Pacífico y Oceanía</td>
+<td style="text-align: center;">Europa - Europa Occidental</td>
+<td style="text-align: center;">Europa - Europa del Este</td>
+<td style="text-align: center;">África - Norte de África</td>
+<td style="text-align: center;">África - África Subsahariana</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: center;">5.21</td>
+<td style="text-align: center;">0.97</td>
+<td style="text-align: center;">14.10</td>
+<td style="text-align: center;">2.39</td>
+<td style="text-align: center;">9.96</td>
+<td style="text-align: center;">1.11</td>
+<td style="text-align: center;">4.81</td>
+<td style="text-align: center;">10.66</td>
+<td style="text-align: center;">19.15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: center;">25.71</td>
+<td style="text-align: center;">26.90</td>
+<td style="text-align: center;">19.44</td>
+<td style="text-align: center;">26.89</td>
+<td style="text-align: center;">31.41</td>
+<td style="text-align: center;">40.10</td>
+<td style="text-align: center;">36.02</td>
+<td style="text-align: center;">25.63</td>
+<td style="text-align: center;">16.53</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Produccion</td>
+<td style="text-align: center;">10.50</td>
+<td style="text-align: center;">2.05</td>
+<td style="text-align: center;">13.61</td>
+<td style="text-align: center;">11.12</td>
+<td style="text-align: center;">8.69</td>
+<td style="text-align: center;">10.75</td>
+<td style="text-align: center;">13.13</td>
+<td style="text-align: center;">14.37</td>
+<td style="text-align: center;">10.89</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Exportaciones</td>
+<td style="text-align: center;">34.89</td>
+<td style="text-align: center;">20.98</td>
+<td style="text-align: center;">21.35</td>
+<td style="text-align: center;">29.96</td>
+<td style="text-align: center;">27.25</td>
+<td style="text-align: center;">49.89</td>
+<td style="text-align: center;">51.06</td>
+<td style="text-align: center;">37.45</td>
+<td style="text-align: center;">23.74</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Importaciones</td>
+<td style="text-align: center;">34.61</td>
+<td style="text-align: center;">54.19</td>
+<td style="text-align: center;">35.75</td>
+<td style="text-align: center;">42.62</td>
+<td style="text-align: center;">58.69</td>
+<td style="text-align: center;">49.88</td>
+<td style="text-align: center;">59.67</td>
+<td style="text-align: center;">47.13</td>
+<td style="text-align: center;">32.14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: center;">3.79</td>
+<td style="text-align: center;">0.03</td>
+<td style="text-align: center;">4.08</td>
+<td style="text-align: center;">0.33</td>
+<td style="text-align: center;">1.93</td>
+<td style="text-align: center;">0.48</td>
+<td style="text-align: center;">3.32</td>
+<td style="text-align: center;">4.32</td>
+<td style="text-align: center;">2.43</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Servicios</td>
+<td style="text-align: center;">59.32</td>
+<td style="text-align: center;">74.05</td>
+<td style="text-align: center;">51.18</td>
+<td style="text-align: center;">51.92</td>
+<td style="text-align: center;">56.82</td>
+<td style="text-align: center;">66.93</td>
+<td style="text-align: center;">57.02</td>
+<td style="text-align: center;">52.13</td>
+<td style="text-align: center;">45.88</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recaudacion_Impuestos</td>
+<td style="text-align: center;">14.40</td>
+<td style="text-align: center;">12.26</td>
+<td style="text-align: center;">10.35</td>
+<td style="text-align: center;">7.15</td>
+<td style="text-align: center;">15.71</td>
+<td style="text-align: center;">23.22</td>
+<td style="text-align: center;">19.02</td>
+<td style="text-align: center;">19.67</td>
+<td style="text-align: center;">12.42</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
+<td style="text-align: center;">3.08</td>
+<td style="text-align: center;">2.32</td>
+<td style="text-align: center;">1.18</td>
+<td style="text-align: center;">2.27</td>
+<td style="text-align: center;">2.02</td>
+<td style="text-align: center;">3.80</td>
+<td style="text-align: center;">4.27</td>
+<td style="text-align: center;">1.40</td>
+<td style="text-align: center;">2.28</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inversion_Extranjera_Salida</td>
+<td style="text-align: center;">0.27</td>
+<td style="text-align: center;">3.31</td>
+<td style="text-align: center;">0.14</td>
+<td style="text-align: center;">0.12</td>
+<td style="text-align: center;">0.33</td>
+<td style="text-align: center;">5.74</td>
+<td style="text-align: center;">1.22</td>
+<td style="text-align: center;">0.09</td>
+<td style="text-align: center;">0.08</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ahorro</td>
+<td style="text-align: center;">19.32</td>
+<td style="text-align: center;">20.53</td>
+<td style="text-align: center;">24.50</td>
+<td style="text-align: center;">29.83</td>
+<td style="text-align: center;">28.40</td>
+<td style="text-align: center;">26.30</td>
+<td style="text-align: center;">21.88</td>
+<td style="text-align: center;">21.13</td>
+<td style="text-align: center;">17.24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos_Militares</td>
+<td style="text-align: center;">1.12</td>
+<td style="text-align: center;">2.34</td>
+<td style="text-align: center;">1.77</td>
+<td style="text-align: center;">4.89</td>
+<td style="text-align: center;">1.42</td>
+<td style="text-align: center;">1.32</td>
+<td style="text-align: center;">1.68</td>
+<td style="text-align: center;">2.64</td>
+<td style="text-align: center;">1.50</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Desviación estándar por Región - Año 2021</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Region</td>
+<td style="text-align: center;">América - Latinoamérica y el Caribe</td>
+<td style="text-align: center;">América - Norteamérica</td>
+<td style="text-align: center;">Asia - Asia Central y del Sur</td>
+<td style="text-align: center;">Asia - Oriente Medio</td>
+<td style="text-align: center;">Asia del Este, Pacífico y Oceanía</td>
+<td style="text-align: center;">Europa - Europa Occidental</td>
+<td style="text-align: center;">Europa - Europa del Este</td>
+<td style="text-align: center;">África - Norte de África</td>
+<td style="text-align: center;">África - África Subsahariana</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: center;">4.92</td>
+<td style="text-align: center;">5.09</td>
+<td style="text-align: center;">8.38</td>
+<td style="text-align: center;">10.82</td>
+<td style="text-align: center;">8.58</td>
+<td style="text-align: center;">2.69</td>
+<td style="text-align: center;">3.82</td>
+<td style="text-align: center;">4.56</td>
+<td style="text-align: center;">11.28</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: center;">4.79</td>
+<td style="text-align: center;">2.35</td>
+<td style="text-align: center;">6.88</td>
+<td style="text-align: center;">9.21</td>
+<td style="text-align: center;">21.00</td>
+<td style="text-align: center;">7.53</td>
+<td style="text-align: center;">5.75</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">7.75</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Produccion</td>
+<td style="text-align: center;">8.66</td>
+<td style="text-align: center;">3.71</td>
+<td style="text-align: center;">6.00</td>
+<td style="text-align: center;">5.84</td>
+<td style="text-align: center;">9.18</td>
+<td style="text-align: center;">8.89</td>
+<td style="text-align: center;">4.40</td>
+<td style="text-align: center;">4.34</td>
+<td style="text-align: center;">4.87</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Exportaciones</td>
+<td style="text-align: center;">11.45</td>
+<td style="text-align: center;">27.82</td>
+<td style="text-align: center;">17.58</td>
+<td style="text-align: center;">26.67</td>
+<td style="text-align: center;">44.79</td>
+<td style="text-align: center;">46.34</td>
+<td style="text-align: center;">19.00</td>
+<td style="text-align: center;">50.32</td>
+<td style="text-align: center;">16.41</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Importaciones</td>
+<td style="text-align: center;">12.34</td>
+<td style="text-align: center;">23.24</td>
+<td style="text-align: center;">16.79</td>
+<td style="text-align: center;">19.09</td>
+<td style="text-align: center;">35.25</td>
+<td style="text-align: center;">37.22</td>
+<td style="text-align: center;">16.97</td>
+<td style="text-align: center;">37.58</td>
+<td style="text-align: center;">18.55</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: center;">7.76</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">11.65</td>
+<td style="text-align: center;">9.21</td>
+<td style="text-align: center;">9.02</td>
+<td style="text-align: center;">0.99</td>
+<td style="text-align: center;">5.35</td>
+<td style="text-align: center;">3.42</td>
+<td style="text-align: center;">6.51</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Servicios</td>
+<td style="text-align: center;">12.37</td>
+<td style="text-align: center;">8.82</td>
+<td style="text-align: center;">8.79</td>
+<td style="text-align: center;">14.38</td>
+<td style="text-align: center;">14.77</td>
+<td style="text-align: center;">9.79</td>
+<td style="text-align: center;">6.17</td>
+<td style="text-align: center;">14.03</td>
+<td style="text-align: center;">11.36</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recaudacion_Impuestos</td>
+<td style="text-align: center;">2.69</td>
+<td style="text-align: center;">0.46</td>
+<td style="text-align: center;">4.22</td>
+<td style="text-align: center;">7.42</td>
+<td style="text-align: center;">8.92</td>
+<td style="text-align: center;">5.05</td>
+<td style="text-align: center;">3.12</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">5.87</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
+<td style="text-align: center;">6.56</td>
+<td style="text-align: center;">0.27</td>
+<td style="text-align: center;">3.07</td>
+<td style="text-align: center;">2.96</td>
+<td style="text-align: center;">9.10</td>
+<td style="text-align: center;">82.98</td>
+<td style="text-align: center;">5.10</td>
+<td style="text-align: center;">1.57</td>
+<td style="text-align: center;">5.96</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inversion_Extranjera_Salida</td>
+<td style="text-align: center;">6.33</td>
+<td style="text-align: center;">1.00</td>
+<td style="text-align: center;">1.12</td>
+<td style="text-align: center;">2.52</td>
+<td style="text-align: center;">5.57</td>
+<td style="text-align: center;">66.77</td>
+<td style="text-align: center;">4.57</td>
+<td style="text-align: center;">0.27</td>
+<td style="text-align: center;">0.82</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ahorro</td>
+<td style="text-align: center;">5.44</td>
+<td style="text-align: center;">1.48</td>
+<td style="text-align: center;">10.73</td>
+<td style="text-align: center;">14.07</td>
+<td style="text-align: center;">10.90</td>
+<td style="text-align: center;">6.85</td>
+<td style="text-align: center;">5.70</td>
+<td style="text-align: center;">12.47</td>
+<td style="text-align: center;">9.22</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos_Militares</td>
+<td style="text-align: center;">0.56</td>
+<td style="text-align: center;">0.57</td>
+<td style="text-align: center;">0.74</td>
+<td style="text-align: center;">1.62</td>
+<td style="text-align: center;">0.74</td>
+<td style="text-align: center;">0.67</td>
+<td style="text-align: center;">1.11</td>
+<td style="text-align: center;">1.62</td>
+<td style="text-align: center;">0.84</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Modelo_DUAL_files/figure-html/multivariado_2021-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Hallazgos</p>
+</section>
+<section id="año-2022" class="level5">
+<h5 class="anchored" data-anchor-id="año-2022"><strong>Año 2022</strong></h5>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Mediana por Región - Año 2022</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Region</td>
+<td style="text-align: center;">América - Latinoamérica y el Caribe</td>
+<td style="text-align: center;">América - Norteamérica</td>
+<td style="text-align: center;">Asia - Asia Central y del Sur</td>
+<td style="text-align: center;">Asia - Oriente Medio</td>
+<td style="text-align: center;">Asia del Este, Pacífico y Oceanía</td>
+<td style="text-align: center;">Europa - Europa Occidental</td>
+<td style="text-align: center;">Europa - Europa del Este</td>
+<td style="text-align: center;">África - Norte de África</td>
+<td style="text-align: center;">África - África Subsahariana</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: center;">4.56</td>
+<td style="text-align: center;">0.97</td>
+<td style="text-align: center;">12.94</td>
+<td style="text-align: center;">2.06</td>
+<td style="text-align: center;">10.16</td>
+<td style="text-align: center;">1.10</td>
+<td style="text-align: center;">4.72</td>
+<td style="text-align: center;">10.22</td>
+<td style="text-align: center;">19.51</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: center;">24.26</td>
+<td style="text-align: center;">21.46</td>
+<td style="text-align: center;">16.16</td>
+<td style="text-align: center;">24.79</td>
+<td style="text-align: center;">27.66</td>
+<td style="text-align: center;">37.93</td>
+<td style="text-align: center;">34.86</td>
+<td style="text-align: center;">28.21</td>
+<td style="text-align: center;">17.68</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Produccion</td>
+<td style="text-align: center;">10.37</td>
+<td style="text-align: center;">4.10</td>
+<td style="text-align: center;">13.64</td>
+<td style="text-align: center;">10.86</td>
+<td style="text-align: center;">8.51</td>
+<td style="text-align: center;">10.98</td>
+<td style="text-align: center;">13.19</td>
+<td style="text-align: center;">15.49</td>
+<td style="text-align: center;">11.16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Exportaciones</td>
+<td style="text-align: center;">37.16</td>
+<td style="text-align: center;">28.10</td>
+<td style="text-align: center;">23.26</td>
+<td style="text-align: center;">42.54</td>
+<td style="text-align: center;">40.82</td>
+<td style="text-align: center;">58.73</td>
+<td style="text-align: center;">60.37</td>
+<td style="text-align: center;">47.90</td>
+<td style="text-align: center;">29.21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Importaciones</td>
+<td style="text-align: center;">39.59</td>
+<td style="text-align: center;">58.28</td>
+<td style="text-align: center;">40.92</td>
+<td style="text-align: center;">31.62</td>
+<td style="text-align: center;">65.95</td>
+<td style="text-align: center;">59.83</td>
+<td style="text-align: center;">69.88</td>
+<td style="text-align: center;">60.33</td>
+<td style="text-align: center;">34.90</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: center;">3.49</td>
+<td style="text-align: center;">0.03</td>
+<td style="text-align: center;">4.00</td>
+<td style="text-align: center;">0.14</td>
+<td style="text-align: center;">2.03</td>
+<td style="text-align: center;">0.50</td>
+<td style="text-align: center;">3.34</td>
+<td style="text-align: center;">3.77</td>
+<td style="text-align: center;">2.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Servicios</td>
+<td style="text-align: center;">59.55</td>
+<td style="text-align: center;">72.44</td>
+<td style="text-align: center;">51.12</td>
+<td style="text-align: center;">44.96</td>
+<td style="text-align: center;">58.03</td>
+<td style="text-align: center;">67.17</td>
+<td style="text-align: center;">58.48</td>
+<td style="text-align: center;">53.03</td>
+<td style="text-align: center;">44.61</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recaudacion_Impuestos</td>
+<td style="text-align: center;">15.05</td>
+<td style="text-align: center;">12.63</td>
+<td style="text-align: center;">11.99</td>
+<td style="text-align: center;">6.35</td>
+<td style="text-align: center;">16.70</td>
+<td style="text-align: center;">23.17</td>
+<td style="text-align: center;">19.01</td>
+<td style="text-align: center;">22.11</td>
+<td style="text-align: center;">13.47</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
+<td style="text-align: center;">2.96</td>
+<td style="text-align: center;">2.29</td>
+<td style="text-align: center;">1.34</td>
+<td style="text-align: center;">2.33</td>
+<td style="text-align: center;">2.35</td>
+<td style="text-align: center;">3.33</td>
+<td style="text-align: center;">4.10</td>
+<td style="text-align: center;">1.69</td>
+<td style="text-align: center;">2.59</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inversion_Extranjera_Salida</td>
+<td style="text-align: center;">0.24</td>
+<td style="text-align: center;">2.77</td>
+<td style="text-align: center;">0.07</td>
+<td style="text-align: center;">0.66</td>
+<td style="text-align: center;">0.53</td>
+<td style="text-align: center;">3.82</td>
+<td style="text-align: center;">0.53</td>
+<td style="text-align: center;">0.14</td>
+<td style="text-align: center;">0.07</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ahorro</td>
+<td style="text-align: center;">18.29</td>
+<td style="text-align: center;">21.24</td>
+<td style="text-align: center;">25.86</td>
+<td style="text-align: center;">34.98</td>
+<td style="text-align: center;">26.42</td>
+<td style="text-align: center;">25.57</td>
+<td style="text-align: center;">22.23</td>
+<td style="text-align: center;">21.96</td>
+<td style="text-align: center;">16.56</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos_Militares</td>
+<td style="text-align: center;">0.90</td>
+<td style="text-align: center;">2.27</td>
+<td style="text-align: center;">2.18</td>
+<td style="text-align: center;">4.59</td>
+<td style="text-align: center;">1.32</td>
+<td style="text-align: center;">1.38</td>
+<td style="text-align: center;">1.76</td>
+<td style="text-align: center;">2.47</td>
+<td style="text-align: center;">1.33</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Desviación estándar por Región - Año 2022</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Region</td>
+<td style="text-align: center;">América - Latinoamérica y el Caribe</td>
+<td style="text-align: center;">América - Norteamérica</td>
+<td style="text-align: center;">Asia - Asia Central y del Sur</td>
+<td style="text-align: center;">Asia - Oriente Medio</td>
+<td style="text-align: center;">Asia del Este, Pacífico y Oceanía</td>
+<td style="text-align: center;">Europa - Europa Occidental</td>
+<td style="text-align: center;">Europa - Europa del Este</td>
+<td style="text-align: center;">África - Norte de África</td>
+<td style="text-align: center;">África - África Subsahariana</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: center;">4.83</td>
+<td style="text-align: center;">5.38</td>
+<td style="text-align: center;">8.30</td>
+<td style="text-align: center;">11.68</td>
+<td style="text-align: center;">8.48</td>
+<td style="text-align: center;">3.52</td>
+<td style="text-align: center;">3.39</td>
+<td style="text-align: center;">4.35</td>
+<td style="text-align: center;">11.56</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: center;">6.01</td>
+<td style="text-align: center;">1.71</td>
+<td style="text-align: center;">8.41</td>
+<td style="text-align: center;">9.90</td>
+<td style="text-align: center;">24.40</td>
+<td style="text-align: center;">7.78</td>
+<td style="text-align: center;">7.47</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">8.38</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Produccion</td>
+<td style="text-align: center;">8.86</td>
+<td style="text-align: center;">3.51</td>
+<td style="text-align: center;">5.92</td>
+<td style="text-align: center;">5.74</td>
+<td style="text-align: center;">9.13</td>
+<td style="text-align: center;">9.26</td>
+<td style="text-align: center;">4.72</td>
+<td style="text-align: center;">4.47</td>
+<td style="text-align: center;">5.40</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Exportaciones</td>
+<td style="text-align: center;">13.14</td>
+<td style="text-align: center;">27.91</td>
+<td style="text-align: center;">19.49</td>
+<td style="text-align: center;">28.69</td>
+<td style="text-align: center;">42.63</td>
+<td style="text-align: center;">47.04</td>
+<td style="text-align: center;">20.06</td>
+<td style="text-align: center;">52.68</td>
+<td style="text-align: center;">17.39</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Importaciones</td>
+<td style="text-align: center;">13.59</td>
+<td style="text-align: center;">27.22</td>
+<td style="text-align: center;">22.29</td>
+<td style="text-align: center;">23.24</td>
+<td style="text-align: center;">34.14</td>
+<td style="text-align: center;">38.76</td>
+<td style="text-align: center;">21.28</td>
+<td style="text-align: center;">44.61</td>
+<td style="text-align: center;">19.79</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: center;">7.82</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">14.31</td>
+<td style="text-align: center;">10.33</td>
+<td style="text-align: center;">9.36</td>
+<td style="text-align: center;">0.98</td>
+<td style="text-align: center;">5.29</td>
+<td style="text-align: center;">3.51</td>
+<td style="text-align: center;">6.27</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Servicios</td>
+<td style="text-align: center;">13.63</td>
+<td style="text-align: center;">11.34</td>
+<td style="text-align: center;">8.64</td>
+<td style="text-align: center;">15.05</td>
+<td style="text-align: center;">15.08</td>
+<td style="text-align: center;">10.91</td>
+<td style="text-align: center;">6.97</td>
+<td style="text-align: center;">16.83</td>
+<td style="text-align: center;">11.82</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recaudacion_Impuestos</td>
+<td style="text-align: center;">3.01</td>
+<td style="text-align: center;">0.02</td>
+<td style="text-align: center;">5.13</td>
+<td style="text-align: center;">7.50</td>
+<td style="text-align: center;">11.41</td>
+<td style="text-align: center;">5.12</td>
+<td style="text-align: center;">3.57</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">5.83</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
+<td style="text-align: center;">9.81</td>
+<td style="text-align: center;">0.27</td>
+<td style="text-align: center;">2.99</td>
+<td style="text-align: center;">2.07</td>
+<td style="text-align: center;">8.92</td>
+<td style="text-align: center;">91.05</td>
+<td style="text-align: center;">3.91</td>
+<td style="text-align: center;">1.65</td>
+<td style="text-align: center;">5.79</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inversion_Extranjera_Salida</td>
+<td style="text-align: center;">2.65</td>
+<td style="text-align: center;">0.68</td>
+<td style="text-align: center;">1.10</td>
+<td style="text-align: center;">3.77</td>
+<td style="text-align: center;">6.08</td>
+<td style="text-align: center;">75.32</td>
+<td style="text-align: center;">1.43</td>
+<td style="text-align: center;">0.17</td>
+<td style="text-align: center;">0.67</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ahorro</td>
+<td style="text-align: center;">5.57</td>
+<td style="text-align: center;">1.66</td>
+<td style="text-align: center;">12.71</td>
+<td style="text-align: center;">20.01</td>
+<td style="text-align: center;">10.94</td>
+<td style="text-align: center;">8.62</td>
+<td style="text-align: center;">6.53</td>
+<td style="text-align: center;">13.50</td>
+<td style="text-align: center;">8.32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos_Militares</td>
+<td style="text-align: center;">0.53</td>
+<td style="text-align: center;">0.57</td>
+<td style="text-align: center;">0.78</td>
+<td style="text-align: center;">1.50</td>
+<td style="text-align: center;">0.69</td>
+<td style="text-align: center;">0.68</td>
+<td style="text-align: center;">4.98</td>
+<td style="text-align: center;">1.38</td>
+<td style="text-align: center;">1.01</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Modelo_DUAL_files/figure-html/multivariado_2022-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Hallazgos</p>
+</section>
+<section id="año-2023" class="level5">
+<h5 class="anchored" data-anchor-id="año-2023"><strong>Año 2023</strong></h5>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Mediana por Región - Año 2023</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Region</td>
+<td style="text-align: center;">América - Latinoamérica y el Caribe</td>
+<td style="text-align: center;">América - Norteamérica</td>
+<td style="text-align: center;">Asia - Asia Central y del Sur</td>
+<td style="text-align: center;">Asia - Oriente Medio</td>
+<td style="text-align: center;">Asia del Este, Pacífico y Oceanía</td>
+<td style="text-align: center;">Europa - Europa Occidental</td>
+<td style="text-align: center;">Europa - Europa del Este</td>
+<td style="text-align: center;">África - Norte de África</td>
+<td style="text-align: center;">África - África Subsahariana</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: center;">4.29</td>
+<td style="text-align: center;">0.64</td>
+<td style="text-align: center;">13.13</td>
+<td style="text-align: center;">2.45</td>
+<td style="text-align: center;">10.45</td>
+<td style="text-align: center;">0.99</td>
+<td style="text-align: center;">3.90</td>
+<td style="text-align: center;">9.97</td>
+<td style="text-align: center;">20.94</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: center;">24.49</td>
+<td style="text-align: center;">21.89</td>
+<td style="text-align: center;">18.11</td>
+<td style="text-align: center;">25.92</td>
+<td style="text-align: center;">22.59</td>
+<td style="text-align: center;">39.65</td>
+<td style="text-align: center;">35.26</td>
+<td style="text-align: center;">26.91</td>
+<td style="text-align: center;">17.59</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Produccion</td>
+<td style="text-align: center;">9.97</td>
+<td style="text-align: center;">2.73</td>
+<td style="text-align: center;">13.02</td>
+<td style="text-align: center;">10.71</td>
+<td style="text-align: center;">7.77</td>
+<td style="text-align: center;">10.89</td>
+<td style="text-align: center;">12.75</td>
+<td style="text-align: center;">14.49</td>
+<td style="text-align: center;">10.69</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Exportaciones</td>
+<td style="text-align: center;">35.51</td>
+<td style="text-align: center;">24.85</td>
+<td style="text-align: center;">21.54</td>
+<td style="text-align: center;">39.63</td>
+<td style="text-align: center;">38.92</td>
+<td style="text-align: center;">56.55</td>
+<td style="text-align: center;">56.48</td>
+<td style="text-align: center;">48.21</td>
+<td style="text-align: center;">26.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Importaciones</td>
+<td style="text-align: center;">37.60</td>
+<td style="text-align: center;">46.01</td>
+<td style="text-align: center;">34.46</td>
+<td style="text-align: center;">47.89</td>
+<td style="text-align: center;">63.48</td>
+<td style="text-align: center;">53.99</td>
+<td style="text-align: center;">59.84</td>
+<td style="text-align: center;">55.14</td>
+<td style="text-align: center;">33.48</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: center;">3.22</td>
+<td style="text-align: center;">0.03</td>
+<td style="text-align: center;">4.32</td>
+<td style="text-align: center;">0.11</td>
+<td style="text-align: center;">1.88</td>
+<td style="text-align: center;">0.53</td>
+<td style="text-align: center;">2.87</td>
+<td style="text-align: center;">3.21</td>
+<td style="text-align: center;">2.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Servicios</td>
+<td style="text-align: center;">60.45</td>
+<td style="text-align: center;">73.59</td>
+<td style="text-align: center;">51.21</td>
+<td style="text-align: center;">51.58</td>
+<td style="text-align: center;">58.46</td>
+<td style="text-align: center;">67.67</td>
+<td style="text-align: center;">59.25</td>
+<td style="text-align: center;">52.96</td>
+<td style="text-align: center;">47.53</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recaudacion_Impuestos</td>
+<td style="text-align: center;">15.05</td>
+<td style="text-align: center;">12.23</td>
+<td style="text-align: center;">11.89</td>
+<td style="text-align: center;">8.46</td>
+<td style="text-align: center;">15.96</td>
+<td style="text-align: center;">24.08</td>
+<td style="text-align: center;">19.07</td>
+<td style="text-align: center;">20.98</td>
+<td style="text-align: center;">13.55</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
+<td style="text-align: center;">2.82</td>
+<td style="text-align: center;">1.94</td>
+<td style="text-align: center;">0.90</td>
+<td style="text-align: center;">1.76</td>
+<td style="text-align: center;">1.67</td>
+<td style="text-align: center;">0.85</td>
+<td style="text-align: center;">3.86</td>
+<td style="text-align: center;">1.64</td>
+<td style="text-align: center;">2.66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inversion_Extranjera_Salida</td>
+<td style="text-align: center;">0.32</td>
+<td style="text-align: center;">2.86</td>
+<td style="text-align: center;">0.13</td>
+<td style="text-align: center;">0.37</td>
+<td style="text-align: center;">0.52</td>
+<td style="text-align: center;">1.48</td>
+<td style="text-align: center;">0.94</td>
+<td style="text-align: center;">0.07</td>
+<td style="text-align: center;">0.06</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ahorro</td>
+<td style="text-align: center;">19.77</td>
+<td style="text-align: center;">20.14</td>
+<td style="text-align: center;">26.10</td>
+<td style="text-align: center;">30.90</td>
+<td style="text-align: center;">27.34</td>
+<td style="text-align: center;">24.77</td>
+<td style="text-align: center;">22.27</td>
+<td style="text-align: center;">24.35</td>
+<td style="text-align: center;">15.77</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos_Militares</td>
+<td style="text-align: center;">0.99</td>
+<td style="text-align: center;">2.33</td>
+<td style="text-align: center;">2.04</td>
+<td style="text-align: center;">5.11</td>
+<td style="text-align: center;">1.26</td>
+<td style="text-align: center;">1.52</td>
+<td style="text-align: center;">1.82</td>
+<td style="text-align: center;">2.36</td>
+<td style="text-align: center;">1.46</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Desviación estándar por Región - Año 2023</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Region</td>
+<td style="text-align: center;">América - Latinoamérica y el Caribe</td>
+<td style="text-align: center;">América - Norteamérica</td>
+<td style="text-align: center;">Asia - Asia Central y del Sur</td>
+<td style="text-align: center;">Asia - Oriente Medio</td>
+<td style="text-align: center;">Asia del Este, Pacífico y Oceanía</td>
+<td style="text-align: center;">Europa - Europa Occidental</td>
+<td style="text-align: center;">Europa - Europa del Este</td>
+<td style="text-align: center;">África - Norte de África</td>
+<td style="text-align: center;">África - África Subsahariana</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: center;">4.58</td>
+<td style="text-align: center;">5.67</td>
+<td style="text-align: center;">8.76</td>
+<td style="text-align: center;">7.33</td>
+<td style="text-align: center;">9.72</td>
+<td style="text-align: center;">3.41</td>
+<td style="text-align: center;">3.20</td>
+<td style="text-align: center;">4.75</td>
+<td style="text-align: center;">10.74</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: center;">9.79</td>
+<td style="text-align: center;">1.40</td>
+<td style="text-align: center;">16.48</td>
+<td style="text-align: center;">12.67</td>
+<td style="text-align: center;">32.61</td>
+<td style="text-align: center;">8.30</td>
+<td style="text-align: center;">9.46</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">13.30</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Produccion</td>
+<td style="text-align: center;">8.57</td>
+<td style="text-align: center;">3.99</td>
+<td style="text-align: center;">5.86</td>
+<td style="text-align: center;">5.16</td>
+<td style="text-align: center;">8.83</td>
+<td style="text-align: center;">7.70</td>
+<td style="text-align: center;">4.69</td>
+<td style="text-align: center;">4.29</td>
+<td style="text-align: center;">5.37</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Exportaciones</td>
+<td style="text-align: center;">13.61</td>
+<td style="text-align: center;">35.20</td>
+<td style="text-align: center;">16.57</td>
+<td style="text-align: center;">33.22</td>
+<td style="text-align: center;">40.72</td>
+<td style="text-align: center;">44.79</td>
+<td style="text-align: center;">18.08</td>
+<td style="text-align: center;">49.06</td>
+<td style="text-align: center;">15.98</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Importaciones</td>
+<td style="text-align: center;">14.18</td>
+<td style="text-align: center;">24.84</td>
+<td style="text-align: center;">23.57</td>
+<td style="text-align: center;">37.94</td>
+<td style="text-align: center;">32.98</td>
+<td style="text-align: center;">37.73</td>
+<td style="text-align: center;">15.84</td>
+<td style="text-align: center;">42.03</td>
+<td style="text-align: center;">18.90</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: center;">8.03</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">11.33</td>
+<td style="text-align: center;">10.11</td>
+<td style="text-align: center;">9.73</td>
+<td style="text-align: center;">0.94</td>
+<td style="text-align: center;">4.76</td>
+<td style="text-align: center;">3.27</td>
+<td style="text-align: center;">6.12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Servicios</td>
+<td style="text-align: center;">13.61</td>
+<td style="text-align: center;">16.33</td>
+<td style="text-align: center;">8.11</td>
+<td style="text-align: center;">9.58</td>
+<td style="text-align: center;">14.10</td>
+<td style="text-align: center;">9.73</td>
+<td style="text-align: center;">6.02</td>
+<td style="text-align: center;">17.12</td>
+<td style="text-align: center;">10.13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recaudacion_Impuestos</td>
+<td style="text-align: center;">3.92</td>
+<td style="text-align: center;">0.85</td>
+<td style="text-align: center;">7.91</td>
+<td style="text-align: center;">6.34</td>
+<td style="text-align: center;">14.41</td>
+<td style="text-align: center;">5.65</td>
+<td style="text-align: center;">6.75</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">7.92</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
+<td style="text-align: center;">15.49</td>
+<td style="text-align: center;">0.24</td>
+<td style="text-align: center;">2.93</td>
+<td style="text-align: center;">4.99</td>
+<td style="text-align: center;">7.41</td>
+<td style="text-align: center;">27.47</td>
+<td style="text-align: center;">8.16</td>
+<td style="text-align: center;">1.12</td>
+<td style="text-align: center;">4.71</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inversion_Extranjera_Salida</td>
+<td style="text-align: center;">3.38</td>
+<td style="text-align: center;">0.65</td>
+<td style="text-align: center;">0.31</td>
+<td style="text-align: center;">2.06</td>
+<td style="text-align: center;">4.69</td>
+<td style="text-align: center;">23.94</td>
+<td style="text-align: center;">7.35</td>
+<td style="text-align: center;">0.30</td>
+<td style="text-align: center;">1.84</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ahorro</td>
+<td style="text-align: center;">5.86</td>
+<td style="text-align: center;">0.96</td>
+<td style="text-align: center;">10.75</td>
+<td style="text-align: center;">14.31</td>
+<td style="text-align: center;">22.11</td>
+<td style="text-align: center;">9.23</td>
+<td style="text-align: center;">5.55</td>
+<td style="text-align: center;">12.15</td>
+<td style="text-align: center;">8.85</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gastos_Militares</td>
+<td style="text-align: center;">0.55</td>
+<td style="text-align: center;">0.55</td>
+<td style="text-align: center;">0.93</td>
+<td style="text-align: center;">1.97</td>
+<td style="text-align: center;">0.69</td>
+<td style="text-align: center;">0.61</td>
+<td style="text-align: center;">7.13</td>
+<td style="text-align: center;">2.63</td>
+<td style="text-align: center;">1.18</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Modelo_DUAL_files/figure-html/multivariado_2023-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Hallazgos</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Modelo_DUAL_files/figure-html/correlacion-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Hallazgos</p>
+</section>
 </section>
 </section>
 </section>
 <section id="análisis-factorial-múltiple" class="level2">
 <h2 class="anchored" data-anchor-id="análisis-factorial-múltiple"><strong>2. Análisis factorial múltiple</strong></h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>        eigenvalue percentage of variance cumulative percentage of variance
+comp 1  2.90847130             24.2372608                          24.23726
+comp 2  1.87597919             15.6331599                          39.87042
+comp 3  1.52539565             12.7116304                          52.58205
+comp 4  1.21003702             10.0836419                          62.66569
+comp 5  1.12271347              9.3559456                          72.02164
+comp 6  0.96586539              8.0488783                          80.07052
+comp 7  0.86372492              7.1977076                          87.26822
+comp 8  0.73971591              6.1642993                          93.43252
+comp 9  0.34732428              2.8943690                          96.32689
+comp 10 0.26269953              2.1891627                          98.51606
+comp 11 0.09912739              0.8260616                          99.34212
+comp 12 0.07894595              0.6578829                         100.00000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$coord
+                                   Dim.1        Dim.2       Dim.3         Dim.4
+Agricultura                  -0.68383919  0.179989308 -0.17347586  0.3764444486
+Gastos                        0.62600793 -0.246935774 -0.32045788 -0.0001887711
+Produccion                   -0.08413979 -0.027117182  0.64536518  0.2776565077
+Exportaciones                 0.73325843 -0.044183197  0.47626271  0.2534928953
+Importaciones                 0.72050742 -0.061191329  0.17087225  0.4462900891
+Remesas                      -0.20682349  0.011030682 -0.40737514  0.5277851495
+Servicios                     0.65179733 -0.119478700 -0.32320918 -0.3429413067
+Recaudacion_Impuestos         0.57222832 -0.207546102 -0.39781805  0.2019475949
+Inversion_Extranjera_Entrada  0.27993337  0.930359573 -0.07556499 -0.0367069871
+Inversion_Extranjera_Salida   0.31151637  0.920769417 -0.03931774 -0.0331854478
+Ahorro                        0.11150168  0.001094896  0.51633812 -0.1183627013
+Gastos_Militares             -0.04660696 -0.072905516  0.13247609 -0.5238251590
+                                   Dim.5
+Agricultura                   0.02787342
+Gastos                        0.50235617
+Produccion                    0.37836203
+Exportaciones                -0.27361255
+Importaciones                -0.29698198
+Remesas                       0.04040795
+Servicios                    -0.33418975
+Recaudacion_Impuestos         0.50153827
+Inversion_Extranjera_Entrada  0.08316269
+Inversion_Extranjera_Salida   0.10726951
+Ahorro                        0.37974118
+Gastos_Militares              0.18940039
+
+$cor
+                                   Dim.1        Dim.2       Dim.3         Dim.4
+Agricultura                  -0.68383919  0.179989308 -0.17347586  0.3764444486
+Gastos                        0.62600793 -0.246935774 -0.32045788 -0.0001887711
+Produccion                   -0.08413979 -0.027117182  0.64536518  0.2776565077
+Exportaciones                 0.73325843 -0.044183197  0.47626271  0.2534928953
+Importaciones                 0.72050742 -0.061191329  0.17087225  0.4462900891
+Remesas                      -0.20682349  0.011030682 -0.40737514  0.5277851495
+Servicios                     0.65179733 -0.119478700 -0.32320918 -0.3429413067
+Recaudacion_Impuestos         0.57222832 -0.207546102 -0.39781805  0.2019475949
+Inversion_Extranjera_Entrada  0.27993337  0.930359573 -0.07556499 -0.0367069871
+Inversion_Extranjera_Salida   0.31151637  0.920769417 -0.03931774 -0.0331854478
+Ahorro                        0.11150168  0.001094896  0.51633812 -0.1183627013
+Gastos_Militares             -0.04660696 -0.072905516  0.13247609 -0.5238251590
+                                   Dim.5
+Agricultura                   0.02787342
+Gastos                        0.50235617
+Produccion                    0.37836203
+Exportaciones                -0.27361255
+Importaciones                -0.29698198
+Remesas                       0.04040795
+Servicios                    -0.33418975
+Recaudacion_Impuestos         0.50153827
+Inversion_Extranjera_Entrada  0.08316269
+Inversion_Extranjera_Salida   0.10726951
+Ahorro                        0.37974118
+Gastos_Militares              0.18940039
+
+$cos2
+                                   Dim.1        Dim.2       Dim.3        Dim.4
+Agricultura                  0.467636041 3.239615e-02 0.030093875 1.417104e-01
+Gastos                       0.391885929 6.097728e-02 0.102693252 3.563451e-08
+Produccion                   0.007079504 7.353416e-04 0.416496218 7.709314e-02
+Exportaciones                0.537667929 1.952155e-03 0.226826172 6.425865e-02
+Importaciones                0.519130947 3.744379e-03 0.029197327 1.991748e-01
+Remesas                      0.042775958 1.216759e-04 0.165954508 2.785572e-01
+Servicios                    0.424839762 1.427516e-02 0.104464175 1.176087e-01
+Recaudacion_Impuestos        0.327445252 4.307538e-02 0.158259198 4.078283e-02
+Inversion_Extranjera_Entrada 0.078362694 8.655689e-01 0.005710068 1.347403e-03
+Inversion_Extranjera_Salida  0.097042450 8.478163e-01 0.001545885 1.101274e-03
+Ahorro                       0.012432624 1.198797e-06 0.266605058 1.400973e-02
+Gastos_Militares             0.002172209 5.315214e-03 0.017549916 2.743928e-01
+                                    Dim.5
+Agricultura                  0.0007769274
+Gastos                       0.2523617208
+Produccion                   0.1431578220
+Exportaciones                0.0748638283
+Importaciones                0.0881982993
+Remesas                      0.0016328021
+Servicios                    0.1116827890
+Recaudacion_Impuestos        0.2515406350
+Inversion_Extranjera_Entrada 0.0069160327
+Inversion_Extranjera_Salida  0.0115067481
+Ahorro                       0.1442033638
+Gastos_Militares             0.0358725061
+
+$contrib
+                                   Dim.1        Dim.2      Dim.3        Dim.4
+Agricultura                  16.07841347 1.726893e+00  1.9728570 1.171125e+01
+Gastos                       13.47394863 3.250424e+00  6.7322371 2.944911e-06
+Produccion                    0.24340978 3.919775e-02 27.3041435 6.371139e+00
+Exportaciones                18.48627247 1.040606e-01 14.8699894 5.310470e+00
+Importaciones                17.84892796 1.995960e-01  1.9140822 1.646023e+01
+Remesas                       1.47073681 6.485996e-03 10.8794402 2.302055e+01
+Servicios                    14.60697798 7.609445e-01  6.8483331 9.719433e+00
+Recaudacion_Impuestos        11.25832845 2.296155e+00 10.3749606 3.370379e+00
+Inversion_Extranjera_Entrada  2.69429148 4.613958e+01  0.3743336 1.113522e-01
+Inversion_Extranjera_Salida   3.33654486 4.519327e+01  0.1013432 9.101159e-02
+Ahorro                        0.42746250 6.390248e-05 17.4777644 1.157793e+00
+Gastos_Militares              0.07468559 2.833301e-01  1.1505157 2.267640e+01
+                                   Dim.5
+Agricultura                   0.06920086
+Gastos                       22.47783843
+Produccion                   12.75105584
+Exportaciones                 6.66811524
+Importaciones                 7.85581551
+Remesas                       0.14543355
+Servicios                     9.94757714
+Recaudacion_Impuestos        22.40470438
+Inversion_Extranjera_Entrada  0.61601048
+Inversion_Extranjera_Salida   1.02490514
+Ahorro                       12.84418216
+Gastos_Militares              3.19516127</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$Gr2019
+                                   Dim.1        Dim.2       Dim.3       Dim.4
+Agricultura                  -0.67116809  0.127746922 -0.15246202  0.39707501
+Gastos                        0.63411018 -0.151980418 -0.32073898  0.03497596
+Produccion                   -0.09668670 -0.081293865  0.62456420  0.29420481
+Exportaciones                 0.77609716  0.169918170  0.39600835  0.23917792
+Importaciones                 0.72641046  0.127560703  0.14094816  0.46762807
+Remesas                      -0.18139570 -0.009966739 -0.39652510  0.55512502
+Servicios                     0.66992047 -0.050799627 -0.33820167 -0.33382570
+Recaudacion_Impuestos         0.61047328 -0.091634190 -0.42806914  0.21109852
+Inversion_Extranjera_Entrada  0.46580152  0.939634739 -0.08897606  0.06674075
+Inversion_Extranjera_Salida   0.46252879  0.937747159 -0.07988254  0.04563159
+Ahorro                        0.06262733 -0.078850293  0.46060469 -0.11725713
+Gastos_Militares             -0.05812985 -0.094991122  0.16457994 -0.56433200
+                                   Dim.5
+Agricultura                   0.01676472
+Gastos                        0.54190834
+Produccion                    0.37426413
+Exportaciones                -0.26064501
+Importaciones                -0.25903579
+Remesas                       0.09010825
+Servicios                    -0.30910355
+Recaudacion_Impuestos         0.49094680
+Inversion_Extranjera_Entrada  0.01237560
+Inversion_Extranjera_Salida   0.03954808
+Ahorro                        0.39793819
+Gastos_Militares              0.17765093
+
+$Gr2020
+                                   Dim.1        Dim.2       Dim.3        Dim.4
+Agricultura                  -0.70448621  0.233736846 -0.10797614  0.400158426
+Gastos                        0.68195492 -0.305382420 -0.30726570 -0.046652468
+Produccion                   -0.05348274  0.007633527  0.67536969  0.287073255
+Exportaciones                 0.74715334  0.004630020  0.47610131  0.278051984
+Importaciones                 0.72359192 -0.020134993  0.21982786  0.429216974
+Remesas                      -0.21380540  0.044235572 -0.36391743  0.528286907
+Servicios                     0.66073740 -0.196344774 -0.33955782 -0.395910604
+Recaudacion_Impuestos         0.58288607 -0.238111882 -0.40228204  0.196456083
+Inversion_Extranjera_Entrada  0.24137375  0.911891970 -0.01043017  0.010299327
+Inversion_Extranjera_Salida   0.31294987  0.891680697  0.03241770  0.062827918
+Ahorro                        0.09882666  0.048571504  0.51752536  0.009557022
+Gastos_Militares             -0.02428343 -0.094226118  0.12874412 -0.571048341
+                                   Dim.5
+Agricultura                   0.01285573
+Gastos                        0.48747877
+Produccion                    0.40773205
+Exportaciones                -0.22979586
+Importaciones                -0.26025522
+Remesas                       0.05821029
+Servicios                    -0.29883883
+Recaudacion_Impuestos         0.52693512
+Inversion_Extranjera_Entrada  0.06942822
+Inversion_Extranjera_Salida   0.09662774
+Ahorro                        0.40241326
+Gastos_Militares              0.14443790
+
+$Gr2021
+                                   Dim.1       Dim.2        Dim.3       Dim.4
+Agricultura                  -0.68374029  0.14571288 -0.146707101  0.37913240
+Gastos                        0.63356789 -0.20541997 -0.339147769 -0.01689236
+Produccion                   -0.07027552 -0.03648050  0.645241931  0.27730045
+Exportaciones                 0.73260147  0.12495796  0.491764689  0.24419371
+Importaciones                 0.72925803  0.08573881  0.191392545  0.42827773
+Remesas                      -0.21955284 -0.01380217 -0.410399627  0.51641368
+Servicios                     0.64305534 -0.06027587 -0.356141754 -0.31074162
+Recaudacion_Impuestos         0.58173755 -0.14761634 -0.404747991  0.19649954
+Inversion_Extranjera_Entrada  0.39821663  0.94484346 -0.043635961  0.03566570
+Inversion_Extranjera_Salida   0.44102350  0.93062156 -0.001033831  0.03716096
+Ahorro                        0.11800833  0.01854471  0.572649299 -0.12954091
+Gastos_Militares             -0.07590741 -0.10871684  0.206828463 -0.53730794
+                                   Dim.5
+Agricultura                  -0.01544162
+Gastos                        0.52332687
+Produccion                    0.39146701
+Exportaciones                -0.23404671
+Importaciones                -0.28299711
+Remesas                      -0.02003447
+Servicios                    -0.32898979
+Recaudacion_Impuestos         0.53517573
+Inversion_Extranjera_Entrada  0.03410431
+Inversion_Extranjera_Salida   0.07008120
+Ahorro                        0.38200818
+Gastos_Militares              0.16582794
+
+$Gr2022
+                                   Dim.1       Dim.2       Dim.3        Dim.4
+Agricultura                  -0.68780972  0.22367736 -0.20600726  0.344557131
+Gastos                        0.63088300 -0.28360531 -0.32980592  0.006666738
+Produccion                   -0.08164211  0.05654721  0.62770577  0.277239852
+Exportaciones                 0.69533424 -0.36573092  0.51533979  0.264361065
+Importaciones                 0.71895545 -0.35603969  0.14529051  0.467259874
+Remesas                      -0.21146449  0.02707434 -0.42457099  0.494856366
+Servicios                     0.64134961 -0.21809300 -0.33748576 -0.274168464
+Recaudacion_Impuestos         0.58034698 -0.28453476 -0.38864865  0.215737492
+Inversion_Extranjera_Entrada  0.05443825  0.95031862 -0.10927125 -0.177495735
+Inversion_Extranjera_Salida   0.06568221  0.94637733 -0.08649126 -0.205769346
+Ahorro                        0.09481244  0.04836301  0.54152390 -0.175266879
+Gastos_Militares             -0.03328028 -0.01511984  0.10477664 -0.481951032
+                                   Dim.5
+Agricultura                   0.04550974
+Gastos                        0.46939980
+Produccion                    0.35608597
+Exportaciones                -0.31938827
+Importaciones                -0.35284399
+Remesas                       0.02708190
+Servicios                    -0.39779278
+Recaudacion_Impuestos         0.45456792
+Inversion_Extranjera_Entrada  0.27035660
+Inversion_Extranjera_Salida   0.28923625
+Ahorro                        0.36930689
+Gastos_Militares              0.23864718
+
+$Gr2023
+                                   Dim.1        Dim.2       Dim.3      Dim.4
+Agricultura                  -0.67551834  0.164791138 -0.25495710  0.3593596
+Gastos                        0.54709060 -0.283811557 -0.30481117  0.0210034
+Produccion                   -0.12118450 -0.089558771  0.65507914  0.2518098
+Exportaciones                 0.71304897 -0.127079595  0.49833073  0.2421343
+Importaciones                 0.70652396 -0.117948938  0.15561314  0.4398865
+Remesas                      -0.21022778  0.005728468 -0.44170092  0.5430152
+Servicios                     0.64541148 -0.062850704 -0.24331065 -0.3972353
+Recaudacion_Impuestos         0.50293026 -0.268077417 -0.36709487  0.1903823
+Inversion_Extranjera_Entrada  0.21210797  0.906357845 -0.12734804 -0.1285542
+Inversion_Extranjera_Salida   0.24757471  0.898456613 -0.06413855 -0.1170104
+Ahorro                        0.18956359 -0.036523112  0.48469511 -0.1859779
+Gastos_Militares             -0.03949963 -0.056231128  0.05566136 -0.4607923
+                                   Dim.5
+Agricultura                   0.07891250
+Gastos                        0.49167119
+Produccion                    0.36385695
+Exportaciones                -0.32204525
+Importaciones                -0.32691603
+Remesas                       0.04835046
+Servicios                    -0.33314531
+Recaudacion_Impuestos         0.50262860
+Inversion_Extranjera_Entrada  0.02092733
+Inversion_Extranjera_Salida   0.03247962
+Ahorro                        0.34831267
+Gastos_Militares              0.21795963</code></pre>
+</div>
+</div>
 <p>Hallazgos</p>
 </section>
 
