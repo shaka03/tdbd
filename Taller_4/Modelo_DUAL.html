@@ -2286,137 +2286,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="análisis-factorial-múltiple" class="level2">
 <h2 class="anchored" data-anchor-id="análisis-factorial-múltiple"><strong>2. Análisis factorial múltiple</strong></h2>
-<section id="contribuciones-por-dimensión" class="level4">
-<h4 class="anchored" data-anchor-id="contribuciones-por-dimensión"><strong>Contribuciones por dimensión</strong></h4>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>        eigenvalue percentage of variance cumulative percentage of variance
-comp 1  2.90847130             24.2372608                          24.23726
-comp 2  1.87597919             15.6331599                          39.87042
-comp 3  1.52539565             12.7116304                          52.58205
-comp 4  1.21003702             10.0836419                          62.66569
-comp 5  1.12271347              9.3559456                          72.02164
-comp 6  0.96586539              8.0488783                          80.07052
-comp 7  0.86372492              7.1977076                          87.26822
-comp 8  0.73971591              6.1642993                          93.43252
-comp 9  0.34732428              2.8943690                          96.32689
-comp 10 0.26269953              2.1891627                          98.51606
-comp 11 0.09912739              0.8260616                          99.34212
-comp 12 0.07894595              0.6578829                         100.00000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$coord
-                                   Dim.1        Dim.2       Dim.3         Dim.4
-Agricultura                  -0.68383919  0.179989308 -0.17347586  0.3764444486
-Gastos                        0.62600793 -0.246935774 -0.32045788 -0.0001887711
-Produccion                   -0.08413979 -0.027117182  0.64536518  0.2776565077
-Exportaciones                 0.73325843 -0.044183197  0.47626271  0.2534928953
-Importaciones                 0.72050742 -0.061191329  0.17087225  0.4462900891
-Remesas                      -0.20682349  0.011030682 -0.40737514  0.5277851495
-Servicios                     0.65179733 -0.119478700 -0.32320918 -0.3429413067
-Recaudacion_Impuestos         0.57222832 -0.207546102 -0.39781805  0.2019475949
-Inversion_Extranjera_Entrada  0.27993337  0.930359573 -0.07556499 -0.0367069871
-Inversion_Extranjera_Salida   0.31151637  0.920769417 -0.03931774 -0.0331854478
-Ahorro                        0.11150168  0.001094896  0.51633812 -0.1183627013
-Gastos_Militares             -0.04660696 -0.072905516  0.13247609 -0.5238251590
-                                   Dim.5
-Agricultura                   0.02787342
-Gastos                        0.50235617
-Produccion                    0.37836203
-Exportaciones                -0.27361255
-Importaciones                -0.29698198
-Remesas                       0.04040795
-Servicios                    -0.33418975
-Recaudacion_Impuestos         0.50153827
-Inversion_Extranjera_Entrada  0.08316269
-Inversion_Extranjera_Salida   0.10726951
-Ahorro                        0.37974118
-Gastos_Militares              0.18940039
-
-$cor
-                                   Dim.1        Dim.2       Dim.3         Dim.4
-Agricultura                  -0.68383919  0.179989308 -0.17347586  0.3764444486
-Gastos                        0.62600793 -0.246935774 -0.32045788 -0.0001887711
-Produccion                   -0.08413979 -0.027117182  0.64536518  0.2776565077
-Exportaciones                 0.73325843 -0.044183197  0.47626271  0.2534928953
-Importaciones                 0.72050742 -0.061191329  0.17087225  0.4462900891
-Remesas                      -0.20682349  0.011030682 -0.40737514  0.5277851495
-Servicios                     0.65179733 -0.119478700 -0.32320918 -0.3429413067
-Recaudacion_Impuestos         0.57222832 -0.207546102 -0.39781805  0.2019475949
-Inversion_Extranjera_Entrada  0.27993337  0.930359573 -0.07556499 -0.0367069871
-Inversion_Extranjera_Salida   0.31151637  0.920769417 -0.03931774 -0.0331854478
-Ahorro                        0.11150168  0.001094896  0.51633812 -0.1183627013
-Gastos_Militares             -0.04660696 -0.072905516  0.13247609 -0.5238251590
-                                   Dim.5
-Agricultura                   0.02787342
-Gastos                        0.50235617
-Produccion                    0.37836203
-Exportaciones                -0.27361255
-Importaciones                -0.29698198
-Remesas                       0.04040795
-Servicios                    -0.33418975
-Recaudacion_Impuestos         0.50153827
-Inversion_Extranjera_Entrada  0.08316269
-Inversion_Extranjera_Salida   0.10726951
-Ahorro                        0.37974118
-Gastos_Militares              0.18940039
-
-$cos2
-                                   Dim.1        Dim.2       Dim.3        Dim.4
-Agricultura                  0.467636041 3.239615e-02 0.030093875 1.417104e-01
-Gastos                       0.391885929 6.097728e-02 0.102693252 3.563451e-08
-Produccion                   0.007079504 7.353416e-04 0.416496218 7.709314e-02
-Exportaciones                0.537667929 1.952155e-03 0.226826172 6.425865e-02
-Importaciones                0.519130947 3.744379e-03 0.029197327 1.991748e-01
-Remesas                      0.042775958 1.216759e-04 0.165954508 2.785572e-01
-Servicios                    0.424839762 1.427516e-02 0.104464175 1.176087e-01
-Recaudacion_Impuestos        0.327445252 4.307538e-02 0.158259198 4.078283e-02
-Inversion_Extranjera_Entrada 0.078362694 8.655689e-01 0.005710068 1.347403e-03
-Inversion_Extranjera_Salida  0.097042450 8.478163e-01 0.001545885 1.101274e-03
-Ahorro                       0.012432624 1.198797e-06 0.266605058 1.400973e-02
-Gastos_Militares             0.002172209 5.315214e-03 0.017549916 2.743928e-01
-                                    Dim.5
-Agricultura                  0.0007769274
-Gastos                       0.2523617208
-Produccion                   0.1431578220
-Exportaciones                0.0748638283
-Importaciones                0.0881982993
-Remesas                      0.0016328021
-Servicios                    0.1116827890
-Recaudacion_Impuestos        0.2515406350
-Inversion_Extranjera_Entrada 0.0069160327
-Inversion_Extranjera_Salida  0.0115067481
-Ahorro                       0.1442033638
-Gastos_Militares             0.0358725061
-
-$contrib
-                                   Dim.1        Dim.2      Dim.3        Dim.4
-Agricultura                  16.07841347 1.726893e+00  1.9728570 1.171125e+01
-Gastos                       13.47394863 3.250424e+00  6.7322371 2.944911e-06
-Produccion                    0.24340978 3.919775e-02 27.3041435 6.371139e+00
-Exportaciones                18.48627247 1.040606e-01 14.8699894 5.310470e+00
-Importaciones                17.84892796 1.995960e-01  1.9140822 1.646023e+01
-Remesas                       1.47073681 6.485996e-03 10.8794402 2.302055e+01
-Servicios                    14.60697798 7.609445e-01  6.8483331 9.719433e+00
-Recaudacion_Impuestos        11.25832845 2.296155e+00 10.3749606 3.370379e+00
-Inversion_Extranjera_Entrada  2.69429148 4.613958e+01  0.3743336 1.113522e-01
-Inversion_Extranjera_Salida   3.33654486 4.519327e+01  0.1013432 9.101159e-02
-Ahorro                        0.42746250 6.390248e-05 17.4777644 1.157793e+00
-Gastos_Militares              0.07468559 2.833301e-01  1.1505157 2.267640e+01
-                                   Dim.5
-Agricultura                   0.06920086
-Gastos                       22.47783843
-Produccion                   12.75105584
-Exportaciones                 6.66811524
-Importaciones                 7.85581551
-Remesas                       0.14543355
-Servicios                     9.94757714
-Recaudacion_Impuestos        22.40470438
-Inversion_Extranjera_Entrada  0.61601048
-Inversion_Extranjera_Salida   1.02490514
-Ahorro                       12.84418216
-Gastos_Militares              3.19516127</code></pre>
-</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$Gr2019
                                    Dim.1        Dim.2       Dim.3       Dim.4
@@ -2561,12 +2431,31 @@ Gastos_Militares              0.21795963</code></pre>
 </div>
 <p>Hallazgos: aquí los hallazgos relevantes deberíaan ser (todo por año):</p>
 <ol type="1">
-<li>La contribución de cada variable a las dimensiones.</li>
-<li>Como se mueven a través de los años</li>
-<li>Tratar de nombrar las dimensiones que salgan, o más o menos a qué se parecen, también por año</li>
+<li>La contribución de cada variable a las dimensiones y los eigenvalues (a nivel general) 1.1. Tratar de nombrar las dimensiones que salgan, o más o menos a qué se parecen</li>
+<li>Luego, como se mueven a través de los años</li>
 <li>ver como se distribuyem por regiones y por años</li>
 <li>preguntarle a copilot qué más podemos sacar</li>
 </ol>
+<section id="varianza-explicada-y-contribuciones-de-las-variables-por-dimensión" class="level4">
+<h4 class="anchored" data-anchor-id="varianza-explicada-y-contribuciones-de-las-variables-por-dimensión"><strong>Varianza explicada y contribuciones de las variables por dimensión</strong></h4>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_DUAL_files/figure-html/eigenvalues-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Modelo_DUAL_files/figure-html/contribuciones-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="análisis-por-países" class="level4">
 <h4 class="anchored" data-anchor-id="análisis-por-países"><strong>Análisis por países</strong></h4>
@@ -2583,15 +2472,6 @@ Gastos_Militares              0.21795963</code></pre>
 </section>
 <section id="análisis-por-año" class="level4">
 <h4 class="anchored" data-anchor-id="análisis-por-año"><strong>Análisis por año</strong></h4>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Modelo_DUAL_files/figure-html/modelo_3-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
 <p>Hallazgos</p>
 </section>
 <section id="análisis-por-grupo" class="level4">

@@ -29,6 +29,7 @@ library(kableExtra)
 library(FactoMineR)
 library(scales)
 library(zoo)
+library(factoextra)
 ```
 
 ## **0. Información general**
@@ -633,8 +634,6 @@ theme(
 Hallazgos
 
 ## **2. Análisis factorial múltiple**
-
-#### **Contribuciones por dimensión**
 ```{r modelo, echo=FALSE, warning=FALSE}
 BaseDUAL = df_clean %>%
   dplyr::select(
@@ -661,20 +660,65 @@ res.dmfa = DMFA(
   quali.sup = 1,
   graph = FALSE
 )
-#res.dmfa
 
-res.dmfa$eig # Valores propios (varianza explicada por cada eje)
-res.dmfa$var  # Cargas de las variables
+#res.dmfa$eig # Valores propios (varianza explicada por cada eje)
+#res.dmfa$var  # Cargas de las variables
 res.dmfa$var.partiel # Contribuciones parciales de las variables por grupo
 ```
 
 Hallazgos: aquí los hallazgos relevantes deberíaan ser (todo por año):
 
-1. La contribución de cada variable a las dimensiones.
-2. Como se mueven a través de los años
-3. Tratar de nombrar las dimensiones que salgan, o más o menos a qué se parecen, también por año
+1. La contribución de cada variable a las dimensiones y los eigenvalues (a nivel general)
+1.1. Tratar de nombrar las dimensiones que salgan, o más o menos a qué se parecen
+2. Luego, como se mueven a través de los años
 4. ver como se distribuyem por regiones y por años
 5. preguntarle a copilot qué más podemos sacar
+
+#### **Varianza explicada y contribuciones de las variables por dimensión**
+```{r eigenvalues, echo=FALSE, warning=FALSE}
+eig = as.data.frame(res.dmfa$eig)
+eig$Dim = seq_len(nrow(eig))
+eig$Dim = factor(paste0("Dim ", eig$Dim),
+                    levels = paste0("Dim ", eig$Dim))
+
+ggplot(eig, aes(x = Dim)) +
+  geom_col(aes(y = `percentage of variance`), fill = "#2C7FB8", width = 0.7) +
+  geom_text(aes(y = `percentage of variance`, label = paste0(round(`percentage of variance`, 1), "%")),
+            vjust = -0.5, size = 3.3) +
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
+  labs(
+    title = "Porcentaje de varianza explicada",
+    x = "Dimensión",
+    y = "Porcentaje"
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+```{r contribuciones, fig.width=8, echo=FALSE, warning=FALSE}
+# Contribución
+coords = as.data.frame(res.dmfa$var$coord)
+dims_plot = names(coords)
+coords$Variable = rownames(coords)
+
+coord_long = coords %>%
+  pivot_longer(cols = dims_plot, names_to = "Dim", values_to = "Carga") %>%
+  mutate(Signo = if_else(Carga >= 0, "Positivo", "Negativo"))
+
+ggplot(coord_long, aes(x = Carga, y = Variable, fill = Signo)) +
+  geom_col(width = 0.8, alpha = 0.95) +
+  facet_wrap(~ Dim, scales = "free_y") +
+  scale_fill_manual(values = c("Positivo" = "#2E8B57", "Negativo" = "#D73027")) + # verde/rojo
+  labs(
+    title = "Cargas por variable y dimensión",
+    x = "Carga (coordenada en la dimensión)",
+    y = "Variable",
+    fill = ""
+  ) +
+  theme_light() +
+  theme(legend.position = "none")
+```
+
+Hallazgos
 
 #### **Análisis por países**
 ```{r modelo_2, echo=FALSE, warning=FALSE}
@@ -687,7 +731,7 @@ Hallazgos
 #### **Análisis por año**
 ```{r modelo_3, echo=FALSE, warning=FALSE}
 # Muestra cómo las variables se proyectan en el plano.
-plot.DMFA(res.dmfa, choix="var",invisible="quali", label="none", new.plot=TRUE)
+#plot.DMFA(res.dmfa, choix="var",invisible="quali", label="none", new.plot=TRUE)
 ```
 
 Hallazgos
