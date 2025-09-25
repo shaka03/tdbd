@@ -634,6 +634,7 @@ Hallazgos
 
 ## **2. Análisis factorial múltiple**
 
+#### **Contribuciones por dimensión**
 ```{r modelo, echo=FALSE, warning=FALSE}
 BaseDUAL = df_clean %>%
   dplyr::select(
@@ -665,16 +666,42 @@ res.dmfa = DMFA(
 res.dmfa$eig # Valores propios (varianza explicada por cada eje)
 res.dmfa$var  # Cargas de las variables
 res.dmfa$var.partiel # Contribuciones parciales de las variables por grupo
+```
 
+Hallazgos: aquí los hallazgos relevantes deberíaan ser (todo por año):
+
+1. La contribución de cada variable a las dimensiones.
+2. Como se mueven a través de los años
+3. Tratar de nombrar las dimensiones que salgan, o más o menos a qué se parecen, también por año
+4. ver como se distribuyem por regiones y por años
+5. preguntarle a copilot qué más podemos sacar
+
+#### **Análisis por países**
+```{r modelo_2, echo=FALSE, warning=FALSE}
 # Muestra a los individuos (países) en el plano factorial.
-#plot.DMFA(res.dmfa, choix="ind",invisible="quali", label="none",new.plot=TRUE)
+plot.DMFA(res.dmfa, choix="ind",invisible="quali", label="none",new.plot=TRUE)
+```
 
+Hallazgos
+
+#### **Análisis por región**
+```{r modelo_3, echo=FALSE, warning=FALSE}
 # Muestra cómo las variables se proyectan en el plano.
-#plot.DMFA(res.dmfa, choix="var",invisible="quali", label="none",new.plot=TRUE)
+plot.DMFA(res.dmfa, choix="var",invisible="quali", label="none")
+```
 
+Hallazgos
+
+#### **Análisis por grupo**
+```{r modelo_4, echo=FALSE, warning=FALSE}
 # Muestra la proyección de los grupos
-#plot.DMFA(res.dmfa, choix="group",invisible="quali", label="none", new.plot=TRUE)
+plot.DMFA(res.dmfa, choix="group",invisible="quali", label="none", new.plot=TRUE)
+```
 
+Hallazgos
+
+#### **Análisis por modalidades**
+```{r modelo_5, echo=FALSE, warning=FALSE}
 # Visualiza las modalidades de la variable cualitativa.
 #plot.DMFA(res.dmfa, choix="quali",invisible="quali", label="none",new.plot=TRUE)
 ```
