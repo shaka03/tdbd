@@ -8,7 +8,7 @@
 
 <meta name="author" content="Jhon Fernando Tascon Velasco">
 <meta name="author" content="Lino Alexander Sinisterra">
-<meta name="author" content="Juan Sebastián Chacon">
+<meta name="author" content="Juan Sebastian Chacón">
 <meta name="dcterms.date" content="2025-09-29">
 
 <title>Taller 3 - Modelo Regresión Multinomial</title>
@@ -64,7 +64,7 @@ ul.task-list li input[type="checkbox"] {
     <div class="quarto-title-meta-contents">
              <p>Jhon Fernando Tascon Velasco </p>
              <p>Lino Alexander Sinisterra </p>
-             <p>Juan Sebastián Chacon </p>
+             <p>Juan Sebastian Chacón </p>
           </div>
   </div>
     
@@ -280,10 +280,116 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>Se identifica una cantidad significativa de valores faltantes en las series numéricas, se realizará un proceso de imputación de variables que incluirá:</p>
 <ul>
-<li>Interpolación de variables.</li>
-<li>Exclusión de registros, en los casos en los que todos los datos sean faltanas para las series numéricas.</li>
+<li>Interpolación de variables, usando el método na.spline.</li>
+<li>Exclusión de registros, en los casos en los que todos los datos sean faltantes para las series numéricas.</li>
 <li>Eliminación de variables, si la cantidad sigue siendo significativa.</li>
 </ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,085 × 17
+# Groups:   Pais [217]
+   Pais     Año Region Gasto_Salud Gasto_ID Gasto_Militar Gasto_Educacion Ahorro
+   &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;         &lt;dbl&gt;           &lt;dbl&gt;  &lt;dbl&gt;
+ 1 Afgan…  2020 Asia …       15.5    NA             1.36            NA     -2.74
+ 2 Alban…  2020 Balca…        7.50   NA             1.30             3.34  17.7 
+ 3 Alema…  2020 Europ…       12.7     3.13          1.37             5.59  28.0 
+ 4 Andor…  2020 Europ…        8.79   NA            NA                2.63  NA   
+ 5 Angola  2020 Áfric…        3.27   NA             1.74             2.67  28.1 
+ 6 Antig…  2020 Latin…        5.73   NA            NA                2.99  NA   
+ 7 Arabi…  2020 Orien…        6.65    0.498         8.79             5.11  20.0 
+ 8 Argel…  2020 Norte…        5.64   NA             6.66             6.19  33.3 
+ 9 Argen…  2020 Latin…       10.5     0.541         0.734            5.28  15.0 
+10 Armen…  2020 Europ…       12.2     0.209         4.98             2.71  15.7 
+# ℹ 1,075 more rows
+# ℹ 9 more variables: Exportaciones &lt;dbl&gt;, Importaciones &lt;dbl&gt;,
+#   Industria &lt;dbl&gt;, Inversion_Extranjera_Entrada &lt;dbl&gt;,
+#   Inversion_Extranjera_Salida &lt;dbl&gt;, Deuda &lt;dbl&gt;,
+#   Recaudacion_Impuestos &lt;dbl&gt;, Agricultura &lt;dbl&gt;, Remesas &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Datos faltantes</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Pais</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Año</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Region</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gasto_Salud</td>
+<td style="text-align: right;">125</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gasto_ID</td>
+<td style="text-align: right;">585</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gasto_Militar</td>
+<td style="text-align: right;">330</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gasto_Educacion</td>
+<td style="text-align: right;">200</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ahorro</td>
+<td style="text-align: right;">285</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Exportaciones</td>
+<td style="text-align: right;">175</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Importaciones</td>
+<td style="text-align: right;">175</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Industria</td>
+<td style="text-align: right;">85</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
+<td style="text-align: right;">125</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inversion_Extranjera_Salida</td>
+<td style="text-align: right;">230</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Deuda</td>
+<td style="text-align: right;">495</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recaudacion_Impuestos</td>
+<td style="text-align: right;">395</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: right;">100</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: right;">100</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 <section id="resumen-de-las-variables" class="level3">
 <h3 class="anchored" data-anchor-id="resumen-de-las-variables"><strong>1.2. Resumen de las variables</strong></h3>

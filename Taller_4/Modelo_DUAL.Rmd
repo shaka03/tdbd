@@ -3,7 +3,7 @@ title: "Taller 3 - Modelo Regresión Multinomial"
 author:
   - name: "Jhon Fernando Tascon Velasco"
   - name: "Lino Alexander Sinisterra"
-  - name: "Juan Sebastián Chacon"
+  - name: "Juan Sebastian Chacón"
 date: "2025-09-29"
 output:
   html_document: default
@@ -28,6 +28,7 @@ library(knitr)
 library(kableExtra)
 library(FactoMineR)
 library(scales)
+library(zoo)
 ```
 
 ## **0. Información general**
@@ -120,9 +121,33 @@ kable(nulos, caption = "Datos faltantes") %>%
 
 Se identifica una cantidad significativa de valores faltantes en las series numéricas, se realizará un proceso de imputación de variables que incluirá:
 
-- Interpolación de variables.
-- Exclusión de registros, en los casos en los que todos los datos sean faltanas para las series numéricas.
+- Interpolación de variables, usando el método na.spline.
+- Exclusión de registros, en los casos en los que todos los datos sean faltantes para las series numéricas.
 - Eliminación de variables, si la cantidad sigue siendo significativa.
+
+```{r limpieza_nulos, echo=FALSE}
+# Limpiar faltantes
+df_clean = df %>%
+  group_by(Pais) %>%
+  arrange(Año) %>%
+  mutate(across(where(is.numeric), ~na.spline(.x, x=Año, na.rm = FALSE)))
+
+# Eliminar registros completos si todas las filas son faltantes
+df_clean
+#df_clean = df_clean %>%
+#  mutate(num_na = rowSums(!is.na(select(., where(is.numeric))))) %>%
+#  filter(num_na > 0) %>%
+#  select(-num_na)
+
+```
+
+```{r nulos2, echo=FALSE}
+# Revisar si hay faltantes
+nulos = colSums(is.na(df_clean))
+
+kable(nulos, caption = "Datos faltantes") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
 
 ### **1.2. Resumen de las variables**
 
