@@ -679,15 +679,15 @@ Hallazgos: aquí los hallazgos relevantes deberíaan ser (todo por año):
 #### **Análisis por países**
 ```{r modelo_2, echo=FALSE, warning=FALSE}
 # Muestra a los individuos (países) en el plano factorial.
-plot.DMFA(res.dmfa, choix="ind",invisible="quali", label="none",new.plot=TRUE)
+plot.DMFA(res.dmfa, choix="ind",invisible="quali", label="none", new.plot=TRUE)
 ```
 
 Hallazgos
 
-#### **Análisis por región**
+#### **Análisis por año**
 ```{r modelo_3, echo=FALSE, warning=FALSE}
 # Muestra cómo las variables se proyectan en el plano.
-plot.DMFA(res.dmfa, choix="var",invisible="quali", label="none")
+plot.DMFA(res.dmfa, choix="var",invisible="quali", label="none", new.plot=TRUE)
 ```
 
 Hallazgos
@@ -695,7 +695,7 @@ Hallazgos
 #### **Análisis por grupo**
 ```{r modelo_4, echo=FALSE, warning=FALSE}
 # Muestra la proyección de los grupos
-plot.DMFA(res.dmfa, choix="group",invisible="quali", label="none", new.plot=TRUE)
+#plot.DMFA(res.dmfa, choix="group",invisible="quali", label="none")
 ```
 
 Hallazgos
@@ -703,7 +703,7 @@ Hallazgos
 #### **Análisis por modalidades**
 ```{r modelo_5, echo=FALSE, warning=FALSE}
 # Visualiza las modalidades de la variable cualitativa.
-#plot.DMFA(res.dmfa, choix="quali",invisible="quali", label="none",new.plot=TRUE)
+#plot.DMFA(res.dmfa, choix="quali",invisible="quali", label="none")
 ```
 
 Hallazgos
