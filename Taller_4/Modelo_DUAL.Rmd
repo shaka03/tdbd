@@ -320,7 +320,7 @@ geom_boxplot() +
   facet_wrap(~Variable, scales = "free") +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  labs(title = "Distribución de las variables numéricas por región para el año 2020")
+  labs(title = "Distribución de las variables numéricas por región para el año 2019")
 boxplots
 ```
 
@@ -660,21 +660,9 @@ res.dmfa = DMFA(
   quali.sup = 1,
   graph = FALSE
 )
-
-#res.dmfa$eig # Valores propios (varianza explicada por cada eje)
-#res.dmfa$var  # Cargas de las variables
-res.dmfa$var.partiel # Contribuciones parciales de las variables por grupo
 ```
 
-Hallazgos: aquí los hallazgos relevantes deberíaan ser (todo por año):
-
-1. La contribución de cada variable a las dimensiones y los eigenvalues (a nivel general)
-1.1. Tratar de nombrar las dimensiones que salgan, o más o menos a qué se parecen
-2. Luego, como se mueven a través de los años
-4. ver como se distribuyem por regiones y por años
-5. preguntarle a copilot qué más podemos sacar
-
-#### **Varianza explicada y contribuciones de las variables por dimensión**
+### **Varianza explicada y contribuciones de las variables por dimensión**
 ```{r eigenvalues, echo=FALSE, warning=FALSE}
 eig = as.data.frame(res.dmfa$eig)
 eig$Dim = seq_len(nrow(eig))
@@ -694,7 +682,9 @@ ggplot(eig, aes(x = Dim)) +
   theme_minimal(base_size = 12)
 ```
 
-```{r contribuciones, fig.width=8, echo=FALSE, warning=FALSE}
+Hallazgos y tratar de nombrar cada dimensión
+
+```{r contribuciones, fig.width=8, echo=FALSE, warning=FALSE, dpi=150}
 # Contribución
 coords = as.data.frame(res.dmfa$var$coord)
 dims_plot = names(coords)
@@ -720,34 +710,199 @@ ggplot(coord_long, aes(x = Carga, y = Variable, fill = Signo)) +
 
 Hallazgos
 
-#### **Análisis por países**
-```{r modelo_2, echo=FALSE, warning=FALSE}
+### **Análisis por individuo (países)**
+```{r analisis_paises, echo=FALSE, warning=FALSE}
 # Muestra a los individuos (países) en el plano factorial.
 plot.DMFA(res.dmfa, choix="ind",invisible="quali", label="none", new.plot=TRUE)
 ```
 
 Hallazgos
 
-#### **Análisis por año**
-```{r modelo_3, echo=FALSE, warning=FALSE}
-# Muestra cómo las variables se proyectan en el plano.
-#plot.DMFA(res.dmfa, choix="var",invisible="quali", label="none", new.plot=TRUE)
+### **Análisis por año**
+```{r analsis_2019, echo=FALSE, warning=FALSE}
+group_vars1 = as.data.frame(res.dmfa$var.partiel$Gr2019)
+group_vars1$Variable = rownames(group_vars1)
+group_vars1$Año = "2019"
+
+group_vars2 = as.data.frame(res.dmfa$var.partiel$Gr2020)
+group_vars2$Variable = rownames(group_vars2)
+group_vars2$Año = "2020"
+
+group_vars3 = as.data.frame(res.dmfa$var.partiel$Gr2021)
+group_vars3$Variable = rownames(group_vars3)
+group_vars3$Año = "2021"
+
+group_vars4 = as.data.frame(res.dmfa$var.partiel$Gr2022)
+group_vars4$Variable = rownames(group_vars4)
+group_vars4$Año = "2022"
+
+group_vars5 = as.data.frame(res.dmfa$var.partiel$Gr2023)
+group_vars5$Variable = rownames(group_vars5)
+group_vars5$Año = "2023"
+
+lista_dfs = list(group_vars1, group_vars2, group_vars3, group_vars4, group_vars5)
+group_vars = bind_rows(lista_dfs)
+
+# Función para generar puntos de una circunferencia
+circle = function(radio, n = 100) {
+  theta <- seq(0, 2*pi, length.out = n)
+  data.frame(
+    x = radio * cos(theta),
+    y = radio * sin(theta),
+    r = radio
+  )
+}
+
+# Crear circunferencias con radios desde 0.2 hasta 1.2
+radios = seq(0.2, 1.0, by = 0.2)
+circunferencias = do.call(rbind, lapply(radios, circle))
+
+group_vars_filt = group_vars %>%
+  filter(Año == "2019")
+ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
+  geom_point() +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), color = "gray85") +
+  geom_text(aes(label = Variable), vjust = -0.5, size = 3) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
+  theme_light() +
+  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2019") +
+  theme(
+    legend.position = "none",
+    panel.grid = element_blank()
+  )
 ```
 
 Hallazgos
 
-#### **Análisis por grupo**
-```{r modelo_4, echo=FALSE, warning=FALSE}
-# Muestra la proyección de los grupos
-#plot.DMFA(res.dmfa, choix="group",invisible="quali", label="none")
+```{r analsis_2020, echo=FALSE, warning=FALSE}
+group_vars_filt = group_vars %>%
+  filter(Año == "2020")
+ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
+  geom_point() +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), color = "gray85") +
+  geom_text(aes(label = Variable), vjust = -0.5, size = 3) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
+  theme_light() +
+  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2020") +
+  theme(
+    legend.position = "none",
+    panel.grid = element_blank()
+  )
 ```
 
 Hallazgos
 
-#### **Análisis por modalidades**
-```{r modelo_5, echo=FALSE, warning=FALSE}
+```{r analsis_2021, echo=FALSE, warning=FALSE}
+group_vars_filt = group_vars %>%
+  filter(Año == "2021")
+ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
+  geom_point() +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), color = "gray85") +
+  geom_text(aes(label = Variable), vjust = -0.5, size = 3) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
+  theme_light() +
+  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2021") +
+  theme(
+    legend.position = "none",
+    panel.grid = element_blank()
+  )
+```
+
+Hallasgos
+
+```{r analsis_2022, echo=FALSE, warning=FALSE}
+group_vars_filt = group_vars %>%
+  filter(Año == "2022")
+ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
+  geom_point() +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), color = "gray85") +
+  geom_text(aes(label = Variable), vjust = -0.5, size = 3) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
+  theme_light() +
+  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2022") +
+  theme(
+    legend.position = "none",
+    panel.grid = element_blank()
+  )
+```
+
+Hallazgos
+
+```{r analsis_2023, echo=FALSE, warning=FALSE}
+group_vars_filt = group_vars %>%
+  filter(Año == "2023")
+ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
+  geom_point() +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), color = "gray85") +
+  geom_text(aes(label = Variable), vjust = -0.5, size = 3) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
+  theme_light() +
+  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2023") +
+  theme(
+    legend.position = "none",
+    panel.grid = element_blank()
+  )
+```
+
+Hallazgos
+
+### **Análisis por región**
+
+```{r modelo_regiones_contr, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8}
+region_list = c(
+    "África - África Subsahariana",
+    "África - Norte de África",
+    "América - Latinoamérica y el Caribe",
+    "América - Norteamérica",
+    "Asia - Asia Central y del Sur",
+    "Asia - Oriente Medio",
+    "Asia del Este, Pacífico y Oceanía",
+    "Europa - Europa del Este",
+    "Europa - Europa Occidental"
+  )
+regions = as.data.frame(res.dmfa$quali.sup$coord)
+regions$Region = rownames(regions)
+
+regions_filt = regions %>%
+  filter(Region == region_list)
+
+regions_filt = regions_filt %>%
+  pivot_longer(cols = dims_plot, names_to = "Dim", values_to = "Carga") %>%
+  mutate(Signo = if_else(Carga >= 0, "Positivo", "Negativo"))
+
+ggplot(regions_filt, aes(x = Carga, y = Region, fill = Signo)) +
+  geom_col(width = 0.8, alpha = 0.95) +
+  facet_wrap(~ Dim, scales = "free_y") +
+  scale_fill_manual(values = c("Positivo" = "#2E8B57", "Negativo" = "#D73027")) + # verde/rojo
+  labs(
+    title = "Cargas por región y dimensión",
+    x = "Carga (coordenada en la dimensión)",
+    y = "Variable",
+    fill = ""
+  ) +
+  theme_light() +
+  theme(legend.position = "none")
+```
+
+Hallazgos
+
+```{r analisis_region, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8}
 # Visualiza las modalidades de la variable cualitativa.
-#plot.DMFA(res.dmfa, choix="quali",invisible="quali", label="none")
+plot.DMFA(res.dmfa, choix="quali",invisible="quali", label="none")
 ```
 
 Hallazgos
+
+## 3. Conclusiones
+
+Resuma las implicaciones del análisis, comentando sobre los patrones encontrados y su relevancia para la comprensión del desarrollo global.
