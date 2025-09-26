@@ -1,5 +1,5 @@
 ---
-title: "Taller 3 - Modelo Regresión Multinomial"
+title: "Taller 4 - Modelo DUAL"
 author:
   - name: "Jhon Fernando Tascon Velasco"
   - name: "Lino Alexander Sinisterra"
