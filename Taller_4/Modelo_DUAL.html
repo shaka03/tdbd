@@ -37,11 +37,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="Modelo_DUAL_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Modelo_DUAL_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Modelo_DUAL_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Modelo_DUAL_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Modelo_DUAL_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="Modelo_DUAL_files/libs/kePrint-0.0.1/kePrint.js"></script>
-
 <link href="Modelo_DUAL_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
-
 
 
 </head>
@@ -281,14 +279,13 @@ ul.task-list li input[type="checkbox"] {
 </table>
 </div>
 </div>
-<p>Se identifica una cantidad significativa de valores faltantes en las series numéricas, se realizará un proceso de imputación de variables que incluirá:</p>
+<p><strong><em>Limpiar faltantes:</em></strong> El proceso de aseguramiento de la calidad de los datos es fundamental antes de aplicar el Análisis Factorial Múltiple Dual (DMFA). La fase de limpieza de nulos se centra en la correcta identificación y conversión de los valores ausentes (.. a NA). Para mejorar la robustez del modelo, es imperativo eliminar registros completos si estos carecen de datos en la totalidad de las variables activas, o considerar la eliminación de variables cuyo volumen de nulos sea tan extremo que comprometa la estructura factorial. No obstante, para preservar las trayectorias de los países y mantener la máxima cantidad de información valiosa, el método preferido para los pocos nulos restantes será la imputación de datos faltantes. a conitnuación, se detalla el paso a paso realizado para la limpiea de datos faltantes:</p>
 <ul>
 <li>Interpolación de variables, usando el método na.spline.</li>
 <li>Exclusión de registros, en los casos en los que todos los datos sean faltantes para las series numéricas.</li>
 <li>Eliminación de variables, si la cantidad sigue siendo significativa: una cantidad mayor a 40% de datos faltantes serán eliminadas.</li>
 <li>Si quedan faltantes en algunos países, se imputarán los registros con base en la mediana de la región al que pertenecen y el año.</li>
 </ul>
-<p>-<strong><em>Limpiar faltantes:</em></strong> El proceso de aseguramiento de la calidad de los datos es fundamental antes de aplicar el Análisis Factorial Múltiple Dual (DMFA). La fase de limpieza de nulos se centra en la correcta identificación y conversión de los valores ausentes (.. a NA). Para optimizar la robustez del modelo, es imperativo eliminar registros completos si estos carecen de datos en la totalidad de las variables activas, o considerar la eliminación de variables cuyo volumen de nulos sea tan extremo que comprometa la estructura factorial. No obstante, para preservar las trayectorias de los países y mantener la máxima cantidad de información valiosa, el método preferido para los pocos nulos restantes será la imputación de datos faltantes</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
@@ -368,336 +365,10 @@ ul.task-list li input[type="checkbox"] {
 </table>
 </div>
 </div>
-<p>Ya la data está limpia para poder ser usada en los análisis posteriores.</p>
-</section>
-<section id="resumen-de-las-variables" class="level3">
-<h3 class="anchored" data-anchor-id="resumen-de-las-variables"><strong>1.2. Resumen de las variables</strong></h3>
-<div class="cell">
-<div class="cell-output-display">
-<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
-<caption>Descripción del conjunto de datos</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
-<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
-<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
-<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
-<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
-<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
-<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Pais</td>
-<td style="text-align: left;">Length:1060</td>
-<td style="text-align: left;">Class :character</td>
-<td style="text-align: left;">Mode :character</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Country Code</td>
-<td style="text-align: left;">Length:1060</td>
-<td style="text-align: left;">Class :character</td>
-<td style="text-align: left;">Mode :character</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Año</td>
-<td style="text-align: left;">Length:1060</td>
-<td style="text-align: left;">Class :character</td>
-<td style="text-align: left;">Mode :character</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Region</td>
-<td style="text-align: left;">Length:1060</td>
-<td style="text-align: left;">Class :character</td>
-<td style="text-align: left;">Mode :character</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Agricultura</td>
-<td style="text-align: left;">Min. :-0.03915</td>
-<td style="text-align: left;">1st Qu.: 1.91786</td>
-<td style="text-align: left;">Median : 6.44714</td>
-<td style="text-align: left;">Mean : 9.69659</td>
-<td style="text-align: left;">3rd Qu.:15.35606</td>
-<td style="text-align: left;">Max. :43.05999</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Gastos</td>
-<td style="text-align: left;">Min. :-29.68</td>
-<td style="text-align: left;">1st Qu.: 18.14</td>
-<td style="text-align: left;">Median : 25.71</td>
-<td style="text-align: left;">Mean : 27.30</td>
-<td style="text-align: left;">3rd Qu.: 33.66</td>
-<td style="text-align: left;">Max. :145.68</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Exportaciones</td>
-<td style="text-align: left;">Min. :-53.96</td>
-<td style="text-align: left;">1st Qu.: 23.69</td>
-<td style="text-align: left;">Median : 35.51</td>
-<td style="text-align: left;">Mean : 42.21</td>
-<td style="text-align: left;">3rd Qu.: 50.61</td>
-<td style="text-align: left;">Max. :222.31</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Inversion_Extranjera_Entrada</td>
-<td style="text-align: left;">Min. :-444.7069</td>
-<td style="text-align: left;">1st Qu.: 0.9518</td>
-<td style="text-align: left;">Median : 2.3204</td>
-<td style="text-align: left;">Mean : 4.4524</td>
-<td style="text-align: left;">3rd Qu.: 4.4333</td>
-<td style="text-align: left;">Max. : 433.7510</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Inversion_Extranjera_Salida</td>
-<td style="text-align: left;">Min. :-382.6866</td>
-<td style="text-align: left;">1st Qu.: 0.0602</td>
-<td style="text-align: left;">Median : 0.3250</td>
-<td style="text-align: left;">Mean : 2.0555</td>
-<td style="text-align: left;">3rd Qu.: 1.3233</td>
-<td style="text-align: left;">Max. : 424.8675</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Importaciones</td>
-<td style="text-align: left;">Min. :-63.51</td>
-<td style="text-align: left;">1st Qu.: 30.10</td>
-<td style="text-align: left;">Median : 42.60</td>
-<td style="text-align: left;">Mean : 48.51</td>
-<td style="text-align: left;">3rd Qu.: 60.04</td>
-<td style="text-align: left;">Max. :198.45</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Produccion</td>
-<td style="text-align: left;">Min. : 0.3311</td>
-<td style="text-align: left;">1st Qu.: 6.3978</td>
-<td style="text-align: left;">Median :10.7039</td>
-<td style="text-align: left;">Mean :11.3437</td>
-<td style="text-align: left;">3rd Qu.:14.8118</td>
-<td style="text-align: left;">Max. :47.7695</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Remesas</td>
-<td style="text-align: left;">Min. : 0.0000</td>
-<td style="text-align: left;">1st Qu.: 0.3729</td>
-<td style="text-align: left;">Median : 2.0253</td>
-<td style="text-align: left;">Mean : 4.7862</td>
-<td style="text-align: left;">3rd Qu.: 5.6622</td>
-<td style="text-align: left;">Max. :49.9757</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Recaudacion_Impuestos</td>
-<td style="text-align: left;">Min. :-31.62</td>
-<td style="text-align: left;">1st Qu.: 12.24</td>
-<td style="text-align: left;">Median : 15.05</td>
-<td style="text-align: left;">Mean : 16.00</td>
-<td style="text-align: left;">3rd Qu.: 19.92</td>
-<td style="text-align: left;">Max. : 74.93</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Servicios</td>
-<td style="text-align: left;">Min. : 6.448</td>
-<td style="text-align: left;">1st Qu.: 48.781</td>
-<td style="text-align: left;">Median : 56.960</td>
-<td style="text-align: left;">Mean : 57.616</td>
-<td style="text-align: left;">3rd Qu.: 65.984</td>
-<td style="text-align: left;">Max. :102.873</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Gastos_Militares</td>
-<td style="text-align: left;">Min. : 0.05409</td>
-<td style="text-align: left;">1st Qu.: 1.11769</td>
-<td style="text-align: left;">Median : 1.43530</td>
-<td style="text-align: left;">Mean : 1.87469</td>
-<td style="text-align: left;">3rd Qu.: 2.18326</td>
-<td style="text-align: left;">Max. :36.65311</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Ahorro</td>
-<td style="text-align: left;">Min. :-44.99</td>
-<td style="text-align: left;">1st Qu.: 17.24</td>
-<td style="text-align: left;">Median : 21.26</td>
-<td style="text-align: left;">Mean : 22.48</td>
-<td style="text-align: left;">3rd Qu.: 28.15</td>
-<td style="text-align: left;">Max. : 64.31</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>El análisis del resumen descriptivo (Media, Mediana, Rango) revela la heterogeneidad de los datos, lo cual justifica las decisiones de estandarización para el DMFA.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div class="table-responsive">
-<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
-<caption>Análisis y Hallazgos del Resumen Descriptivo de Variables Económicas</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo_Clave</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Variables_Involucradas</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Implicacion_para_el_DMFA</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Extrema Disparidad (Volatilidad y Outliers)</td>
-<td style="text-align: left;">Inversión Extranjera (Entrada y Salida), Remesas.</td>
-<td style="text-align: left;">Los rangos amplios y los máximos extremos confirman la necesidad crítica de estandarizar las variables (`scale=TRUE` en MFA). De lo contrario, estas variables dominarían los primeros componentes principales.</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Asimetría (Sesgo a la Derecha)</td>
-<td style="text-align: left;">Remesas, Inversión Extranjera Entrada.</td>
-<td style="text-align: left;">La Media es significativamente mayor que la Mediana. El DMFA probablemente creará un factor latente centrado en las 'Economías Dependientes de Flujos Específicos'.</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Estructura de Riesgo Fiscal</td>
-<td style="text-align: left;">Deuda, Gastos, Recaudación Impuestos.</td>
-<td style="text-align: left;">La Deuda Total es un indicador de gran peso. Estos ítems se agruparán en un factor de 'Solidez Fiscal y Endeudamiento', mostrando la vulnerabilidad económica post-2019.</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Balance Comercial Deficitario</td>
-<td style="text-align: left;">Exportaciones e Importaciones.</td>
-<td style="text-align: left;">La Media de Importaciones supera ligeramente la de Exportaciones. Esto implica que el DMFA se centrará en el 'Grado de Apertura e Integración Comercial'.</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Necesidad de Escalamiento</td>
-<td style="text-align: left;">Todas las Variables Cuantitativas.</td>
-<td style="text-align: left;">La diferencia de magnitud entre variables (ej. Agricultura vs. Inversión Extranjera) obliga a la escalización de la varianza para que las correlaciones construyan los factores.</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<section id="análisis-univariado-de-las-variables-numéricas" class="level4">
-<h4 class="anchored" data-anchor-id="análisis-univariado-de-las-variables-numéricas"><strong>Análisis univariado de las variables numéricas</strong></h4>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Modelo_DUAL_files/figure-html/numericas-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Los histogramas confirman la forma de la distribución y la presencia de asimetrías, lo cual es fundamental para justificar la aplicación del DMFA y la estandarización.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div class="table-responsive">
-<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
-<caption>Análisis y Hallazgos de la Distribución Visual de Variables (Histogramas)</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Variables</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Tipo_de_Distribución_Visual</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo_Clave</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Implicación_para_el_DMFA</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Remesas</td>
-<td style="text-align: left;">Altamente Asimétrica a la Derecha (Sesgo Positivo Extremo).</td>
-<td style="text-align: left;">La gran mayoría de observaciones se concentra cerca de cero, con una cola larga hacia valores altos (países muy dependientes).</td>
-<td style="text-align: left;">El DMFA definirá un eje que separe claramente a los países dependientes de remesas. Esta variable tendrá una alta contribución a ese factor.</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Inversión Extranjera (Entrada y Salida)</td>
-<td style="text-align: left;">Asimétrica a la Derecha con concentración en valores bajos.</td>
-<td style="text-align: left;">Existen puntos extremos aislados (outliers) que causan el sesgo y la volatilidad, confirmando la heterogeneidad de los flujos de capital.</td>
-<td style="text-align: left;">Los factores de flujo de capital serán impulsados por la intensidad y volatilidad de la inversión en países específicos.</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Agricultura, Gastos Militares</td>
-<td style="text-align: left;">Concentrada en el extremo bajo (Sesgo positivo moderado).</td>
-<td style="text-align: left;">La mayoría de los países mantienen un porcentaje de PIB bajo para estas variables.</td>
-<td style="text-align: left;">Tendrán un poder discriminatorio limitado, pero diferenciarán a los países con estructuras económicas muy primarias o alta inversión en defensa.</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Servicios, Exportaciones, Importaciones, Ahorro</td>
-<td style="text-align: left;">Relativamente Simétricas y cercanas a la normal.</td>
-<td style="text-align: left;">La mayor parte de las economías se comporta de manera similar, indicando que serán variables clave en la construcción de los ejes principales.</td>
-<td style="text-align: left;">Estas variables serán fundamentales en la construcción de los primeros factores, representando la estructura económica general y el comercio.</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Producción, Deuda</td>
-<td style="text-align: left;">Distribución Bimodal o Multimodal (Especialmente Deuda).</td>
-<td style="text-align: left;">Sugiere la existencia de al menos dos o más grupos de países claramente diferenciados por sus niveles de endeudamiento o estructura productiva.</td>
-<td style="text-align: left;">El factor de Riesgo Fiscal deberá capturar esta diferencia bimodal, dividiendo la muestra en grupos con distinto perfil de endeudamiento.</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Modelo_DUAL_files/figure-html/numericas_2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Los diagramas de caja (Boxplots) visualizan la mediana, la dispersión y la presencia de <em>outliers</em>, lo cual es esencial para confirmar la necesidad de estandarización y la posterior interpretación de los factores.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div class="table-responsive">
-<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
-<caption>Análisis y Hallazgos de la Dispersión Visual de Variables (Boxplots)</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Variables</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo_Clave_sobre_Dispersión</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Implicación_Directa_para_el_DMFA</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Inversión Extranjera (Entrada y Salida), Remesas, Deuda</td>
-<td style="text-align: left;">Distribución altamente sesgada con outliers extremos. La caja (50% central) es pequeña, pero los bigotes son muy largos.</td>
-<td style="text-align: left;">Confirma que los valores atípicos serán los principales impulsores del factor asociado. Estos extremos son críticos para el agrupamiento y la trayectoria de países específicos.</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Gastos Militares, Agricultura</td>
-<td style="text-align: left;">Mediana muy baja y gran concentración de observaciones cerca de cero.</td>
-<td style="text-align: left;">Estas variables no son representativas del comportamiento promedio de la muestra y solo diferenciarán a un grupo pequeño de países con estructuras primarias o de alta defensa.</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Exportaciones, Importaciones, Servicios, Producción</td>
-<td style="text-align: left;">Distribución más simétrica con dispersión moderada. La mediana está bien centrada en la caja.</td>
-<td style="text-align: left;">Estas variables representan la estructura económica promedio de la muestra. Serán las principales contribuyentes a los primeros factores (Dimensión 1 y 2), definiendo el plano factorial.</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Deuda Total</td>
-<td style="text-align: left;">Mediana alta con outliers superiores.</td>
-<td style="text-align: left;">Confirma que la alta deuda es un patrón generalizado, pero los outliers superiores indican un subconjunto de países con riesgo fiscal extremo que el DMFA deberá aislar.</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Necesidad de Estandarización</td>
-<td style="text-align: left;">La escala de los boxplots varía drásticamente entre variables (ej. Deuda vs. Remesas).</td>
-<td style="text-align: left;">Reafirma la necesidad de escalamiento. Sin estandarización, las variables con mayor rango (ej. Inversión Extranjera) dominarían la varianza total, sesgando los resultados del DMFA.</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</section>
+<p>Con los datos limpios, se procede a hacer el análisis exploratorio.</p>
 </section>
 <section id="análisis-multivariado" class="level3">
-<h3 class="anchored" data-anchor-id="análisis-multivariado"><strong>1.3. Análisis multivariado</strong></h3>
+<h3 class="anchored" data-anchor-id="análisis-multivariado"><strong>1.2. Análisis multivariado</strong></h3>
 <section id="variables-numéricas-vs.-año-y-región" class="level4">
 <h4 class="anchored" data-anchor-id="variables-numéricas-vs.-año-y-región"><strong>Variables numéricas vs.&nbsp;Año y Región</strong></h4>
 <section id="análisis-general-por-región" class="level5">
@@ -1042,16 +713,6 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>En términos generales, haciendo una desagregación de cada variable económica por región, se puede decir que:</p>
-<ul>
-<li><strong>Agricultura:</strong> África Subsahariana y Asia Central/Sur presentan valores más altos y dispersos, lo que indicaría una que la agricultura es parte importante en su PIB. Contrario pasa con Europa Occidental y Norteamérica, que tienen valores bajos y homogéneos. Lo anterior hace sentido, ya que estos útimos principalmente conglomeran países cuya especialidad es la transformación de productos.</li>
-<li><strong>Ahorro:</strong> se presenta una alta variabilidad en los países del Asia del Este y Europa Occidental. Lo países del África Subsahariana son los que presentan valores más bajos en ahorro (con respecto al PIB), pero muy cerca los países del norte de África y de Latinoaméria y el Caribe. Los países asiáticos al parecen tienen una mayor tendencia al ahorro, con base en la media de estas regiones on respecto a las demás regiones.</li>
-<li><strong>Exportaciones e Importaciones:</strong> en cuanto a las exportaciones, en los países europeos, el rubro de las exportaciones es más importante en su PIB que en las otras regiones del mundo, mientras que en Norteamérica no lo es tanto. Sin embargo, si vemos las importaciones, Norteamérica repunta, junto con los países europeos y del Asia del Esto, Pacífico y Oceanía.</li>
-<li><strong>Gastos y Gastos Militares:</strong> Norteamérica y Europa Occidental dominan en gastos totales. Oriente Medio destaca en gastos militares. las demás regiones tienen unos gastos y gastos militares similares (en cuanto a su porcentaje en el PIB).</li>
-<li><strong>Inversión Extranjera (Entrada y Salida):</strong> Muy similares en todas las regiones, siendo más variable Europa occidental.</li>
-<li><strong>Producción y Servicios:</strong> Norteamérica y Europa Occidental son regiones que se destacan con valores altos en el rubro de servicios, y los países de Lationamérica también es destacable lo que aporta el sector servicio en el PIB de estos países. Por otro lado, África Subsahariana y Asia Central/Sur tienen los valores más bajos. En producción, las regiones son similares, pero Norteamérica es la región más baja en este rubro.</li>
-<li><strong>Recaudación de Impuestos:</strong> Europa Occidental presenta una mediana elevada en esta variable, mientras Oriente Medio el que tiene la mediana más baja..</li>
-<li><strong>Remesas:</strong> Asia Central/Sur y Latinoamérica presentan valores altos (dependencia de remesas). Mientras que Europa Occidental y Norteamérica son casi nulos.</li>
-</ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -1059,36 +720,30 @@ ul.task-list li input[type="checkbox"] {
 <caption>Análisis de Patrones de Variables por Región (General)</caption>
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo_Clave_Variable</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Región_Patrón_Destacado</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Implicación_DMFA_Clustering</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo.Clave.por.Variable</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Patrones.Destacados</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Estructura Productiva (Agricultura/Servicios)</td>
-<td style="text-align: left;">África Subsahariana y Asia Central/Sur: Alta dependencia agrícola (valores altos y dispersos). **Norteamérica y Europa Occidental: Dominio en el sector servicios.</td>
-<td style="text-align: left;">Estas variables definirán el primer factor del DMFA, separando las economías primarias/en desarrollo de las economías de alto valor agregado/servicios.</td>
+<td style="text-align: left;">Estructura Productiva (Agricultura/Producción/Servicios)</td>
+<td style="text-align: left;">África Subsahariana y Asia Central/Sur: Alta dependencia agrícola (valores altos y dispersos). Norteamérica y Europa Occidental son regiones que se destacan con valores altos en el rubro de servicios, y los países de Lationamérica también es destacable lo que aporta el sector servicio en el PIB de estos países. Por otro lado, África Subsahariana y Asia Central/Sur tienen los valores más bajos. En producción, las regiones son similares, pero Norteamérica es la región más baja en este rubro.</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Solidez Fiscal y Ahorro</td>
-<td style="text-align: left;">Asia del Este y Europa Occidental: Mayor tendencia al Ahorro y variabilidad. África Subsahariana y Norte de África: Valores de Ahorro más bajos.</td>
-<td style="text-align: left;">El DMFA construirá un eje que clasifique las regiones según su disciplina financiera y capacidad de inversión. Las regiones asiáticas se proyectarán de forma opuesta a las africanas/latinoamericanas en este eje.</td>
+<td style="text-align: left;">En general, los países asiáticos al parecen tienen una mayor tendencia al ahorro, con base en la mediana de estas regiones con respecto a las demás regiones. Destacan Asia del Este y Europa Occidental, con mayor tendencia al Ahorro y variabilidad. África Subsahariana y Norte de África: Valores de Ahorro más bajos. En cuanto a recaudación de impuestos, Europa Occidental presenta una mediana elevada en esta variable, mientras Oriente Medio el que tiene la mediana más baja.</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Apertura Comercial (Exp. e Imp.)</td>
-<td style="text-align: left;">Europa (Occidental/Este): Máxima integración comercial (Altas Exportaciones e Importaciones). Norteamérica/Asia del Este: Grandes Importadores.</td>
-<td style="text-align: left;">Los contrastes ayudarán a definir el factor de 'Integración Global'. La alta variabilidad en Europa Occidental (`sd` alto) indica alta heterogeneidad, que debe ser capturada por el modelo.</td>
+<td style="text-align: left;">Europa (Occidental/Este): mayor integración comercial (Altas Exportaciones e Importaciones). Norteamérica/Asia del Este: Grandes Importadores.</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Flujos de Capital (Remesas)</td>
 <td style="text-align: left;">Latinoamérica y el Caribe y Asia Central/Sur: Valores altos y dependencia estructural de Remesas.</td>
-<td style="text-align: left;">La diferencia extrema de medianas confirma que la Remesa será el principal discriminante para la dependencia de flujos externos, agrupando a las regiones receptoras.</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Gasto y Seguridad (Gastos/Gastos Militares)</td>
 <td style="text-align: left;">Oriente Medio: Alta prioridad y gasto en la dimensión militar. Norteamérica y Europa Occidental: Alto Gasto Total del gobierno.</td>
-<td style="text-align: left;">El modelo utilizará los `Gastos` para diferenciar las regiones con alta intervención estatal y aislará la región de Oriente Medio en una dimensión de 'Inversión en Seguridad' (Gasto Militar).</td>
 </tr>
 </tbody>
 </table>
@@ -1437,6 +1092,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+<p>Haciendo un análisis por región, para el año 2019 se tiene lo siguiente:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -1444,31 +1100,30 @@ ul.task-list li input[type="checkbox"] {
 <caption>Análisis de Patrones Regionales - Año 2019</caption>
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Dimension</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo_Clave</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Implicación_DMFA</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Categoria</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Patrones.Destacados</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Estructura Productiva</td>
-<td style="text-align: left;">La dicotomía Agricultura vs. Servicios es marcada. África Subsahariana y Asia Central/Sur dependen de Agricultura; Norteamérica y Europa de Servicios.</td>
-<td style="text-align: left;">El primer eje (Dimensión 1) del DMFA se centrará en el nivel de desarrollo, separando las economías primarias de las de servicios.</td>
+<td style="text-align: left;">Estructura Productiva (Agricultura/Producción/Servicios)</td>
+<td style="text-align: left;">Agricultura: muy alta y dispersa en África Subsahariana y Asia Central/Sur; baja y estable en Europa Occidental y Norteamérica. Producción: Norteamérica, Europa Occidental y Asia del Este/Pacífico por encima de las demás regiones; África Subsahariana y Asia Central/Sur rezagadas. Servicios: altos en Europa Occidental y Norteamérica; medios-altos en Asia del Este/Pacífico; bajos en África Subsahariana y Asia Central/Sur. En términos generales, se mantienen los mismos patrones y las jerarquías regionales comparado con el análisis global (sin temporalidad), reforzando el patrón global, con contrastes más marcados (especialmente en Agricultura alta en regiones emergentes y Servicios/Producción altos en avanzadas).</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Flujos Financieros Críticos</td>
-<td style="text-align: left;">Remesas (Asia Central/Sur y Latinoamérica) e Inversión Extranjera (Entrada/Salida, alta variabilidad en Europa Occidental) definen la volatilidad regional.</td>
-<td style="text-align: left;">El factor de 'Dependencia Externa' se define claramente, con Latinoamérica y Asia Central/Sur proyectándose de forma opuesta a las economías desarrolladas en este eje.</td>
+<td style="text-align: left;">Solidez Fiscal y Ahorro</td>
+<td style="text-align: left;">Recaudación: alta y consistente en Europa Occidental y Norteamérica; baja y muy heterogénea en África Subsahariana y Asia Central/Sur; intermedia en Latinoamérica. Ahorro: alto en Asia del Este/Pacífico y Europa Occidental; bajo en África Subsahariana; variabilidad visible en Europa del Este y Latinoamérica. similar al grupo anterior, 2019 mantiene consistencia con el análisis sin temporalidad, pero se observa un poco más de heterogeneidad intra-regional en regiones de menor ingreso.</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Solidez Fiscal y Gasto</td>
-<td style="text-align: left;">Europa Occidental tiene la Mediana más alta en Recaudación de Impuestos y Deuda, mostrando una estructura fiscal robusta pero altamente endeudada.</td>
-<td style="text-align: left;">El factor de 'Riesgo Fiscal' se establece con una fuerte correlación entre capacidad de recaudación e incurrencia en deuda en las regiones desarrolladas.</td>
+<td style="text-align: left;">Apertura Comercial (Exp. e Imp.)</td>
+<td style="text-align: left;">Exportaciones/Importaciones con medianas altas en Europa Occidental, Norteamérica y Asia del Este/Pacífico; bajas en África Subsahariana y Asia Central/Sur. Latinoamérica y Europa del Este muestran dispersión notable (combinación de economías muy abiertas y otras menos). En general, 2019 es congruente con el patrón sin temporalidad; resalta más heterogeneidad en regiones intermedias (LatAm o Europa del Este).</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Integración y Comercio</td>
-<td style="text-align: left;">Europa del Este y Europa Occidental muestran los valores más altos de Exportaciones e Importaciones, indicando la máxima apertura comercial.</td>
-<td style="text-align: left;">El factor de 'Apertura' se define por la intensidad comercial, siendo las regiones europeas el punto de referencia positivo.</td>
+<td style="text-align: left;">Flujos de Capital (Remesas)</td>
+<td style="text-align: left;">Muy altas (y muy dispersas) en Asia Central/Sur y Latinoamérica; bajas o casi nulas en Europa Occidental, Norteamérica y Asia del Este/Pacífico. Distribuciones con colas superiores marcadas por países puntuales en estas regiones. Esta categoria ern el año 2019 replica el patrón sin temporalidad.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gasto y Seguridad (Gastos/Gastos Militares)</td>
+<td style="text-align: left;">Gasto total: alto en Norteamérica y Europa Occidental; bajo en África Subsahariana; intermedio en Latinoamérica y Europa del Este. Gasto militar: Oriente Medio muestra valores muy elevados con outliers pronunciados; Norteamérica alto pero más estable; las demás regiones en niveles moderados a bajos. El año 2019 acentúa los picos de gasto militar en Oriente Medio (debido a la constante tensión con Israeel y sus países vecinos) y mantiene el liderazgo de gasto total en regiones avanzadas.</td>
 </tr>
 </tbody>
 </table>
@@ -1817,7 +1472,44 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<p>Para el 2020, la pandemia del COVID-19 afectó en cuánto a los gastos, recaudación de impuestos o ahorros. sin embargo, los patrones siguen siendo similares. A continuación, se resumen los hallazgos:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de Patrones Regionales - Año 2020</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Categoria</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Patrones.Destacados</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Estructura Productiva (Agricultura/Producción/Servicios)</td>
+<td style="text-align: left;">En el 2020, África Subsahariana y Asia Central/Sur mantienen sus patrones con Agricultura alta y dispersa; Europa Occidental y Norteamérica con Agricultura baja y estable. Producción/Servicios altos y más compactos en Europa Occidental, Norteamérica y Asia del Este/Pacífico, pero ligeramente más bajos que el 2019 (efecto pandemia); bajos en África Subsahariana y Asia Central/Sur; mayor heterogeneidad en regiones emergentes. Comparando con el 2019 y patrón sin temporalidad, se mantienen las jerarquías regionales, aunque en 2020 se observan contrastes algo más marcados en extremos y ligero aumento de dispersión en regiones intermedias (Latinoamérica, Europa del Este).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Solidez Fiscal y Ahorro</td>
+<td style="text-align: left;">En 2020, Recaudación sigue siendo alta y consistente en Europa Occidental/Norteamérica; baja y heterogénea en África Subsahariana/Asia Central-Sur; intermedia en Latinoamérica y ligeramente bajo vs 2019. Ahorro elevado en Asia del Este/Pacífico y Europa Occidental; bajo en África Subsahariana; variabilidad en Europa del Este y Latinoamérica. Comparando con 2019 hay un ligero aumento de heterogeneidad en 2020 en grupos intermedios para ahorros, sin cambios en el orden relativo, y es un poco más homogéneo en recaudación de impuestos. Versus el patrón sin temporalidad, no hay cambios mayores.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Apertura Comercial (Exp. e Imp.)</td>
+<td style="text-align: left;">Exportaciones/Importaciones con medianas altas en Europa Occidental/Norteamérica/Asia del Este-Pacífico; bajas en África Subsahariana/Asia Central-Sur. Latinoamérica y Europa del Este con dispersión notable (brechas intra-regionales). vs 2019: el patrón es similar; 2020 muestra algo más de heterogeneidad en regiones mixtas, pero medianas bajas vs 2019, acentuando el efecto de pandemia. vs patrones sin temporalidad: Misma jerarquía; el global presenta dispersión más moderada; 2020 acentúa diferencias dentro de regiones intermedias.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Flujos de Capital (Remesas)</td>
+<td style="text-align: left;">En el 2020, las remsesas siguen siendo muy altas y muy dispersas en Asia Central/Sur y Latinoamérica; bajas o casi nulas en Europa Occidental/Norteamérica/Asia del Este-Pacífico. Distribuciones con colas superiores dominadas por pocos países. vs 2019 y patrón sin temporalidad, el 2020 hace más visibles los máximos y colas en la distribución de las remesas a nivel regional.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gasto y Seguridad (Gastos/Gastos Militares)</td>
+<td style="text-align: left;">Gasto total alto en Norteamérica/Europa Occidental; bajo en África Subsahariana; intermedio en Latinoamérica/Europa del Este. Gasto militar: Oriente Medio con outliers muy elevados; Norteamérica alto pero más estable; las demás regiones moderado-bajo. esto indica la influencia de la pandemia, en el que los gastos fueron llevados más a controlar la epidemia y a la salud de las personas, inviertiendo menos en otros rubreos como el militar.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </section>
 <section id="año-2021" class="level5">
 <h5 class="anchored" data-anchor-id="año-2021"><strong>Año 2021</strong></h5>
@@ -2160,7 +1852,44 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<p>El 2021 presenta una leve recuperación comparando con el 2020, debido a la “normalidad” pos-COVID19. A continuación, se presentan los siguientes hallazgos:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de Patrones Regionales - Año 2021</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Categoria</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Patrones.Destacados</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Estructura Productiva (Agricultura/Producción/Servicios)</td>
+<td style="text-align: left;">En el 2021 se mantiene la jerarquía: Europa Occidental y Norteamérica con Producción/Servicios altos y compactos y Agricultura baja; África Subsahariana y Asia Central/Sur con Agricultura alta y dispersa y Producción/Servicios bajos; Asia del Este/Pacífico en niveles altos/intermedios con menor dispersión. Comparando con el 2020: Se recuperan ligeramente las medianas de Producción/Servicios en regiones avanzadas (leve repunte respecto al bache de 2020); Agricultura sin cambios sustantivos de posición. vs patrón sin temporalidad: coincide la ordenación estructural; el general suaviza picos/colas; 2021 enfatiza extremos puntuales.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Solidez Fiscal y Ahorro</td>
+<td style="text-align: left;">Recaudación alta y estable en Europa Occidental/Norteamérica; baja y heterogénea en África Subsahariana/Asia Central-Sur; Latinoamérica intermedia. Ahorro elevado en Asia del Este/Pacífico y Europa Occidental; bajo en África Subsahariana; variabilidad visible en Europa del Este y LatAm. vs 2020: se recupera levementa la Recaudación y Ahorro en regiones avanzadas, aunque en regiones emergentes persiste heterogeneidad. vs patrones sin temporalidad: se exhibe menor variabilidad interna.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Apertura Comercial (Exp. e Imp.)</td>
+<td style="text-align: left;">Para el año 2021, las Exportaciones/Importaciones mantienen medianas altas en Europa Occidental/Norteamérica/Asia del Este-Pacífico; bajas en África Subsahariana/Asia Central-Sur; LatAm y Europa del Este con dispersión notable, por la mezcla de economías muy abiertas y menos abiertas. vs 2020: se observa un incremento en medianas (reapertura y normalización del comercio) en regiones avanzadas y parte de Asia del Este/Pacífico; regiones rezagadas permanecen por debajo. vs patrón sin temporalidad: 2021 muestra brechas intra-regionales más visibles en regiones mixtas.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Flujos de Capital (Remesas)</td>
+<td style="text-align: left;">En el 2021, las remesas se mantienen muy altas y dispersas en Asia Central/Sur y Latinoamérica; bajas o casi nulas en Europa Occidental/Norteamérica/Asia del Este-Pacífico. Se mantienen colas superiores por pocos países. vs 2020: Igual o ligeramente mayor en las regiones líderes (las medianas se ven tan altas o un poco más); regiones avanzadas siguen bajas. vs patrones sin temporalidad: El global amortigua extremos; 2021 hace más visibles picos concentrados.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gasto y Seguridad (Gastos/Gastos Militares)</td>
+<td style="text-align: left;">Gasto total sin cambio en sus patrones: alto en Europa Occidental/Norteamérica; bajo en África Subsahariana; intermedio en LatAm/Europa del Este. Gasto militar: Oriente Medio conserva outliers muy elevados; Norteamérica alto pero más estable; el resto moderado/bajo. vs 2020: Niveles similares o ligeramente superiores en Gasto total en avanzadas (continúa la senda de normalización); Gasto militar mantiene picos en Oriente Medio sin cambios de orden. vs Global: Mismo patrón; el global suaviza outliers, mientras 2021 resalta máximos.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </section>
 <section id="año-2022" class="level5">
 <h5 class="anchored" data-anchor-id="año-2022"><strong>Año 2022</strong></h5>
@@ -2503,7 +2232,44 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<p>El año 2022 sigue en recuperación luego de la pandemia del 2020, por ende, la mayoría de los indicadores tienden a aumentar. a continuación, se repsentan los hallazgos para este año:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de Patrones Regionales - Año 2022</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Categoria</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Patrones.Destacados</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Estructura Productiva (Agricultura/Producción/Servicios)</td>
+<td style="text-align: left;">Agricultura: 2022 mantiene medianas altas en África Subsahariana y Asia Central/Sur (sin cambios relevantes vs 2019–2021) y bajas en Europa Occidental/Norteamérica. Producción: 2022 muestra medianas ligeramente superiores a 2021 en Europa Occidental/Norteamérica (consolidación tras 2020) y altas estables en Asia del Este/Pacífico; bajas estables en África Subsahariana/Asia Central-Sur. Servicios: 2022 con medianas iguales o algo mayores que 2021 en Europa Occidental; Norteamérica se mantiene alta; LatAm intermedia con dispersión; África Subsahariana baja.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Solidez Fiscal y Ahorro</td>
+<td style="text-align: left;">Recaudación: 2022 con medianas levemente por encima de 2021 en Europa Occidental; Norteamérica estable-alta; África Subsahariana baja estable; LatAm intermedia estable. Ahorro: 2022 alto y estable en Asia del Este/Pacífico; Europa Occidental ligero incremento vs 2021; África Subsahariana baja; Europa del Este con variabilidad. Vs 2019–2021: no hay cambios de jerarquía; se observan ajustes menores al alza en economías avanzadas.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Apertura Comercial (Exp. e Imp.)</td>
+<td style="text-align: left;">Para el año 2022, las Exportaciones/Importaciones presentan medianas más altas que 2021 en Europa Occidental/Norteamérica y ligero aumento en Asia del Este/Pacífico (normalización pos-pandemia); LatAm y Europa del Este mantienen medianas intermedias con amplia dispersión; África Subsahariana/Asia Central-Sur bajas estables. Vs 2020: 2022 se ubica claramente por encima (continuación de la recuperación). Vs 2019: 2022 aparece similar o levemente superior en economís avanzadas; similar en economías rezagadas.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Flujos de Capital (Remesas)</td>
+<td style="text-align: left;">El año 2022 mantiene medianas altas en Asia Central/Sur y LatAm, similares o marginalmente superiores a 2021; Europa Occidental/Norteamérica/Asia del Este-Pacífico permanecen bajas.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gasto y Seguridad (Gastos/Gastos Militares)</td>
+<td style="text-align: left;">Gasto total: año 2022 alto y estable en Europa Occidental/Norteamérica (medianas igualwa o ligeramente superiores vs 2021), bajo en África Subsahariana, intermedio en LatAm/Europa del Este. Gasto militar: 2022 sin cambios de mediana relevantes a simple vista; Oriente Medio conserva valores altos con outliers; Norteamérica alto y estable; resto moderado-bajo.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </section>
 <section id="año-2023" class="level5">
 <h5 class="anchored" data-anchor-id="año-2023"><strong>Año 2023</strong></h5>
@@ -2846,7 +2612,44 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<p>El año 2023 presenta una recuperación consolidad luego de la pandemia del COVID-19, y persisten brechas en algunas regiones como África Subsahariana y Asia Central/Sur.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de Patrones Regionales - Año 2022</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Categoria</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Patrones.Destacados</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Estructura Productiva (Agricultura/Producción/Servicios)</td>
+<td style="text-align: left;">Agricultura: 2023 mantiene consistencia en África Subsahariana y Asia Central/Sur, sin cambios relevantes vs 2022; dispersión ligeramente menor (menos outliers). Producción: medianas levemente altas en Europa Occidental y Norteamérica (recuperación consolidada),pero similar en Asia del Este/Pacífico vs el año anterior; regiones rezagadas sin mejora visible. Servicios: medianas levemente altas en Europa Occidental y Norteamérica vs 2022; LatAm estable; África Subsahariana sigue baja. Patrón nuevo: ligera reducción de dispersión en regiones avanzadas (cajas más compactas).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Solidez Fiscal y Ahorro</td>
+<td style="text-align: left;">Recaudación: medianas con aumento leve en Europa Occidental y Norteamérica vs 2022; LatAm estable; África Subsahariana sigue baja. Ahorro: medianas altas en Asia del Este/Pacífico y Europa Occidental (máximos del periodo); LatAm y África Subsahariana sin cambios. Patrón nuevo: Asia del Este/Pacífico consolida liderazgo en ahorro con menor dispersión.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Apertura Comercial (Exp. e Imp.)</td>
+<td style="text-align: left;">Exportaciones: medianas altas en Europa Occidental y Norteamérica (superan niveles 2022 y se acercan a 2019); LatAm y Europa del Este con dispersión alta; África Subsahariana estable. Importaciones: patrón similar; medianas ↑ en avanzadas, ≈ en rezagadas. Patrón nuevo: 2023 marca máximos post-2020 en comercio para regiones avanzadas.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Flujos de Capital (Remesas)</td>
+<td style="text-align: left;">Medianas similares en Asia Central/Sur y LatAm (altas); ligero aumento en LatAm vs 2022; regiones avanzadas siguen bajas. Dispersión alta persiste (colas superiores). Se mantiene concentración en pocas economías.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gasto y Seguridad (Gastos/Gastos Militares)</td>
+<td style="text-align: left;">Gasto total: medianas levemente superiores en Europa Occidental y Norteamérica (máximos del periodo); LatAm estable; África Subsahariana baja. Gasto militar: sin cambios sustantivos; Oriente Medio sigue con outliers altos, especialmente por la guErra Israel-Palestina. Patrón nuevo: consolidación de gasto público alto en economías avanzadas.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </section>
 <section id="correlación" class="level5">
 <h5 class="anchored" data-anchor-id="correlación"><strong>Correlación</strong></h5>

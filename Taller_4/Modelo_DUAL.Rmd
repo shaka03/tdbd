@@ -141,7 +141,7 @@ kable(nulos, caption = "Datos faltantes") %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
-Se identifica una cantidad significativa de valores faltantes en las series numéricas, se realizará un proceso de imputación de variables que incluirá:
+***Limpiar faltantes:*** El proceso de aseguramiento de la calidad de los datos es fundamental antes de aplicar el Análisis Factorial Múltiple Dual (DMFA). La fase de limpieza de nulos se centra en la correcta identificación y conversión de los valores ausentes (.. a NA). Para mejorar la robustez del modelo, es imperativo eliminar registros completos si estos carecen de datos en la totalidad de las variables activas, o considerar la eliminación de variables cuyo volumen de nulos sea tan extremo que comprometa la estructura factorial. No obstante, para preservar las trayectorias de los países y mantener la máxima cantidad de información valiosa, el método preferido para los pocos nulos restantes será la imputación de datos faltantes. a conitnuación, se detalla el paso a paso realizado para la limpiea de datos faltantes:
 
 - Interpolación de variables, usando el método na.spline.
 - Exclusión de registros, en los casos en los que todos los datos sean faltantes para las series numéricas.
@@ -175,7 +175,6 @@ df_clean = df_clean %>%
   ungroup()
 ```
 
--***Limpiar faltantes:*** El proceso de aseguramiento de la calidad de los datos es fundamental antes de aplicar el Análisis Factorial Múltiple Dual (DMFA). La fase de limpieza de nulos se centra en la correcta identificación y conversión de los valores ausentes (.. a NA). Para optimizar la robustez del modelo, es imperativo eliminar registros completos si estos carecen de datos en la totalidad de las variables activas, o considerar la eliminación de variables cuyo volumen de nulos sea tan extremo que comprometa la estructura factorial. No obstante, para preservar las trayectorias de los países y mantener la máxima cantidad de información valiosa, el método preferido para los pocos nulos restantes será la imputación de datos faltantes
 
 ```{r nulos2, echo=FALSE}
 # Revisar si hay faltantes
@@ -185,203 +184,9 @@ kable(nulos, caption = "Datos faltantes") %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
-Ya la data está limpia para poder ser usada en los análisis posteriores.
+Con los datos limpios, se procede a hacer el análisis exploratorio.
 
-### **1.2. Resumen de las variables**
-
-```{r descripcion, echo=FALSE}
-resumen = summary(df_clean)
-kable(t(resumen), caption = "Descripción del conjunto de datos") %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
-```
-
-El análisis del resumen descriptivo (Media, Mediana, Rango) revela la heterogeneidad de los datos, lo cual justifica las decisiones de estandarización para el DMFA.
-
-```{r analisis_resumen_tabla, echo=FALSE}
-analisis_resumen = data.frame(
-  Hallazgo_Clave = c(
-    "Extrema Disparidad (Volatilidad y Outliers)",
-    "Asimetría (Sesgo a la Derecha)",
-    "Estructura de Riesgo Fiscal",
-    "Balance Comercial Deficitario",
-    "Necesidad de Escalamiento"
-  ),
-  Variables_Involucradas = c(
-    "Inversión Extranjera (Entrada y Salida), Remesas.",
-    "Remesas, Inversión Extranjera Entrada.",
-    "Deuda, Gastos, Recaudación Impuestos.",
-    "Exportaciones e Importaciones.",
-    "Todas las Variables Cuantitativas."
-  ),
-  Implicacion_para_el_DMFA = c(
-    "Los rangos amplios y los máximos extremos confirman la necesidad crítica de estandarizar las variables (`scale=TRUE` en MFA). De lo contrario, estas variables dominarían los primeros componentes principales.",
-    "La Media es significativamente mayor que la Mediana. El DMFA probablemente creará un factor latente centrado en las 'Economías Dependientes de Flujos Específicos'.",
-    "La Deuda Total es un indicador de gran peso. Estos ítems se agruparán en un factor de 'Solidez Fiscal y Endeudamiento', mostrando la vulnerabilidad económica post-2019.",
-    "La Media de Importaciones supera ligeramente la de Exportaciones. Esto implica que el DMFA se centrará en el 'Grado de Apertura e Integración Comercial'.",
-    "La diferencia de magnitud entre variables (ej. Agricultura vs. Inversión Extranjera) obliga a la escalización de la varianza para que las correlaciones construyan los factores."
-  )
-)
-
-# Generamos la tabla con kableExtra
-kable(analisis_resumen,
-      format = "html",
-      align = "l",
-      caption = "Análisis y Hallazgos del Resumen Descriptivo de Variables Económicas") %>%
-  kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-    full_width = FALSE,
-    position = "center"
-  )
-```
-
-#### **Análisis univariado de las variables numéricas**
-
-```{r numericas, fig.width=10, fig.height=10, fig.align='center', echo=FALSE, message=FALSE}
-cat("\n")
-# Crear histogramas con facetas
-df_long = df_clean %>%
-  dplyr::select(
-    Agricultura,
-    Gastos,
-    Produccion,
-    Exportaciones,
-    Importaciones,
-    Remesas,
-    Servicios,
-    Recaudacion_Impuestos,
-    Inversion_Extranjera_Entrada,
-    Inversion_Extranjera_Salida,
-    Ahorro,
-    Gastos_Militares
-  )
-
-df_long = pivot_longer(
-  df_long,
-  cols = c(
-    Agricultura,
-    Gastos,
-    Produccion,
-    Exportaciones,
-    Importaciones,
-    Remesas,
-    Servicios,
-    Recaudacion_Impuestos,
-    Inversion_Extranjera_Entrada,
-    Inversion_Extranjera_Salida,
-    Ahorro,
-    Gastos_Militares
-  ),
-  names_to = "Variable",
-  values_to = "Valor"
-)
-
-histogramas = ggplot(df_long, aes(x = Valor, fill = Variable)) +
-  geom_histogram(bins=15) +
-  facet_wrap(~Variable, scales = "free") +
-  theme_light() +
-  theme(legend.position = "none",
-    plot.title = element_text(hjust = 0.5)) +
-  labs(title="Histogramas de las variables numéricas")
-histogramas
-```
-
-Los histogramas confirman la forma de la distribución y la presencia de asimetrías, lo cual es fundamental para justificar la aplicación del DMFA y la estandarización.
-
-```{r analisis_histogramas_tabla, echo=FALSE}
-analisis_hist = data.frame(
-  Variables = c(
-    "Remesas",
-    "Inversión Extranjera (Entrada y Salida)",
-    "Agricultura, Gastos Militares",
-    "Servicios, Exportaciones, Importaciones, Ahorro",
-    "Producción, Deuda"
-  ),
-  Tipo_de_Distribución_Visual = c(
-    "Altamente Asimétrica a la Derecha (Sesgo Positivo Extremo).",
-    "Asimétrica a la Derecha con concentración en valores bajos.",
-    "Concentrada en el extremo bajo (Sesgo positivo moderado).",
-    "Relativamente Simétricas y cercanas a la normal.",
-    "Distribución Bimodal o Multimodal (Especialmente Deuda)."
-  ),
-  Hallazgo_Clave = c(
-    "La gran mayoría de observaciones se concentra cerca de cero, con una cola larga hacia valores altos (países muy dependientes).",
-    "Existen puntos extremos aislados (outliers) que causan el sesgo y la volatilidad, confirmando la heterogeneidad de los flujos de capital.",
-    "La mayoría de los países mantienen un porcentaje de PIB bajo para estas variables.",
-    "La mayor parte de las economías se comporta de manera similar, indicando que serán variables clave en la construcción de los ejes principales.",
-    "Sugiere la existencia de al menos dos o más grupos de países claramente diferenciados por sus niveles de endeudamiento o estructura productiva."
-  ),
-  Implicación_para_el_DMFA = c(
-    "El DMFA definirá un eje que separe claramente a los países dependientes de remesas. Esta variable tendrá una alta contribución a ese factor.",
-    "Los factores de flujo de capital serán impulsados por la intensidad y volatilidad de la inversión en países específicos.",
-    "Tendrán un poder discriminatorio limitado, pero diferenciarán a los países con estructuras económicas muy primarias o alta inversión en defensa.",
-    "Estas variables serán fundamentales en la construcción de los primeros factores, representando la estructura económica general y el comercio.",
-    "El factor de Riesgo Fiscal deberá capturar esta diferencia bimodal, dividiendo la muestra en grupos con distinto perfil de endeudamiento."
-  )
-)
-
-# Generamos la tabla con kableExtra
-kable(analisis_hist,
-      format = "html",
-      align = "l",
-      caption = "Análisis y Hallazgos de la Distribución Visual de Variables (Histogramas)") %>%
-  kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-    full_width = FALSE,
-    position = "center"
-  )
-```
-
-```{r numericas_2, fig.width=10, fig.height=10, fig.align='center', echo=FALSE, message=FALSE}
-boxplots = ggplot(df_long, aes(y = Valor, fill = Variable)) +
-  geom_boxplot() +
-  facet_wrap(~Variable, scales = "free") +
-  theme_light() +
-  theme(legend.position = "none",
-    plot.title = element_text(hjust = 0.5)) +
-  labs(title = "Boxplots de las variables numéricas")
-boxplots
-```
-
-Los diagramas de caja (Boxplots) visualizan la mediana, la dispersión y la presencia de *outliers*, lo cual es esencial para confirmar la necesidad de estandarización y la posterior interpretación de los factores.
-
-```{r analisis_boxplots_tabla, echo=FALSE}
-analisis_boxplots = data.frame(
-  Variables = c(
-    "Inversión Extranjera (Entrada y Salida), Remesas, Deuda",
-    "Gastos Militares, Agricultura",
-    "Exportaciones, Importaciones, Servicios, Producción",
-    "Deuda Total",
-    "Necesidad de Estandarización"
-  ),
-  Hallazgo_Clave_sobre_Dispersión = c(
-    "Distribución altamente sesgada con outliers extremos. La caja (50% central) es pequeña, pero los bigotes son muy largos.",
-    "Mediana muy baja y gran concentración de observaciones cerca de cero.",
-    "Distribución más simétrica con dispersión moderada. La mediana está bien centrada en la caja.",
-    "Mediana alta con outliers superiores.",
-    "La escala de los boxplots varía drásticamente entre variables (ej. Deuda vs. Remesas)."
-  ),
-  Implicación_Directa_para_el_DMFA = c(
-    "Confirma que los valores atípicos serán los principales impulsores del factor asociado. Estos extremos son críticos para el agrupamiento y la trayectoria de países específicos.",
-    "Estas variables no son representativas del comportamiento promedio de la muestra y solo diferenciarán a un grupo pequeño de países con estructuras primarias o de alta defensa.",
-    "Estas variables representan la estructura económica promedio de la muestra. Serán las principales contribuyentes a los primeros factores (Dimensión 1 y 2), definiendo el plano factorial.",
-    "Confirma que la alta deuda es un patrón generalizado, pero los outliers superiores indican un subconjunto de países con riesgo fiscal extremo que el DMFA deberá aislar.",
-    "Reafirma la necesidad de escalamiento. Sin estandarización, las variables con mayor rango (ej. Inversión Extranjera) dominarían la varianza total, sesgando los resultados del DMFA."
-  )
-)
-
-# Generamos la tabla con kableExtra
-kable(analisis_boxplots,
-      format = "html",
-      align = "l",
-      caption = "Análisis y Hallazgos de la Dispersión Visual de Variables (Boxplots)") %>%
-  kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-    full_width = FALSE,
-    position = "center"
-  )
-```
-
-### **1.3. Análisis multivariado**
+### **1.2. Análisis multivariado**
 
 #### **Variables numéricas vs. Año y Región**
 
@@ -453,37 +258,21 @@ print(boxplots)
 
 En términos generales, haciendo una desagregación de cada variable económica por región, se puede decir que:
 
-- **Agricultura:** África Subsahariana y Asia Central/Sur presentan valores más altos y dispersos, lo que indicaría una que la agricultura es parte importante en su PIB. Contrario pasa con Europa Occidental y Norteamérica, que tienen valores bajos y homogéneos. Lo anterior hace sentido, ya que estos útimos principalmente conglomeran países cuya especialidad es la transformación de productos.
-- **Ahorro:** se presenta una alta variabilidad en los países del Asia del Este y Europa Occidental. Lo países del África Subsahariana son los que presentan valores más bajos en ahorro (con respecto al PIB), pero muy cerca los países del norte de África y de Latinoaméria y el Caribe. Los países asiáticos al parecen tienen una mayor tendencia al ahorro, con base en la media de estas regiones on respecto a las demás regiones.
-- **Exportaciones e Importaciones:** en cuanto a las exportaciones, en los países europeos, el rubro de las exportaciones es más importante en su PIB que en las otras regiones del mundo, mientras que en Norteamérica no lo es tanto. Sin embargo, si vemos las importaciones, Norteamérica repunta, junto con los países europeos y del Asia del Esto, Pacífico y Oceanía.
-- **Gastos y Gastos Militares:** Norteamérica y Europa Occidental dominan en gastos totales. Oriente Medio destaca en gastos militares. las demás regiones tienen unos gastos y gastos militares similares (en cuanto a su porcentaje en el PIB).
-- **Inversión Extranjera (Entrada y Salida):** Muy similares en todas las regiones, siendo más variable Europa occidental.
-- **Producción y Servicios:** Norteamérica y Europa Occidental son regiones que se destacan con valores altos en el rubro de servicios, y los países de Lationamérica también es destacable lo que aporta el sector servicio en el PIB de estos países. Por otro lado, África Subsahariana y Asia Central/Sur tienen los valores más bajos. En producción, las regiones son similares, pero Norteamérica es la región más baja en este rubro.
-- **Recaudación de Impuestos:** Europa Occidental presenta una mediana elevada en esta variable, mientras Oriente Medio el que tiene la mediana más baja..
-- **Remesas:** Asia Central/Sur y Latinoamérica presentan valores altos (dependencia de remesas). Mientras que Europa Occidental y Norteamérica son casi nulos.
-
 ```{r multivariado_general_analisis, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
 analisis_multivariado_general = data.frame(
-  Hallazgo_Clave_Variable = c(
-    "Estructura Productiva (Agricultura/Servicios)",
+  "Hallazgo Clave por Variable" = c(
+    "Estructura Productiva (Agricultura/Producción/Servicios)",
     "Solidez Fiscal y Ahorro",
     "Apertura Comercial (Exp. e Imp.)",
     "Flujos de Capital (Remesas)",
     "Gasto y Seguridad (Gastos/Gastos Militares)"
   ),
-  Región_Patrón_Destacado = c(
-    "África Subsahariana y Asia Central/Sur: Alta dependencia agrícola (valores altos y dispersos).\n**Norteamérica y Europa Occidental: Dominio en el sector servicios.",
-    "Asia del Este y Europa Occidental: Mayor tendencia al Ahorro y variabilidad.\nÁfrica Subsahariana y Norte de África: Valores de Ahorro más bajos.",
-    "Europa (Occidental/Este): Máxima integración comercial (Altas Exportaciones e Importaciones).\nNorteamérica/Asia del Este: Grandes Importadores.",
+  "Patrones Destacados" = c(
+    "África Subsahariana y Asia Central/Sur: Alta dependencia agrícola (valores altos y dispersos).\nNorteamérica y Europa Occidental son regiones que se destacan con valores altos en el rubro de servicios, y los países de Lationamérica también es destacable lo que aporta el sector servicio en el PIB de estos países. Por otro lado, África Subsahariana y Asia Central/Sur tienen los valores más bajos. En producción, las regiones son similares, pero Norteamérica es la región más baja en este rubro.",
+    "En general, los países asiáticos al parecen tienen una mayor tendencia al ahorro, con base en la mediana de estas regiones con respecto a las demás regiones. Destacan Asia del Este y Europa Occidental, con mayor tendencia al Ahorro y variabilidad.\nÁfrica Subsahariana y Norte de África: Valores de Ahorro más bajos.\nEn cuanto a recaudación de impuestos, Europa Occidental presenta una mediana elevada en esta variable, mientras Oriente Medio el que tiene la mediana más baja.",
+    "Europa (Occidental/Este): mayor integración comercial (Altas Exportaciones e Importaciones).\nNorteamérica/Asia del Este: Grandes Importadores.",
     "Latinoamérica y el Caribe y Asia Central/Sur: Valores altos y dependencia estructural de Remesas.",
     "Oriente Medio: Alta prioridad y gasto en la dimensión militar.\nNorteamérica y Europa Occidental: Alto Gasto Total del gobierno."
-  ),
-  Implicación_DMFA_Clustering = c(
-    "Estas variables definirán el primer factor del DMFA, separando las economías primarias/en desarrollo de las economías de alto valor agregado/servicios.",
-    "El DMFA construirá un eje que clasifique las regiones según su disciplina financiera y capacidad de inversión. Las regiones asiáticas se proyectarán de forma opuesta a las africanas/latinoamericanas en este eje.",
-    "Los contrastes ayudarán a definir el factor de 'Integración Global'. La alta variabilidad en Europa Occidental (`sd` alto) indica alta heterogeneidad, que debe ser capturada por el modelo.",
-    "La diferencia extrema de medianas confirma que la Remesa será el principal discriminante para la dependencia de flujos externos, agrupando a las regiones receptoras.",
-    "El modelo utilizará los `Gastos` para diferenciar las regiones con alta intervención estatal y aislará la región de Oriente Medio en una dimensión de 'Inversión en Seguridad' (Gasto Militar)."
   )
 )
 
@@ -566,26 +355,23 @@ geom_boxplot() +
 boxplots
 ```
 
+Haciendo un análisis por región, para el año 2019 se tiene lo siguiente:
 ```{r analisis_multivariado_2019, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
 cat("\n")
 analisis_2019 = data.frame(
-  Dimension = c(
-    "Estructura Productiva",
-    "Flujos Financieros Críticos",
-    "Solidez Fiscal y Gasto",
-    "Integración y Comercio"
+  Categoria = c(
+    "Estructura Productiva (Agricultura/Producción/Servicios)",
+    "Solidez Fiscal y Ahorro",
+    "Apertura Comercial (Exp. e Imp.)",
+    "Flujos de Capital (Remesas)",
+    "Gasto y Seguridad (Gastos/Gastos Militares)"
   ),
-  Hallazgo_Clave = c(
-    "La dicotomía Agricultura vs. Servicios es marcada. África Subsahariana y Asia Central/Sur dependen de Agricultura; Norteamérica y Europa de Servicios.",
-    "Remesas (Asia Central/Sur y Latinoamérica) e Inversión Extranjera (Entrada/Salida, alta variabilidad en Europa Occidental) definen la volatilidad regional.",
-    "Europa Occidental tiene la Mediana más alta en Recaudación de Impuestos y Deuda, mostrando una estructura fiscal robusta pero altamente endeudada.",
-    "Europa del Este y Europa Occidental muestran los valores más altos de Exportaciones e Importaciones, indicando la máxima apertura comercial."
-  ),
-  Implicación_DMFA = c(
-    "El primer eje (Dimensión 1) del DMFA se centrará en el nivel de desarrollo, separando las economías primarias de las de servicios.",
-    "El factor de 'Dependencia Externa' se define claramente, con Latinoamérica y Asia Central/Sur proyectándose de forma opuesta a las economías desarrolladas en este eje.",
-    "El factor de 'Riesgo Fiscal' se establece con una fuerte correlación entre capacidad de recaudación e incurrencia en deuda en las regiones desarrolladas.",
-    "El factor de 'Apertura' se define por la intensidad comercial, siendo las regiones europeas el punto de referencia positivo."
+  "Patrones Destacados" = c(
+    "Agricultura: muy alta y dispersa en África Subsahariana y Asia Central/Sur; baja y estable en Europa Occidental y Norteamérica.\nProducción: Norteamérica, Europa Occidental y Asia del Este/Pacífico por encima de las demás regiones; África Subsahariana y Asia Central/Sur rezagadas.\nServicios: altos en Europa Occidental y Norteamérica; medios-altos en Asia del Este/Pacífico; bajos en África Subsahariana y Asia Central/Sur.\n\n En términos generales, se mantienen los mismos patrones y las jerarquías regionales comparado con el análisis global (sin temporalidad), reforzando el patrón global, con contrastes más marcados (especialmente en Agricultura alta en regiones emergentes y Servicios/Producción altos en avanzadas).",
+    "Recaudación: alta y consistente en Europa Occidental y Norteamérica; baja y muy heterogénea en África Subsahariana y Asia Central/Sur; intermedia en Latinoamérica.\nAhorro: alto en Asia del Este/Pacífico y Europa Occidental; bajo en África Subsahariana; variabilidad visible en Europa del Este y Latinoamérica.\nsimilar al grupo anterior, 2019 mantiene consistencia con el análisis sin temporalidad, pero se observa un poco más de heterogeneidad intra-regional en regiones de menor ingreso.",
+    "Exportaciones/Importaciones con medianas altas en Europa Occidental, Norteamérica y Asia del Este/Pacífico; bajas en África Subsahariana y Asia Central/Sur. Latinoamérica y Europa del Este muestran dispersión notable (combinación de economías muy abiertas y otras menos).\nEn general, 2019 es congruente con el patrón sin temporalidad; resalta más heterogeneidad en regiones intermedias (LatAm o Europa del Este).",
+    "Muy altas (y muy dispersas) en Asia Central/Sur y Latinoamérica; bajas o casi nulas en Europa Occidental, Norteamérica y Asia del Este/Pacífico. Distribuciones con colas superiores marcadas por países puntuales en estas regiones.\n Esta categoria ern el año 2019 replica el patrón sin temporalidad.",
+    "Gasto total: alto en Norteamérica y Europa Occidental; bajo en África Subsahariana; intermedio en Latinoamérica y Europa del Este.\nGasto militar: Oriente Medio muestra valores muy elevados con outliers pronunciados; Norteamérica alto pero más estable; las demás regiones en niveles moderados a bajos.\n El año 2019 acentúa los picos de gasto militar en Oriente Medio (debido a la constante tensión con Israeel y sus países vecinos) y mantiene el liderazgo de gasto total en regiones avanzadas."
   )
 )
 
@@ -668,7 +454,37 @@ geom_boxplot() +
 boxplots
 ```
 
-Hallazgos
+Para el 2020, la pandemia del COVID-19 afectó en cuánto a los gastos, recaudación de impuestos o ahorros. sin embargo, los patrones siguen siendo similares. A continuación, se resumen los hallazgos:
+```{r analisis_multivariado_2020, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+analisis_2020 = data.frame(
+  Categoria = c(
+    "Estructura Productiva (Agricultura/Producción/Servicios)",
+    "Solidez Fiscal y Ahorro",
+    "Apertura Comercial (Exp. e Imp.)",
+    "Flujos de Capital (Remesas)",
+    "Gasto y Seguridad (Gastos/Gastos Militares)"
+  ),
+  "Patrones Destacados" = c(
+    "En el 2020, África Subsahariana y Asia Central/Sur mantienen sus patrones con Agricultura alta y dispersa; Europa Occidental y Norteamérica con Agricultura baja y estable.\nProducción/Servicios altos y más compactos en Europa Occidental, Norteamérica y Asia del Este/Pacífico, pero ligeramente más bajos que el 2019 (efecto pandemia); bajos en África Subsahariana y Asia Central/Sur; mayor heterogeneidad en regiones emergentes.\nComparando con el 2019 y patrón sin temporalidad, se mantienen las jerarquías regionales, aunque en 2020 se observan contrastes algo más marcados en extremos y ligero aumento de dispersión en regiones intermedias (Latinoamérica, Europa del Este).",
+    "En 2020, Recaudación sigue siendo alta y consistente en Europa Occidental/Norteamérica; baja y heterogénea en África Subsahariana/Asia Central-Sur; intermedia en Latinoamérica y ligeramente bajo vs 2019.\nAhorro elevado en Asia del Este/Pacífico y Europa Occidental; bajo en África Subsahariana; variabilidad en Europa del Este y Latinoamérica.\nComparando con 2019 hay un ligero aumento de heterogeneidad en 2020 en grupos intermedios para ahorros, sin cambios en el orden relativo, y es un poco más homogéneo en recaudación de impuestos. Versus el patrón sin temporalidad, no hay cambios mayores.",
+    "Exportaciones/Importaciones con medianas altas en Europa Occidental/Norteamérica/Asia del Este-Pacífico; bajas en África Subsahariana/Asia Central-Sur. Latinoamérica y Europa del Este con dispersión notable (brechas intra-regionales).\nvs 2019: el patrón es similar; 2020 muestra algo más de heterogeneidad en regiones mixtas, pero medianas bajas vs 2019, acentuando el efecto de pandemia. vs patrones sin temporalidad: Misma jerarquía; el global presenta dispersión más moderada; 2020 acentúa diferencias dentro de regiones intermedias.",
+    "En el 2020, las remsesas siguen siendo muy altas y muy dispersas en Asia Central/Sur y Latinoamérica; bajas o casi nulas en Europa Occidental/Norteamérica/Asia del Este-Pacífico. Distribuciones con colas superiores dominadas por pocos países.\nvs 2019 y patrón sin temporalidad, el 2020 hace más visibles los máximos y colas en la distribución de las remesas a nivel regional.",
+    "Gasto total alto en Norteamérica/Europa Occidental; bajo en África Subsahariana; intermedio en Latinoamérica/Europa del Este.\nGasto militar: Oriente Medio con outliers muy elevados; Norteamérica alto pero más estable; las demás regiones moderado-bajo. esto indica la influencia de la pandemia, en el que los gastos fueron llevados más a controlar la epidemia y a la salud de las personas, inviertiendo menos en otros rubreos como el militar."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(analisis_2020,
+      format = "html",
+      align = "l",
+      caption = "Análisis de Patrones Regionales - Año 2020") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
 
 ##### **Año 2021**
 ```{r multivariado_2021, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
@@ -736,7 +552,37 @@ geom_boxplot() +
 boxplots
 ```
 
-Hallazgos
+El 2021 presenta una leve recuperación comparando con el 2020, debido a la "normalidad" pos-COVID19. A continuación, se presentan los siguientes hallazgos:
+```{r analisis_multivariado_2021, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+analisis_2021 = data.frame(
+  Categoria = c(
+    "Estructura Productiva (Agricultura/Producción/Servicios)",
+    "Solidez Fiscal y Ahorro",
+    "Apertura Comercial (Exp. e Imp.)",
+    "Flujos de Capital (Remesas)",
+    "Gasto y Seguridad (Gastos/Gastos Militares)"
+  ),
+  "Patrones Destacados" = c(
+    "En el 2021 se mantiene la jerarquía: Europa Occidental y Norteamérica con Producción/Servicios altos y compactos y Agricultura baja; África Subsahariana y Asia Central/Sur con Agricultura alta y dispersa y Producción/Servicios bajos; Asia del Este/Pacífico en niveles altos/intermedios con menor dispersión.\nComparando con el 2020: Se recuperan ligeramente las medianas de Producción/Servicios en regiones avanzadas (leve repunte respecto al bache de 2020); Agricultura sin cambios sustantivos de posición. vs patrón sin temporalidad: coincide la ordenación estructural; el general suaviza picos/colas; 2021 enfatiza extremos puntuales.",
+    "Recaudación alta y estable en Europa Occidental/Norteamérica; baja y heterogénea en África Subsahariana/Asia Central-Sur; Latinoamérica intermedia. Ahorro elevado en Asia del Este/Pacífico y Europa Occidental; bajo en África Subsahariana; variabilidad visible en Europa del Este y LatAm.\nvs 2020: se recupera levementa la Recaudación y Ahorro en regiones avanzadas, aunque en regiones emergentes persiste heterogeneidad. vs patrones sin temporalidad: se exhibe menor variabilidad interna.",
+    "Para el año 2021, las Exportaciones/Importaciones mantienen medianas altas en Europa Occidental/Norteamérica/Asia del Este-Pacífico; bajas en África Subsahariana/Asia Central-Sur; LatAm y Europa del Este con dispersión notable, por la mezcla de economías muy abiertas y menos abiertas.\nvs 2020: se observa un incremento en medianas (reapertura y normalización del comercio) en regiones avanzadas y parte de Asia del Este/Pacífico; regiones rezagadas permanecen por debajo. vs patrón sin temporalidad: 2021 muestra brechas intra-regionales más visibles en regiones mixtas.",
+    "En el 2021, las remesas se mantienen muy altas y dispersas en Asia Central/Sur y Latinoamérica; bajas o casi nulas en Europa Occidental/Norteamérica/Asia del Este-Pacífico. Se mantienen colas superiores por pocos países.\nvs 2020: Igual o ligeramente mayor en las regiones líderes (las medianas se ven tan altas o un poco más); regiones avanzadas siguen bajas. vs patrones sin temporalidad: El global amortigua extremos; 2021 hace más visibles picos concentrados.",
+    "Gasto total sin cambio en sus patrones: alto en Europa Occidental/Norteamérica; bajo en África Subsahariana; intermedio en LatAm/Europa del Este. Gasto militar: Oriente Medio conserva outliers muy elevados; Norteamérica alto pero más estable; el resto moderado/bajo.\nvs 2020: Niveles similares o ligeramente superiores en Gasto total en avanzadas (continúa la senda de normalización); Gasto militar mantiene picos en Oriente Medio sin cambios de orden. vs Global: Mismo patrón; el global suaviza outliers, mientras 2021 resalta máximos."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(analisis_2021,
+      format = "html",
+      align = "l",
+      caption = "Análisis de Patrones Regionales - Año 2021") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
 
 ##### **Año 2022**
 ```{r multivariado_2022, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
@@ -804,7 +650,37 @@ geom_boxplot() +
 boxplots
 ```
 
-Hallazgos
+El año 2022 sigue en recuperación luego de la pandemia del 2020, por ende, la mayoría de los indicadores tienden a aumentar. a continuación, se repsentan los hallazgos para este año:
+```{r analisis_multivariado_2022, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+analisis_2022 = data.frame(
+  Categoria = c(
+    "Estructura Productiva (Agricultura/Producción/Servicios)",
+    "Solidez Fiscal y Ahorro",
+    "Apertura Comercial (Exp. e Imp.)",
+    "Flujos de Capital (Remesas)",
+    "Gasto y Seguridad (Gastos/Gastos Militares)"
+  ),
+  "Patrones Destacados" = c(
+    "Agricultura: 2022 mantiene medianas altas en África Subsahariana y Asia Central/Sur (sin cambios relevantes vs 2019–2021) y bajas en Europa Occidental/Norteamérica.\nProducción: 2022 muestra medianas ligeramente superiores a 2021 en Europa Occidental/Norteamérica (consolidación tras 2020) y altas estables en Asia del Este/Pacífico; bajas estables en África Subsahariana/Asia Central-Sur.\nServicios: 2022 con medianas iguales o algo mayores que 2021 en Europa Occidental; Norteamérica se mantiene alta; LatAm intermedia con dispersión; África Subsahariana baja.",
+    "Recaudación: 2022 con medianas levemente por encima de 2021 en Europa Occidental; Norteamérica estable-alta; África Subsahariana baja estable; LatAm intermedia estable.\nAhorro: 2022 alto y estable en Asia del Este/Pacífico; Europa Occidental ligero incremento vs 2021; África Subsahariana baja; Europa del Este con variabilidad.\nVs 2019–2021: no hay cambios de jerarquía; se observan ajustes menores al alza en economías avanzadas.",
+    "Para el año 2022, las Exportaciones/Importaciones presentan medianas más altas que 2021 en Europa Occidental/Norteamérica y ligero aumento en Asia del Este/Pacífico (normalización pos-pandemia); LatAm y Europa del Este mantienen medianas intermedias con amplia dispersión; África Subsahariana/Asia Central-Sur bajas estables. Vs 2020: 2022 se ubica claramente por encima (continuación de la recuperación). Vs 2019: 2022 aparece similar o levemente superior en economís avanzadas; similar en economías rezagadas. ",
+    "El año 2022 mantiene medianas altas en Asia Central/Sur y LatAm, similares o marginalmente superiores a 2021; Europa Occidental/Norteamérica/Asia del Este-Pacífico permanecen bajas.",
+    "Gasto total: año 2022 alto y estable en Europa Occidental/Norteamérica (medianas igualwa o ligeramente superiores vs 2021), bajo en África Subsahariana, intermedio en LatAm/Europa del Este.\nGasto militar: 2022 sin cambios de mediana relevantes a simple vista; Oriente Medio conserva valores altos con outliers; Norteamérica alto y estable; resto moderado-bajo."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(analisis_2022,
+      format = "html",
+      align = "l",
+      caption = "Análisis de Patrones Regionales - Año 2022") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
 
 ##### **Año 2023**
 ```{r multivariado_2023, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
@@ -872,7 +748,38 @@ geom_boxplot() +
 boxplots
 ```
 
-Hallazgos
+El año 2023 presenta una recuperación consolidad luego de la pandemia del COVID-19, y persisten brechas en algunas regiones como África Subsahariana y Asia Central/Sur.
+
+```{r analisis_multivariado_2023, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+analisis_2023 = data.frame(
+  Categoria = c(
+    "Estructura Productiva (Agricultura/Producción/Servicios)",
+    "Solidez Fiscal y Ahorro",
+    "Apertura Comercial (Exp. e Imp.)",
+    "Flujos de Capital (Remesas)",
+    "Gasto y Seguridad (Gastos/Gastos Militares)"
+  ),
+  "Patrones Destacados" = c(
+    "Agricultura: 2023 mantiene consistencia en África Subsahariana y Asia Central/Sur, sin cambios relevantes vs 2022; dispersión ligeramente menor (menos outliers).\nProducción: medianas levemente altas en Europa Occidental y Norteamérica (recuperación consolidada),pero similar en Asia del Este/Pacífico vs el año anterior; regiones rezagadas sin mejora visible.\nServicios: medianas levemente altas en Europa Occidental y Norteamérica vs 2022; LatAm estable; África Subsahariana sigue baja.\nPatrón nuevo: ligera reducción de dispersión en regiones avanzadas (cajas más compactas).",
+    "Recaudación: medianas con aumento leve en Europa Occidental y Norteamérica vs 2022; LatAm estable; África Subsahariana sigue baja.\nAhorro: medianas altas en Asia del Este/Pacífico y Europa Occidental (máximos del periodo); LatAm y África Subsahariana sin cambios.\nPatrón nuevo: Asia del Este/Pacífico consolida liderazgo en ahorro con menor dispersión.",
+    "Exportaciones: medianas altas en Europa Occidental y Norteamérica (superan niveles 2022 y se acercan a 2019); LatAm y Europa del Este con dispersión alta; África Subsahariana estable.\nImportaciones: patrón similar; medianas ↑ en avanzadas, ≈ en rezagadas.\nPatrón nuevo: 2023 marca máximos post-2020 en comercio para regiones avanzadas.",
+    "Medianas similares en Asia Central/Sur y LatAm (altas); ligero aumento en LatAm vs 2022; regiones avanzadas siguen bajas. Dispersión alta persiste (colas superiores). Se mantiene concentración en pocas economías.",
+    "Gasto total: medianas levemente superiores en Europa Occidental y Norteamérica (máximos del periodo); LatAm estable; África Subsahariana baja.\nGasto militar: sin cambios sustantivos; Oriente Medio sigue con outliers altos, especialmente por la guErra Israel-Palestina.\nPatrón nuevo: consolidación de gasto público alto en economías avanzadas."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(analisis_2023,
+      format = "html",
+      align = "l",
+      caption = "Análisis de Patrones Regionales - Año 2022") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
 
 ##### **Correlación**
 ```{r correlacion, fig.width=10, fig.height=10, fig.align='center', echo=FALSE}
