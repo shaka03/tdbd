@@ -257,8 +257,76 @@ Hallazgos
 
 #### **Variables numéricas vs. Año y Región**
 
+##### **Análisis general por región**
+```{r multivariado_general, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+
+df_long = df_clean %>%
+  dplyr::select(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares,
+                Region)
+
+df_stats = df_long %>%
+  group_by(Region) %>%
+  summarise(across(where(is.numeric), list(
+      mediana = ~round(median(.x, na.rm = TRUE), 2)
+    ), .names = "{.col}"))
+
+kable(t(df_stats), format = "html", caption = "Mediana por Región", align = "c") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                full_width = TRUE, position = "center")
+
+df_stats = df_long %>%
+  group_by(Region) %>%
+  summarise(across(where(is.numeric), list(
+      sd = ~round(sd(.x, na.rm = TRUE), 2)
+    ), .names = "{.col}"))
+
+kable(t(df_stats), format = "html", caption = "Desviación estándar por Región - Año 2019", align = "c") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                full_width = TRUE, position = "center")
+
+
+df_long = df_long %>%
+  pivot_longer(cols = c(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares),
+               names_to = "Variable",
+               values_to = "Valor")
+
+# Crear el gráfico de boxplots
+boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
+geom_boxplot() +
+  facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
+  theme_light() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(title = "Distribución de las variables numéricas por región")
+boxplots
+```
+
+Hallazgos
+
 ##### **Año 2019**
-```{r multivariado_2019, fig.width=10, fig.height=6, fig.align='center', echo=FALSE, warning=FALSE}
+```{r multivariado_2019, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
 cat("\n")
 
 df_long = df_clean %>%
@@ -317,7 +385,7 @@ df_long = df_long %>%
 # Crear el gráfico de boxplots
 boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
 geom_boxplot() +
-  facet_wrap(~Variable, scales = "free") +
+  facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5)) +
   labs(title = "Distribución de las variables numéricas por región para el año 2019")
@@ -327,7 +395,7 @@ boxplots
 Hallazgos
 
 ##### **Año 2020**
-```{r multivariado_2020, fig.width=10, fig.height=6, fig.align='center', echo=FALSE, warning=FALSE}
+```{r multivariado_2020, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
 cat("\n")
 
 df_long = df_clean %>%
@@ -386,7 +454,7 @@ df_long = df_long %>%
 # Crear el gráfico de boxplots
 boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
 geom_boxplot() +
-  facet_wrap(~Variable, scales = "free") +
+  facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5)) +
   labs(title = "Distribución de las variables numéricas por región para el año 2020")
@@ -396,7 +464,7 @@ boxplots
 Hallazgos
 
 ##### **Año 2021**
-```{r multivariado_2021, fig.width=10, fig.height=6, fig.align='center', echo=FALSE, warning=FALSE}
+```{r multivariado_2021, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
 cat("\n")
 
 df_long = df_clean %>%
@@ -454,7 +522,7 @@ df_long = df_long %>%
 # Crear el gráfico de boxplots
 boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
 geom_boxplot() +
-  facet_wrap(~Variable, scales = "free") +
+  facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5)) +
   labs(title = "Distribución de las variables numéricas por región para el año 2021")
@@ -464,7 +532,7 @@ boxplots
 Hallazgos
 
 ##### **Año 2022**
-```{r multivariado_2022, fig.width=10, fig.height=6, fig.align='center', echo=FALSE, warning=FALSE}
+```{r multivariado_2022, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
 cat("\n")
 
 df_long = df_clean %>%
@@ -522,7 +590,7 @@ df_long = df_long %>%
 # Crear el gráfico de boxplots
 boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
 geom_boxplot() +
-  facet_wrap(~Variable, scales = "free") +
+  facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5)) +
   labs(title = "Distribución de las variables numéricas por región para el año 2022")
@@ -532,7 +600,7 @@ boxplots
 Hallazgos
 
 ##### **Año 2023**
-```{r multivariado_2023, fig.width=10, fig.height=6, fig.align='center', echo=FALSE, warning=FALSE}
+```{r multivariado_2023, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
 cat("\n")
 
 df_long = df_clean %>%
@@ -590,7 +658,7 @@ df_long = df_long %>%
 # Crear el gráfico de boxplots
 boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
 geom_boxplot() +
-  facet_wrap(~Variable, scales = "free") +
+  facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5)) +
   labs(title = "Distribución de las variables numéricas por región para el año 2023")
@@ -663,7 +731,7 @@ res.dmfa = DMFA(
 ```
 
 ### **Varianza explicada y contribuciones de las variables por dimensión**
-```{r eigenvalues, echo=FALSE, warning=FALSE}
+```{r eigenvalues, echo=FALSE, warning=FALSE, fig.align='center'}
 eig = as.data.frame(res.dmfa$eig)
 eig$Dim = seq_len(nrow(eig))
 eig$Dim = factor(paste0("Dim ", eig$Dim),
@@ -684,7 +752,7 @@ ggplot(eig, aes(x = Dim)) +
 
 Hallazgos y tratar de nombrar cada dimensión
 
-```{r contribuciones, fig.width=8, echo=FALSE, warning=FALSE, dpi=150}
+```{r contribuciones, fig.width=8, echo=FALSE, warning=FALSE, dpi=150, fig.align='center'}
 # Contribución
 coords = as.data.frame(res.dmfa$var$coord)
 dims_plot = names(coords)
@@ -711,7 +779,7 @@ ggplot(coord_long, aes(x = Carga, y = Variable, fill = Signo)) +
 Hallazgos
 
 ### **Análisis por individuo (países)**
-```{r analisis_paises, echo=FALSE, warning=FALSE}
+```{r analisis_paises, echo=FALSE, warning=FALSE, fig.align='center'}
 # Muestra a los individuos (países) en el plano factorial.
 plot.DMFA(res.dmfa, choix="ind",invisible="quali", label="none", new.plot=TRUE)
 ```
@@ -719,7 +787,7 @@ plot.DMFA(res.dmfa, choix="ind",invisible="quali", label="none", new.plot=TRUE)
 Hallazgos
 
 ### **Análisis por año**
-```{r analsis_2019, echo=FALSE, warning=FALSE}
+```{r analisis_2019, echo=FALSE, warning=FALSE, fig.align='center'}
 group_vars1 = as.data.frame(res.dmfa$var.partiel$Gr2019)
 group_vars1$Variable = rownames(group_vars1)
 group_vars1$Año = "2019"
@@ -776,7 +844,7 @@ ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
 
 Hallazgos
 
-```{r analsis_2020, echo=FALSE, warning=FALSE}
+```{r analisis_2020, echo=FALSE, warning=FALSE, fig.align='center'}
 group_vars_filt = group_vars %>%
   filter(Año == "2020")
 ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
@@ -796,7 +864,7 @@ ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
 
 Hallazgos
 
-```{r analsis_2021, echo=FALSE, warning=FALSE}
+```{r analisis_2021, echo=FALSE, warning=FALSE, fig.align='center'}
 group_vars_filt = group_vars %>%
   filter(Año == "2021")
 ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
@@ -814,9 +882,9 @@ ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
   )
 ```
 
-Hallasgos
+Hallazgos
 
-```{r analsis_2022, echo=FALSE, warning=FALSE}
+```{r analisis_2022, echo=FALSE, warning=FALSE, fig.align='center'}
 group_vars_filt = group_vars %>%
   filter(Año == "2022")
 ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
@@ -836,7 +904,7 @@ ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
 
 Hallazgos
 
-```{r analsis_2023, echo=FALSE, warning=FALSE}
+```{r analisis_2023, echo=FALSE, warning=FALSE, fig.align='center'}
 group_vars_filt = group_vars %>%
   filter(Año == "2023")
 ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
@@ -858,7 +926,7 @@ Hallazgos
 
 ### **Análisis por región**
 
-```{r modelo_regiones_contr, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8}
+```{r modelo_regiones_contr, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8, fig.align='center'}
 region_list = c(
     "África - África Subsahariana",
     "África - Norte de África",
@@ -896,7 +964,7 @@ ggplot(regions_filt, aes(x = Carga, y = Region, fill = Signo)) +
 
 Hallazgos
 
-```{r analisis_region, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8}
+```{r analisis_region, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8, fig.align='center'}
 # Visualiza las modalidades de la variable cualitativa.
 plot.DMFA(res.dmfa, choix="quali",invisible="quali", label="none")
 ```
