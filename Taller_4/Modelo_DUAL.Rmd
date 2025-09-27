@@ -101,6 +101,14 @@ kable(variables, format = "html", caption = "Descripción de variables del estud
                 full_width = FALSE, position = "center")
 ```
 
+- ***Unidad de Estudio (Individuos):***	La unidad de observación principal es el País, cuyas características económicas varían en el tiempo.
+
+- ***Horizonte Temporal:***	El estudio abarca un periodo de cinco años (2019 al 2023). Este marco es crítico, ya que incluye el impacto y la recuperación de la crisis global iniciada en 2020, lo que potencia el análisis de trayectorias.
+
+- ***Variables Activas (Cuantitativas):***	Se emplearán 13 variables económicas (e.g., Servicios, Gastos, Deuda, Exportaciones, Remesas) para construir el espacio factorial. Todas son expresadas como porcentaje del PIB (%), asegurando que miden la estructura económica relativa y no el tamaño absoluto.
+
+- ***Variables de Agrupamiento/Clasificación:***	El análisis está desagregado por 14 Regiones geográficas predefinidas (e.g., Latinoamérica y el Caribe, Europa Occidental, África Subsahariana), lo que facilita una interpretación geopolítica de los resultados.
+
 ## **1. Análisis exploratorio**
 
 ```{r carga_datos, echo=FALSE}
@@ -167,6 +175,8 @@ df_clean = df_clean %>%
   ungroup()
 ```
 
+-***Limpiar faltantes:*** El proceso de aseguramiento de la calidad de los datos es fundamental antes de aplicar el Análisis Factorial Múltiple Dual (DMFA). La fase de limpieza de nulos se centra en la correcta identificación y conversión de los valores ausentes (.. a NA). Para optimizar la robustez del modelo, es imperativo eliminar registros completos si estos carecen de datos en la totalidad de las variables activas, o considerar la eliminación de variables cuyo volumen de nulos sea tan extremo que comprometa la estructura factorial. No obstante, para preservar las trayectorias de los países y mantener la máxima cantidad de información valiosa, el método preferido para los pocos nulos restantes será la imputación de datos faltantes
+
 ```{r nulos2, echo=FALSE}
 # Revisar si hay faltantes
 nulos = colSums(is.na(df_clean))
@@ -185,7 +195,44 @@ kable(t(resumen), caption = "Descripción del conjunto de datos") %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
-Hallazgos
+El análisis del resumen descriptivo (Media, Mediana, Rango) revela la heterogeneidad de los datos, lo cual justifica las decisiones de estandarización para el DMFA.
+
+```{r analisis_resumen_tabla, echo=FALSE}
+analisis_resumen = data.frame(
+  Hallazgo_Clave = c(
+    "Extrema Disparidad (Volatilidad y Outliers)",
+    "Asimetría (Sesgo a la Derecha)",
+    "Estructura de Riesgo Fiscal",
+    "Balance Comercial Deficitario",
+    "Necesidad de Escalamiento"
+  ),
+  Variables_Involucradas = c(
+    "Inversión Extranjera (Entrada y Salida), Remesas.",
+    "Remesas, Inversión Extranjera Entrada.",
+    "Deuda, Gastos, Recaudación Impuestos.",
+    "Exportaciones e Importaciones.",
+    "Todas las Variables Cuantitativas."
+  ),
+  Implicacion_para_el_DMFA = c(
+    "Los rangos amplios y los máximos extremos confirman la necesidad crítica de estandarizar las variables (`scale=TRUE` en MFA). De lo contrario, estas variables dominarían los primeros componentes principales.",
+    "La Media es significativamente mayor que la Mediana. El DMFA probablemente creará un factor latente centrado en las 'Economías Dependientes de Flujos Específicos'.",
+    "La Deuda Total es un indicador de gran peso. Estos ítems se agruparán en un factor de 'Solidez Fiscal y Endeudamiento', mostrando la vulnerabilidad económica post-2019.",
+    "La Media de Importaciones supera ligeramente la de Exportaciones. Esto implica que el DMFA se centrará en el 'Grado de Apertura e Integración Comercial'.",
+    "La diferencia de magnitud entre variables (ej. Agricultura vs. Inversión Extranjera) obliga a la escalización de la varianza para que las correlaciones construyan los factores."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(analisis_resumen,
+      format = "html",
+      align = "l",
+      caption = "Análisis y Hallazgos del Resumen Descriptivo de Variables Económicas") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
 
 #### **Análisis univariado de las variables numéricas**
 
@@ -238,7 +285,51 @@ histogramas = ggplot(df_long, aes(x = Valor, fill = Variable)) +
 histogramas
 ```
 
-Hallazgos
+Los histogramas confirman la forma de la distribución y la presencia de asimetrías, lo cual es fundamental para justificar la aplicación del DMFA y la estandarización.
+
+```{r analisis_histogramas_tabla, echo=FALSE}
+analisis_hist = data.frame(
+  Variables = c(
+    "Remesas",
+    "Inversión Extranjera (Entrada y Salida)",
+    "Agricultura, Gastos Militares",
+    "Servicios, Exportaciones, Importaciones, Ahorro",
+    "Producción, Deuda"
+  ),
+  Tipo_de_Distribución_Visual = c(
+    "Altamente Asimétrica a la Derecha (Sesgo Positivo Extremo).",
+    "Asimétrica a la Derecha con concentración en valores bajos.",
+    "Concentrada en el extremo bajo (Sesgo positivo moderado).",
+    "Relativamente Simétricas y cercanas a la normal.",
+    "Distribución Bimodal o Multimodal (Especialmente Deuda)."
+  ),
+  Hallazgo_Clave = c(
+    "La gran mayoría de observaciones se concentra cerca de cero, con una cola larga hacia valores altos (países muy dependientes).",
+    "Existen puntos extremos aislados (outliers) que causan el sesgo y la volatilidad, confirmando la heterogeneidad de los flujos de capital.",
+    "La mayoría de los países mantienen un porcentaje de PIB bajo para estas variables.",
+    "La mayor parte de las economías se comporta de manera similar, indicando que serán variables clave en la construcción de los ejes principales.",
+    "Sugiere la existencia de al menos dos o más grupos de países claramente diferenciados por sus niveles de endeudamiento o estructura productiva."
+  ),
+  Implicación_para_el_DMFA = c(
+    "El DMFA definirá un eje que separe claramente a los países dependientes de remesas. Esta variable tendrá una alta contribución a ese factor.",
+    "Los factores de flujo de capital serán impulsados por la intensidad y volatilidad de la inversión en países específicos.",
+    "Tendrán un poder discriminatorio limitado, pero diferenciarán a los países con estructuras económicas muy primarias o alta inversión en defensa.",
+    "Estas variables serán fundamentales en la construcción de los primeros factores, representando la estructura económica general y el comercio.",
+    "El factor de Riesgo Fiscal deberá capturar esta diferencia bimodal, dividiendo la muestra en grupos con distinto perfil de endeudamiento."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(analisis_hist,
+      format = "html",
+      align = "l",
+      caption = "Análisis y Hallazgos de la Distribución Visual de Variables (Histogramas)") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
 
 ```{r numericas_2, fig.width=10, fig.height=10, fig.align='center', echo=FALSE, message=FALSE}
 boxplots = ggplot(df_long, aes(y = Valor, fill = Variable)) +
@@ -251,7 +342,44 @@ boxplots = ggplot(df_long, aes(y = Valor, fill = Variable)) +
 boxplots
 ```
 
-Hallazgos
+Los diagramas de caja (Boxplots) visualizan la mediana, la dispersión y la presencia de *outliers*, lo cual es esencial para confirmar la necesidad de estandarización y la posterior interpretación de los factores.
+
+```{r analisis_boxplots_tabla, echo=FALSE}
+analisis_boxplots = data.frame(
+  Variables = c(
+    "Inversión Extranjera (Entrada y Salida), Remesas, Deuda",
+    "Gastos Militares, Agricultura",
+    "Exportaciones, Importaciones, Servicios, Producción",
+    "Deuda Total",
+    "Necesidad de Estandarización"
+  ),
+  Hallazgo_Clave_sobre_Dispersión = c(
+    "Distribución altamente sesgada con outliers extremos. La caja (50% central) es pequeña, pero los bigotes son muy largos.",
+    "Mediana muy baja y gran concentración de observaciones cerca de cero.",
+    "Distribución más simétrica con dispersión moderada. La mediana está bien centrada en la caja.",
+    "Mediana alta con outliers superiores.",
+    "La escala de los boxplots varía drásticamente entre variables (ej. Deuda vs. Remesas)."
+  ),
+  Implicación_Directa_para_el_DMFA = c(
+    "Confirma que los valores atípicos serán los principales impulsores del factor asociado. Estos extremos son críticos para el agrupamiento y la trayectoria de países específicos.",
+    "Estas variables no son representativas del comportamiento promedio de la muestra y solo diferenciarán a un grupo pequeño de países con estructuras primarias o de alta defensa.",
+    "Estas variables representan la estructura económica promedio de la muestra. Serán las principales contribuyentes a los primeros factores (Dimensión 1 y 2), definiendo el plano factorial.",
+    "Confirma que la alta deuda es un patrón generalizado, pero los outliers superiores indican un subconjunto de países con riesgo fiscal extremo que el DMFA deberá aislar.",
+    "Reafirma la necesidad de escalamiento. Sin estandarización, las variables con mayor rango (ej. Inversión Extranjera) dominarían la varianza total, sesgando los resultados del DMFA."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(analisis_boxplots,
+      format = "html",
+      align = "l",
+      caption = "Análisis y Hallazgos de la Dispersión Visual de Variables (Boxplots)") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
 
 ### **1.3. Análisis multivariado**
 
@@ -320,7 +448,7 @@ geom_boxplot() +
   theme_light() +
   theme(plot.title = element_text(hjust = 0.5)) +
   labs(title = "Distribución de las variables numéricas por región")
-boxplots
+print(boxplots)
 ```
 
 En términos generales, haciendo una desagregación de cada variable económica por región, se puede decir que:
@@ -333,6 +461,43 @@ En términos generales, haciendo una desagregación de cada variable económica 
 - **Producción y Servicios:** Norteamérica y Europa Occidental son regiones que se destacan con valores altos en el rubro de servicios, y los países de Lationamérica también es destacable lo que aporta el sector servicio en el PIB de estos países. Por otro lado, África Subsahariana y Asia Central/Sur tienen los valores más bajos. En producción, las regiones son similares, pero Norteamérica es la región más baja en este rubro.
 - **Recaudación de Impuestos:** Europa Occidental presenta una mediana elevada en esta variable, mientras Oriente Medio el que tiene la mediana más baja..
 - **Remesas:** Asia Central/Sur y Latinoamérica presentan valores altos (dependencia de remesas). Mientras que Europa Occidental y Norteamérica son casi nulos.
+
+```{r multivariado_general_analisis, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+analisis_multivariado_general = data.frame(
+  Hallazgo_Clave_Variable = c(
+    "Estructura Productiva (Agricultura/Servicios)",
+    "Solidez Fiscal y Ahorro",
+    "Apertura Comercial (Exp. e Imp.)",
+    "Flujos de Capital (Remesas)",
+    "Gasto y Seguridad (Gastos/Gastos Militares)"
+  ),
+  Región_Patrón_Destacado = c(
+    "África Subsahariana y Asia Central/Sur: Alta dependencia agrícola (valores altos y dispersos).\n**Norteamérica y Europa Occidental: Dominio en el sector servicios.",
+    "Asia del Este y Europa Occidental: Mayor tendencia al Ahorro y variabilidad.\nÁfrica Subsahariana y Norte de África: Valores de Ahorro más bajos.",
+    "Europa (Occidental/Este): Máxima integración comercial (Altas Exportaciones e Importaciones).\nNorteamérica/Asia del Este: Grandes Importadores.",
+    "Latinoamérica y el Caribe y Asia Central/Sur: Valores altos y dependencia estructural de Remesas.",
+    "Oriente Medio: Alta prioridad y gasto en la dimensión militar.\nNorteamérica y Europa Occidental: Alto Gasto Total del gobierno."
+  ),
+  Implicación_DMFA_Clustering = c(
+    "Estas variables definirán el primer factor del DMFA, separando las economías primarias/en desarrollo de las economías de alto valor agregado/servicios.",
+    "El DMFA construirá un eje que clasifique las regiones según su disciplina financiera y capacidad de inversión. Las regiones asiáticas se proyectarán de forma opuesta a las africanas/latinoamericanas en este eje.",
+    "Los contrastes ayudarán a definir el factor de 'Integración Global'. La alta variabilidad en Europa Occidental (`sd` alto) indica alta heterogeneidad, que debe ser capturada por el modelo.",
+    "La diferencia extrema de medianas confirma que la Remesa será el principal discriminante para la dependencia de flujos externos, agrupando a las regiones receptoras.",
+    "El modelo utilizará los `Gastos` para diferenciar las regiones con alta intervención estatal y aislará la región de Oriente Medio en una dimensión de 'Inversión en Seguridad' (Gasto Militar)."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(analisis_multivariado_general,
+      format = "html",
+      align = "l",
+      caption = "Análisis de Patrones de Variables por Región (General)") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
 
 ##### **Año 2019**
 ```{r multivariado_2019, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
@@ -401,7 +566,40 @@ geom_boxplot() +
 boxplots
 ```
 
-Hallazgos
+```{r analisis_multivariado_2019, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+analisis_2019 = data.frame(
+  Dimension = c(
+    "Estructura Productiva",
+    "Flujos Financieros Críticos",
+    "Solidez Fiscal y Gasto",
+    "Integración y Comercio"
+  ),
+  Hallazgo_Clave = c(
+    "La dicotomía Agricultura vs. Servicios es marcada. África Subsahariana y Asia Central/Sur dependen de Agricultura; Norteamérica y Europa de Servicios.",
+    "Remesas (Asia Central/Sur y Latinoamérica) e Inversión Extranjera (Entrada/Salida, alta variabilidad en Europa Occidental) definen la volatilidad regional.",
+    "Europa Occidental tiene la Mediana más alta en Recaudación de Impuestos y Deuda, mostrando una estructura fiscal robusta pero altamente endeudada.",
+    "Europa del Este y Europa Occidental muestran los valores más altos de Exportaciones e Importaciones, indicando la máxima apertura comercial."
+  ),
+  Implicación_DMFA = c(
+    "El primer eje (Dimensión 1) del DMFA se centrará en el nivel de desarrollo, separando las economías primarias de las de servicios.",
+    "El factor de 'Dependencia Externa' se define claramente, con Latinoamérica y Asia Central/Sur proyectándose de forma opuesta a las economías desarrolladas en este eje.",
+    "El factor de 'Riesgo Fiscal' se establece con una fuerte correlación entre capacidad de recaudación e incurrencia en deuda en las regiones desarrolladas.",
+    "El factor de 'Apertura' se define por la intensidad comercial, siendo las regiones europeas el punto de referencia positivo."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(analisis_2019,
+      format = "html",
+      align = "l",
+      caption = "Análisis de Patrones Regionales - Año 2019") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
 
 ##### **Año 2020**
 ```{r multivariado_2020, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}

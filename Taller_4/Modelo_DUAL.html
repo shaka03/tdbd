@@ -37,9 +37,11 @@ ul.task-list li input[type="checkbox"] {
 <link href="Modelo_DUAL_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Modelo_DUAL_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Modelo_DUAL_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Modelo_DUAL_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Modelo_DUAL_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="Modelo_DUAL_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
 <link href="Modelo_DUAL_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
 
 
 </head>
@@ -185,6 +187,12 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+<ul>
+<li><p><strong><em>Unidad de Estudio (Individuos):</em></strong> La unidad de observación principal es el País, cuyas características económicas varían en el tiempo.</p></li>
+<li><p><strong><em>Horizonte Temporal:</em></strong> El estudio abarca un periodo de cinco años (2019 al 2023). Este marco es crítico, ya que incluye el impacto y la recuperación de la crisis global iniciada en 2020, lo que potencia el análisis de trayectorias.</p></li>
+<li><p><strong><em>Variables Activas (Cuantitativas):</em></strong> Se emplearán 13 variables económicas (e.g., Servicios, Gastos, Deuda, Exportaciones, Remesas) para construir el espacio factorial. Todas son expresadas como porcentaje del PIB (%), asegurando que miden la estructura económica relativa y no el tamaño absoluto.</p></li>
+<li><p><strong><em>Variables de Agrupamiento/Clasificación:</em></strong> El análisis está desagregado por 14 Regiones geográficas predefinidas (e.g., Latinoamérica y el Caribe, Europa Occidental, África Subsahariana), lo que facilita una interpretación geopolítica de los resultados.</p></li>
+</ul>
 </section>
 <section id="análisis-exploratorio" class="level2">
 <h2 class="anchored" data-anchor-id="análisis-exploratorio"><strong>1. Análisis exploratorio</strong></h2>
@@ -280,6 +288,7 @@ ul.task-list li input[type="checkbox"] {
 <li>Eliminación de variables, si la cantidad sigue siendo significativa: una cantidad mayor a 40% de datos faltantes serán eliminadas.</li>
 <li>Si quedan faltantes en algunos países, se imputarán los registros con base en la mediana de la región al que pertenecen y el año.</li>
 </ul>
+<p>-<strong><em>Limpiar faltantes:</em></strong> El proceso de aseguramiento de la calidad de los datos es fundamental antes de aplicar el Análisis Factorial Múltiple Dual (DMFA). La fase de limpieza de nulos se centra en la correcta identificación y conversión de los valores ausentes (.. a NA). Para optimizar la robustez del modelo, es imperativo eliminar registros completos si estos carecen de datos en la totalidad de las variables activas, o considerar la eliminación de variables cuyo volumen de nulos sea tan extremo que comprometa la estructura factorial. No obstante, para preservar las trayectorias de los países y mantener la máxima cantidad de información valiosa, el método preferido para los pocos nulos restantes será la imputación de datos faltantes</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
@@ -453,12 +462,12 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Inversion_Extranjera_Salida</td>
-<td style="text-align: left;">Min. :-382.68662</td>
-<td style="text-align: left;">1st Qu.: 0.06023</td>
-<td style="text-align: left;">Median : 0.32504</td>
-<td style="text-align: left;">Mean : 2.05555</td>
-<td style="text-align: left;">3rd Qu.: 1.32329</td>
-<td style="text-align: left;">Max. : 424.86749</td>
+<td style="text-align: left;">Min. :-382.6866</td>
+<td style="text-align: left;">1st Qu.: 0.0602</td>
+<td style="text-align: left;">Median : 0.3250</td>
+<td style="text-align: left;">Mean : 2.0555</td>
+<td style="text-align: left;">3rd Qu.: 1.3233</td>
+<td style="text-align: left;">Max. : 424.8675</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Importaciones</td>
@@ -527,7 +536,50 @@ ul.task-list li input[type="checkbox"] {
 </table>
 </div>
 </div>
-<p>Hallazgos</p>
+<p>El análisis del resumen descriptivo (Media, Mediana, Rango) revela la heterogeneidad de los datos, lo cual justifica las decisiones de estandarización para el DMFA.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis y Hallazgos del Resumen Descriptivo de Variables Económicas</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo_Clave</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variables_Involucradas</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Implicacion_para_el_DMFA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Extrema Disparidad (Volatilidad y Outliers)</td>
+<td style="text-align: left;">Inversión Extranjera (Entrada y Salida), Remesas.</td>
+<td style="text-align: left;">Los rangos amplios y los máximos extremos confirman la necesidad crítica de estandarizar las variables (`scale=TRUE` en MFA). De lo contrario, estas variables dominarían los primeros componentes principales.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Asimetría (Sesgo a la Derecha)</td>
+<td style="text-align: left;">Remesas, Inversión Extranjera Entrada.</td>
+<td style="text-align: left;">La Media es significativamente mayor que la Mediana. El DMFA probablemente creará un factor latente centrado en las 'Economías Dependientes de Flujos Específicos'.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Estructura de Riesgo Fiscal</td>
+<td style="text-align: left;">Deuda, Gastos, Recaudación Impuestos.</td>
+<td style="text-align: left;">La Deuda Total es un indicador de gran peso. Estos ítems se agruparán en un factor de 'Solidez Fiscal y Endeudamiento', mostrando la vulnerabilidad económica post-2019.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Balance Comercial Deficitario</td>
+<td style="text-align: left;">Exportaciones e Importaciones.</td>
+<td style="text-align: left;">La Media de Importaciones supera ligeramente la de Exportaciones. Esto implica que el DMFA se centrará en el 'Grado de Apertura e Integración Comercial'.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Necesidad de Escalamiento</td>
+<td style="text-align: left;">Todas las Variables Cuantitativas.</td>
+<td style="text-align: left;">La diferencia de magnitud entre variables (ej. Agricultura vs. Inversión Extranjera) obliga a la escalización de la varianza para que las correlaciones construyan los factores.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 <section id="análisis-univariado-de-las-variables-numéricas" class="level4">
 <h4 class="anchored" data-anchor-id="análisis-univariado-de-las-variables-numéricas"><strong>Análisis univariado de las variables numéricas</strong></h4>
 <div class="cell" data-layout-align="center">
@@ -539,7 +591,56 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<p>Los histogramas confirman la forma de la distribución y la presencia de asimetrías, lo cual es fundamental para justificar la aplicación del DMFA y la estandarización.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis y Hallazgos de la Distribución Visual de Variables (Histogramas)</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variables</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Tipo_de_Distribución_Visual</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo_Clave</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Implicación_para_el_DMFA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: left;">Altamente Asimétrica a la Derecha (Sesgo Positivo Extremo).</td>
+<td style="text-align: left;">La gran mayoría de observaciones se concentra cerca de cero, con una cola larga hacia valores altos (países muy dependientes).</td>
+<td style="text-align: left;">El DMFA definirá un eje que separe claramente a los países dependientes de remesas. Esta variable tendrá una alta contribución a ese factor.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inversión Extranjera (Entrada y Salida)</td>
+<td style="text-align: left;">Asimétrica a la Derecha con concentración en valores bajos.</td>
+<td style="text-align: left;">Existen puntos extremos aislados (outliers) que causan el sesgo y la volatilidad, confirmando la heterogeneidad de los flujos de capital.</td>
+<td style="text-align: left;">Los factores de flujo de capital serán impulsados por la intensidad y volatilidad de la inversión en países específicos.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Agricultura, Gastos Militares</td>
+<td style="text-align: left;">Concentrada en el extremo bajo (Sesgo positivo moderado).</td>
+<td style="text-align: left;">La mayoría de los países mantienen un porcentaje de PIB bajo para estas variables.</td>
+<td style="text-align: left;">Tendrán un poder discriminatorio limitado, pero diferenciarán a los países con estructuras económicas muy primarias o alta inversión en defensa.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Servicios, Exportaciones, Importaciones, Ahorro</td>
+<td style="text-align: left;">Relativamente Simétricas y cercanas a la normal.</td>
+<td style="text-align: left;">La mayor parte de las economías se comporta de manera similar, indicando que serán variables clave en la construcción de los ejes principales.</td>
+<td style="text-align: left;">Estas variables serán fundamentales en la construcción de los primeros factores, representando la estructura económica general y el comercio.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Producción, Deuda</td>
+<td style="text-align: left;">Distribución Bimodal o Multimodal (Especialmente Deuda).</td>
+<td style="text-align: left;">Sugiere la existencia de al menos dos o más grupos de países claramente diferenciados por sus niveles de endeudamiento o estructura productiva.</td>
+<td style="text-align: left;">El factor de Riesgo Fiscal deberá capturar esta diferencia bimodal, dividiendo la muestra en grupos con distinto perfil de endeudamiento.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -549,7 +650,50 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<p>Los diagramas de caja (Boxplots) visualizan la mediana, la dispersión y la presencia de <em>outliers</em>, lo cual es esencial para confirmar la necesidad de estandarización y la posterior interpretación de los factores.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis y Hallazgos de la Dispersión Visual de Variables (Boxplots)</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variables</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo_Clave_sobre_Dispersión</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Implicación_Directa_para_el_DMFA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Inversión Extranjera (Entrada y Salida), Remesas, Deuda</td>
+<td style="text-align: left;">Distribución altamente sesgada con outliers extremos. La caja (50% central) es pequeña, pero los bigotes son muy largos.</td>
+<td style="text-align: left;">Confirma que los valores atípicos serán los principales impulsores del factor asociado. Estos extremos son críticos para el agrupamiento y la trayectoria de países específicos.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gastos Militares, Agricultura</td>
+<td style="text-align: left;">Mediana muy baja y gran concentración de observaciones cerca de cero.</td>
+<td style="text-align: left;">Estas variables no son representativas del comportamiento promedio de la muestra y solo diferenciarán a un grupo pequeño de países con estructuras primarias o de alta defensa.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Exportaciones, Importaciones, Servicios, Producción</td>
+<td style="text-align: left;">Distribución más simétrica con dispersión moderada. La mediana está bien centrada en la caja.</td>
+<td style="text-align: left;">Estas variables representan la estructura económica promedio de la muestra. Serán las principales contribuyentes a los primeros factores (Dimensión 1 y 2), definiendo el plano factorial.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Deuda Total</td>
+<td style="text-align: left;">Mediana alta con outliers superiores.</td>
+<td style="text-align: left;">Confirma que la alta deuda es un patrón generalizado, pero los outliers superiores indican un subconjunto de países con riesgo fiscal extremo que el DMFA deberá aislar.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Necesidad de Estandarización</td>
+<td style="text-align: left;">La escala de los boxplots varía drásticamente entre variables (ej. Deuda vs. Remesas).</td>
+<td style="text-align: left;">Reafirma la necesidad de escalamiento. Sin estandarización, las variables con mayor rango (ej. Inversión Extranjera) dominarían la varianza total, sesgando los resultados del DMFA.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="análisis-multivariado" class="level3">
@@ -908,6 +1052,49 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Recaudación de Impuestos:</strong> Europa Occidental presenta una mediana elevada en esta variable, mientras Oriente Medio el que tiene la mediana más baja..</li>
 <li><strong>Remesas:</strong> Asia Central/Sur y Latinoamérica presentan valores altos (dependencia de remesas). Mientras que Europa Occidental y Norteamérica son casi nulos.</li>
 </ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de Patrones de Variables por Región (General)</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo_Clave_Variable</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Región_Patrón_Destacado</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Implicación_DMFA_Clustering</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Estructura Productiva (Agricultura/Servicios)</td>
+<td style="text-align: left;">África Subsahariana y Asia Central/Sur: Alta dependencia agrícola (valores altos y dispersos). **Norteamérica y Europa Occidental: Dominio en el sector servicios.</td>
+<td style="text-align: left;">Estas variables definirán el primer factor del DMFA, separando las economías primarias/en desarrollo de las economías de alto valor agregado/servicios.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Solidez Fiscal y Ahorro</td>
+<td style="text-align: left;">Asia del Este y Europa Occidental: Mayor tendencia al Ahorro y variabilidad. África Subsahariana y Norte de África: Valores de Ahorro más bajos.</td>
+<td style="text-align: left;">El DMFA construirá un eje que clasifique las regiones según su disciplina financiera y capacidad de inversión. Las regiones asiáticas se proyectarán de forma opuesta a las africanas/latinoamericanas en este eje.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Apertura Comercial (Exp. e Imp.)</td>
+<td style="text-align: left;">Europa (Occidental/Este): Máxima integración comercial (Altas Exportaciones e Importaciones). Norteamérica/Asia del Este: Grandes Importadores.</td>
+<td style="text-align: left;">Los contrastes ayudarán a definir el factor de 'Integración Global'. La alta variabilidad en Europa Occidental (`sd` alto) indica alta heterogeneidad, que debe ser capturada por el modelo.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Flujos de Capital (Remesas)</td>
+<td style="text-align: left;">Latinoamérica y el Caribe y Asia Central/Sur: Valores altos y dependencia estructural de Remesas.</td>
+<td style="text-align: left;">La diferencia extrema de medianas confirma que la Remesa será el principal discriminante para la dependencia de flujos externos, agrupando a las regiones receptoras.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gasto y Seguridad (Gastos/Gastos Militares)</td>
+<td style="text-align: left;">Oriente Medio: Alta prioridad y gasto en la dimensión militar. Norteamérica y Europa Occidental: Alto Gasto Total del gobierno.</td>
+<td style="text-align: left;">El modelo utilizará los `Gastos` para diferenciar las regiones con alta intervención estatal y aislará la región de Oriente Medio en una dimensión de 'Inversión en Seguridad' (Gasto Militar).</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </section>
 <section id="año-2019" class="level5">
 <h5 class="anchored" data-anchor-id="año-2019"><strong>Año 2019</strong></h5>
@@ -1250,7 +1437,44 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de Patrones Regionales - Año 2019</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Dimension</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo_Clave</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Implicación_DMFA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Estructura Productiva</td>
+<td style="text-align: left;">La dicotomía Agricultura vs. Servicios es marcada. África Subsahariana y Asia Central/Sur dependen de Agricultura; Norteamérica y Europa de Servicios.</td>
+<td style="text-align: left;">El primer eje (Dimensión 1) del DMFA se centrará en el nivel de desarrollo, separando las economías primarias de las de servicios.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Flujos Financieros Críticos</td>
+<td style="text-align: left;">Remesas (Asia Central/Sur y Latinoamérica) e Inversión Extranjera (Entrada/Salida, alta variabilidad en Europa Occidental) definen la volatilidad regional.</td>
+<td style="text-align: left;">El factor de 'Dependencia Externa' se define claramente, con Latinoamérica y Asia Central/Sur proyectándose de forma opuesta a las economías desarrolladas en este eje.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Solidez Fiscal y Gasto</td>
+<td style="text-align: left;">Europa Occidental tiene la Mediana más alta en Recaudación de Impuestos y Deuda, mostrando una estructura fiscal robusta pero altamente endeudada.</td>
+<td style="text-align: left;">El factor de 'Riesgo Fiscal' se establece con una fuerte correlación entre capacidad de recaudación e incurrencia en deuda en las regiones desarrolladas.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Integración y Comercio</td>
+<td style="text-align: left;">Europa del Este y Europa Occidental muestran los valores más altos de Exportaciones e Importaciones, indicando la máxima apertura comercial.</td>
+<td style="text-align: left;">El factor de 'Apertura' se define por la intensidad comercial, siendo las regiones europeas el punto de referencia positivo.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </section>
 <section id="año-2020" class="level5">
 <h5 class="anchored" data-anchor-id="año-2020"><strong>Año 2020</strong></h5>
