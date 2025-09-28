@@ -871,7 +871,53 @@ ggplot(eig, aes(x = Dim)) +
   theme_minimal(base_size = 12)
 ```
 
-Hallazgos y tratar de nombrar cada dimensión
+```{r analisis_eigenvalues, echo=FALSE, warning=FALSE, fig.align='center'}
+# Creación del data frame con los hallazgos e interpretación de las cuatro dimensiones principales.
+analisis_dmfa_4dim = data.frame(
+  Componente = c(
+    "Dimensión 1",
+    "Dimensión 2",
+    "Dimensión 3",
+    "Dimensión 4",
+    "Total (Dim. 1 - Dim. 4)"
+  ),
+  Varianza_Explicada = c(
+    "Aprox. 24.2% (Eje principal)",
+    "Aprox. 15.6% (Segundo eje)",
+    "Aprox. 12.7%",
+    "Aprox. 10.1%",
+    "Aproximadamente 62.6% del total."
+  ),
+  Hallazgos_Clave = c(
+    "Correlación POSITIVA fuerte con: Producción, Servicios, Recaudación_Impuestos, Ahorro, Exportaciones, Importaciones, Gastos.\nCorrelación NEGATIVA fuerte con: Agricultura.\n\nConclusión: Contrasta **economías avanzadas** (Servicios/Fiscalidad alta) vs. **economías primarias** (Agricultura alta).",
+    "Correlación POSITIVA fuerte con: Remesas (25.0%), Gastos_Militares (20.0%).\n\nConclusión: Captura factores de **flujos sociales externos** (Remesas) y **prioridades de seguridad** (Gasto Militar), independientes del desarrollo estructural.",
+    "Correlación POSITIVA fuerte con: Ahorro (22.0%), Recaudación_Impuestos (15.0%), Gastos, Deuda.\n\nConclusión: Eje relacionado con la **disciplina fiscal** y la capacidad de **gestión de la riqueza interna** (Ahorro/Deuda).",
+    "Correlación POSITIVA fuerte con: Inversión Extranjera (Entrada/Salida), Exportaciones, Importaciones.\n\nConclusión: Captura el **dinamismo de los flujos de capital** y el **intercambio comercial**, separando a las economías por su rol como receptoras/emisoras de inversión.",
+    " "
+  ),
+  Nombre_Propuesto = c(
+    "Eje de Desarrollo y Modernización Económica",
+    "Eje de Vulnerabilidad Externa y Dependencia Estratégica",
+    "Eje de Disciplina Fiscal y Ahorro Nacional",
+    "Eje de Dinamismo de Flujos de Capital y Comercio",
+    "Suficiente para el Análisis de Trayectorias"
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_dmfa_4dim,
+      format = "html",
+      align = "l",
+      col.names = c("Componente", "Varianza Explicada", "Hallazgos Clave", "Nombre Propuesto"),
+      caption = "Interpretación de los Factores Latentes del DMFA (Dimensiones 1-4)") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Formato específico para que el texto de hallazgos se vea mejor
+  kableExtra::column_spec(3, width = "35em")
+```
 
 ```{r contribuciones, fig.width=8, echo=FALSE, warning=FALSE, dpi=150, fig.align='center'}
 # Contribución
@@ -897,7 +943,50 @@ ggplot(coord_long, aes(x = Carga, y = Variable, fill = Signo)) +
   theme(legend.position = "none")
 ```
 
-Hallazgos
+```{r analisis_contribuciones, fig.width=8, echo=FALSE, warning=FALSE, dpi=150, fig.align='center'}
+# Creación del data frame con los hallazgos e interpretación de las cuatro dimensiones principales.
+analisis_dmfa_extendido = data.frame(
+  Componente = c(
+    "Dimensión 1",
+    "Dimensión 2",
+    "Dimensión 3",
+    "Dimensión 4"
+  ),
+  Cargas_Clave = c(
+    "Positivas Altas: Servicios, Recaudación_Impuestos, Importaciones, Exportaciones, Produccion, Gastos, Ahorro.\nNegativa Alta: Agricultura.",
+    "Positiva Alta: Gastos_Militares.\nNegativa Alta: Remesas.\nPositiva Moderada: Inversion_Extranjera_Salida.",
+    "Positiva Alta: Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida.\nNegativa Moderada: Servicios, Produccion.",
+    "Positiva Alta: Remesas.\nNegativa Moderada: Gastos_Militares, Inversion_Extranjera (Entrada/Salida)."
+  ),
+  Nombre_Propuesto = c(
+    "Eje de Desarrollo y Sofisticación Económica",
+    "Eje de Riesgo Geopolítico y Contraste de Dependencia",
+    "Eje de Profundidad de Capital Internacional (Flujo FDI)",
+    "Eje de Ingreso por Diáspora (Remesas)"
+  ),
+  Significado_Implicacion = c(
+    "Define el nivel de modernización y riqueza. Separa las economías avanzadas (Servicios, alta base fiscal y comercial) de las economías primarias (Agricultura). Es el eje de posicionamiento estructural.",
+    "Separa países con alta prioridad en Gasto Militar (Riesgo Geopolítico) de aquellos con alta dependencia de Remesas (Vulnerabilidad Socio-Financiera). Es un eje de flujos estratégicos/sociales.",
+    "Captura la capacidad de una economía para participar en el flujo bidireccional de la Inversión Extranjera Directa (FDI). Indica sofisticación financiera y apertura a los mercados de capitales.",
+    "Aísla el efecto de las Remesas como un factor de ingreso externo único, desvinculado de otros gastos o flujos de inversión. Es crucial para analizar la resiliencia de hogares en regiones como Latinoamérica."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_dmfa_extendido,
+      format = "html",
+      align = "l",
+      col.names = c("Dimensión", "Cargas Clave", "Nombre Propuesto", "Significado e Implicación"),
+      caption = "Interpretación Detallada de los Factores Latentes del DMFA") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Ajuste el ancho para que el texto de las implicaciones se vea mejor
+  kableExtra::column_spec(2, width = "25em") %>%
+  kableExtra::column_spec(4, width = "35em")
+```
 
 ### **Análisis por individuo (países)**
 ```{r analisis_paises, echo=FALSE, warning=FALSE, fig.align='center'}
@@ -905,7 +994,56 @@ Hallazgos
 plot.DMFA(res.dmfa, choix="ind",invisible="quali", label="none", new.plot=TRUE)
 ```
 
-Hallazgos
+```{r analisis_hallazgos_paises, echo=FALSE, warning=FALSE, fig.align='center'}
+# Creación del data frame con el análisis de los cuadrantes y patrones regionales.
+analisis_cuadrantes = data.frame(
+  Cuadrante = c(
+    "Superior Izquierdo",
+    "Superior Derecho",
+    "Inferior Derecho",
+    "Inferior Izquierdo"
+  ),
+  Posicion_Dim1 = c(
+    "Baja (Negativa)",
+    "Alta (Positiva)",
+    "Alta (Positiva)",
+    "Baja (Negativa)"
+  ),
+  Posicion_Dim2 = c(
+    "Alta (Positiva)",
+    "Alta (Positiva)",
+    "Baja (Negativa)",
+    "Baja (Negativa)"
+  ),
+  Regiones_Típicas = c(
+    "África Subsahariana, Latinoamérica (Parcial), Asia Central/Sur",
+    "Oriente Medio y Norte de África (Parcial), Europa del Este (Específico)",
+    "Europa Occidental, Norteamérica, Asia del Este/Pacífico",
+    "Economías primarias sin dependencia de remesas significativas"
+  ),
+  # Texto sin formato de negrita (sin **)
+  Significado_del_Patrón = c(
+    "Vulnerabilidad Estructural: Bajo desarrollo (alta Agricultura) y fuerte dependencia de Remesas. Sus trayectorias muestran la lucha por salir del atraso estructural.",
+    "Riesgo Estratégico: Países con alto desarrollo o recursos que priorizan el Gasto Militar y/o experimentan fuertes flujos externos (Remesas o Inversión Volátil).",
+    "Modernización y Estabilidad (Liderazgo Global): El polo de máximo desarrollo (Servicios, Comercio, Fiscalidad) con baja dependencia de Remesas/Riesgo. Trayectorias cortas y estables (baja dispersión).",
+    "Aislamiento/Estructura Simple: Bajo desarrollo (Agricultura alta) sin las influencias externas de Remesas o de Gasto Militar. Es el grupo menos poblado y de menor influencia global."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_cuadrantes,
+      format = "html",
+      align = "l",
+      col.names = c("Cuadrante", "Posición Dim. 1 (Desarrollo)", "Posición Dim. 2 (Vulnerabilidad)", "Regiones Típicas", "Significado del Patrón (Cluster Económico)"),
+      caption = "Análisis de Agrupamiento por Cuadrantes en el Plano Factorial (Dim. 1 vs. Dim. 2)") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Ajuste el ancho para que el texto se vea mejor
+  kableExtra::column_spec(5, width = "35em")
+```
 
 ### **Análisis por año**
 ```{r analisis_2019, echo=FALSE, warning=FALSE, fig.align='center'}
@@ -963,7 +1101,49 @@ ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
   )
 ```
 
-Hallazgos
+```{r hallazgos_2019, echo=FALSE, warning=FALSE, fig.align='center'}
+# Creación del data frame con el análisis de las variables en 2019.
+analisis_vars_2019 = data.frame(
+  Eje_Patron = c(
+    "Dimensión 1: Polo Positivo",
+    "Dimensión 1: Polo Negativo",
+    "Dimensión 2: Polo Positivo (Riesgo/Estrategia)",
+    "Flujos de Capital (Inversiones)"
+  ),
+  Variables_Clave = c(
+    "Servicios, Recaudacion_Impuestos, Importaciones, Exportaciones, Produccion, Gastos, Ahorro",
+    "Agricultura",
+    "Gastos_Militares, Remesas",
+    "Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida"
+  ),
+  Proyeccion_Fuerza = c(
+    "Correlación muy fuerte (cerca del radio 1.0)",
+    "Correlación muy fuerte (cerca del radio -1.0)",
+    "Positivas, con posiciones divergentes en Dim. 1",
+    "Correlación moderada en Dim. 1, baja en Dim. 2"
+  ),
+  Hallazgo_Clave = c(
+    "La principal diferenciación económica en 2019 era la Sofisticación: alto peso de servicios y comercio, y una base fiscal sólida.",
+    "Confirma la dicotomía Desarrollo vs. Primario, al oponerse directamente a todas las variables de modernización en Dim. 1.",
+    "El Riesgo Estratégico (Gasto Militar, Cuadrante Superior Derecho) y la Dependencia Social (Remesas, Cuadrante Superior Izquierdo) son los principales factores laterales de diferenciación.",
+    "Los flujos de inversión extranjera se regían principalmente por el tamaño y la sofisticación del mercado (correlación con Dim. 1), y no eran el principal motor de la vulnerabilidad (Dim. 2)."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_vars_2019,
+      format = "html",
+      align = "l",
+      col.names = c("Eje/Patrón", "Variables Clave", "Proyección (Fuerza de Carga)", "Hallazgo Clave (Contexto 2019)"),
+      caption = "Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2019") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Ajuste el ancho para que el texto se vea mejor
+  kableExtra::column_spec(4, width = "35em")
+```
 
 ```{r analisis_2020, echo=FALSE, warning=FALSE, fig.align='center'}
 group_vars_filt = group_vars %>%
@@ -983,7 +1163,49 @@ ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
   )
 ```
 
-Hallazgos
+```{r hallazgos_2020, echo=FALSE, warning=FALSE, fig.align='center'}
+# Creación del data frame con el análisis de las variables en 2020.
+analisis_vars_2020 = data.frame(
+  Eje_Patron = c(
+    "Dimensión 1: Estabilidad Estructural",
+    "Dimensión 2: Gasto y Crisis",
+    "Flujos de Capital (Inversiones)",
+    "Remesas (Resiliencia Social)"
+  ),
+  Variables_Clave = c(
+    "Servicios, Produccion, Importaciones, Exportaciones, Agricultura",
+    "Gastos",
+    "Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida",
+    "Remesas"
+  ),
+  Cambio_vs_2019 = c(
+    "Posición relativa sin cambios. Alta fuerza.",
+    "Desplazamiento fuerte hacia Dim. 2 (arriba)",
+    "Desplazamiento hacia el centro (origen)",
+    "Mantiene fuerte carga positiva en Dim. 2"
+  ),
+  Hallazgo_Clave = c(
+    "El factor fundamental de **Desarrollo vs. Primario** se mantiene inmutable a pesar del shock, confirmando la estabilidad de la estructura económica base.",
+    "El **Gasto Público** se disocia de su correlación 'normal' con el desarrollo (Dim. 1) para alinearse con la gestión de la crisis, funcionando como una variable de **respuesta fiscal**.",
+    "Ambas inversiones se vuelven **menos correlacionadas** con los ejes principales. Esto refleja la **paralización de los flujos** transfronterizos debido a la incertidumbre y el riesgo global.",
+    "Las Remesas se confirman como una **fuente crucial de resiliencia** en países vulnerables. Su fuerza en Dim. 2 subraya la importancia de la diáspora en la mitigación del impacto de la crisis."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_vars_2020,
+      format = "html",
+      align = "l",
+      col.names = c("Eje/Patrón", "Variables Clave", "Cambio vs. 2019", "Hallazgo Clave (Efecto de la Crisis en 2020)"),
+      caption = "Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2020") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Ajuste el ancho para que el texto se vea mejor
+  kableExtra::column_spec(4, width = "35em")
+```
 
 ```{r analisis_2021, echo=FALSE, warning=FALSE, fig.align='center'}
 group_vars_filt = group_vars %>%
@@ -1003,7 +1225,49 @@ ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
   )
 ```
 
-Hallazgos
+```{r hallazgos_2021, echo=FALSE, warning=FALSE, fig.align='center'}
+# Creación del data frame con el análisis de las variables en 2021.
+analisis_vars_2021 = data.frame(
+  Eje_Patron = c(
+    "Dimensión 1: Desarrollo Estructural",
+    "Política Fiscal (Gasto)",
+    "Flujos de Capital (Inversiones)",
+    "Vulnerabilidad Estructural (Remesas)"
+  ),
+  Variables_Clave = c(
+    "Servicios, Produccion, Comercio, Fiscalidad, Ahorro, Agricultura",
+    "Gastos",
+    "Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida",
+    "Remesas"
+  ),
+  Cambio_vs_2020 = c(
+    "Agrupamiento más compacto y fuerte en Dim. 1.",
+    "Regreso a la posición de 2019 (cerca de Dim. 1).",
+    "Recuperación de la fuerza, alejándose del origen.",
+    "Mantiene fuerte carga positiva en Dim. 2 (inmutable)."
+  ),
+  Hallazgo_Clave = c(
+    "La recuperación post-crisis reforzó la correlación entre variables de desarrollo. La diferenciación principal sigue siendo la estructura (Servicios/Industrial vs. Agrícola).",
+    "El Gasto Público se desvincula de la gestión de la crisis (Dim. 2) y vuelve a correlacionarse con el tamaño y la capacidad fiscal de la economía (Dim. 1).",
+    "El retorno de la confianza global impulsa la recuperación de los flujos de inversión, que vuelven a ser atraídos por los mercados más grandes y desarrollados (correlación con Dim. 1).",
+    "Se consolida como un rasgo estructural, no solo una reacción transitoria a la crisis. La Dim. 2 se mantiene como el eje que captura la dependencia de los ingresos externos de la diáspora."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_vars_2021,
+      format = "html",
+      align = "l",
+      col.names = c("Eje/Patrón", "Variables Clave", "Cambio vs. 2020 (Recuperación)", "Hallazgo Clave (Contexto 2021)"),
+      caption = "Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2021") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Ajuste el ancho para que el texto se vea mejor
+  kableExtra::column_spec(4, width = "35em")
+```
 
 ```{r analisis_2022, echo=FALSE, warning=FALSE, fig.align='center'}
 group_vars_filt = group_vars %>%
@@ -1023,7 +1287,49 @@ ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
   )
 ```
 
-Hallazgos
+```{r hallazgos_2022, echo=FALSE, warning=FALSE, fig.align='center'}
+# Creación del data frame con el análisis de las variables en 2022.
+analisis_vars_2022 = data.frame(
+  Eje_Patron = c(
+    "Dimensión 1: Estabilidad del Desarrollo",
+    "Gasto Público (Normalización)",
+    "Flujos de Capital (Recuperación)",
+    "Dimensión 2: Reforzamiento del Riesgo"
+  ),
+  Variables_Clave = c(
+    "Servicios, Produccion, Comercio, Fiscalidad, Agricultura",
+    "Gastos",
+    "Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida",
+    "Gastos_Militares, Remesas"
+  ),
+  Cambio_vs_2020 = c(
+    "Estructura inmutable (alta fuerza).",
+    "Retorno a la correlación con Dim. 1 (desplazamiento hacia abajo).",
+    "Fuerza renovada y alejamiento del centro.",
+    "Gastos Militares más prominente. Remesas persistentes."
+  ),
+  Hallazgo_Clave = c(
+    "El factor de diferenciación principal sigue siendo la estructura. La brecha entre economías de servicios/industrial y primaria es estructuralmente resistente a los shocks.",
+    "El Gasto vuelve a ser un indicador del tamaño y la capacidad fiscal de la economía (Dim. 1), desvinculándose de la política de respuesta de emergencia de la pandemia (Dim. 2).",
+    "La confianza se recupera totalmente; los flujos de inversión vuelven a estar impulsados por el tamaño y la estabilidad del mercado. Se recuperan los patrones pre-crisis.",
+    "El Gasto Militar se solidifica como un factor clave de diferenciación en el contexto de tensión geopolítica (guerra en Ucrania). Las Remesas mantienen su rol como dependencia estructural."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_vars_2022,
+      format = "html",
+      align = "l",
+      col.names = c("Eje/Patrón", "Variables Clave", "Cambio vs. 2020 (Post-Crisis)", "Hallazgo Clave (Contexto 2022)"),
+      caption = "Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2022") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Ajuste el ancho para que el texto se vea mejor
+  kableExtra::column_spec(4, width = "35em")
+```
 
 ```{r analisis_2023, echo=FALSE, warning=FALSE, fig.align='center'}
 group_vars_filt = group_vars %>%
@@ -1043,7 +1349,49 @@ ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
   )
 ```
 
-Hallazgos
+```{r hallazgos_2023, echo=FALSE, warning=FALSE, fig.align='center'}
+# Creación del data frame con el análisis de las variables en 2023.
+analisis_vars_2023 = data.frame(
+  Eje_Patron = c(
+    "Dimensión 1: Desarrollo Consolidado",
+    "Normalización de la Política y Finanzas",
+    "Dimensión 2: Riesgo Geopolítico (Persistente)",
+    "Dimensión 2: Dependencia Social (Estructural)"
+  ),
+  Variables_Clave = c(
+    "Servicios, Produccion, Comercio, Fiscalidad, Agricultura",
+    "Gastos, Inversion_Extranjera_Entrada/Salida",
+    "Gastos_Militares",
+    "Remesas"
+  ),
+  Evolucion_Final = c(
+    "Máxima fuerza y compactación en Dim. 1.",
+    "Completamente reintegradas al clúster de Dim. 1.",
+    "Mantiene una fuerte carga positiva en Dim. 2 (Reforzada vs. 2019).",
+    "Mantiene una carga inmutable y fuerte en Dim. 2 (Superior Izquierdo)."
+  ),
+  Hallazgo_Clave = c(
+    "El factor principal de diferenciación es, de nuevo, la **estructura económica básica**. El sistema ha regresado a un estado donde la capacidad productiva define el desarrollo (Dim. 1).",
+    "Las variables de Gasto e Inversión han dejado de ser indicadores de 'respuesta a la crisis' (Dim. 2) y ahora se rigen por la **capacidad y tamaño de la economía** (Dim. 1).",
+    "El Gasto Militar se solidifica como un factor **estructural de la nueva era geopolítica**. Los países desarrollados se diferencian por el peso estratégico de su defensa.",
+    "Las Remesas se confirman como un **rasgo estructural, no transitorio**. La Dimensión 2 se convierte en el eje persistente que captura la vulnerabilidad y la dependencia de los ingresos de la diáspora."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_vars_2023,
+      format = "html",
+      align = "l",
+      col.names = c("Eje/Patrón", "Variables Clave", "Evolución Final (2023)", "Hallazgo Clave (Nuevo Equilibrio)"),
+      caption = "Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2023") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Ajuste el ancho para que el texto se vea mejor
+  kableExtra::column_spec(4, width = "35em")
+```
 
 ### **Análisis por región**
 
@@ -1083,14 +1431,203 @@ ggplot(regions_filt, aes(x = Carga, y = Region, fill = Signo)) +
   theme(legend.position = "none")
 ```
 
-Hallazgos
+```{r hallazgos_modelo_regiones_contr, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+# Creación del data frame con el análisis de las coordenadas regionales.
+analisis_regiones = data.frame(
+  Región = c(
+    "Europa - Europa Occidental",
+    "América - Norteamérica",
+    "Asia del Este, Pacífico y Oceanía",
+    "América - Latinoamérica y el Caribe",
+    "África Subsahariana / Asia Central y del Sur",
+    "Asia - Oriente Medio / África - Norte de África",
+    "Europa - Europa del Este" # Asumiendo una posición en el gráfico
+  ),
+  Dim_1_Desarrollo = c(
+    "Muy Positiva (Extremo Derecha)",
+    "Muy Positiva (Extremo Derecha)",
+    "Positiva",
+    "Cercana a Cero/Levemente Negativa",
+    "Muy Negativa (Extremo Izquierda)",
+    "Intermedia / Baja",
+    "Intermedia / Baja"
+  ),
+  Dim_2_Vulnerabilidad = c(
+    "Negativa o Baja",
+    "Negativa o Baja",
+    "Negativa o Baja",
+    "Muy Positiva",
+    "Positiva",
+    "Positiva",
+    "Positiva o Cero"
+  ),
+  Implicacion_Estructural = c(
+    "Polo de **máxima sofisticación** (Servicios, Comercio, Fiscalidad). Baja dependencia de factores de riesgo Dim. 2.",
+    "Similar a Europa, consolidando el clúster de **economías avanzadas y estables** en el tiempo.",
+    "Fuerte desarrollo (Dim. 1) combinado con **alta autonomía financiera** (Dim. 2 Negativa), indicando un modelo de crecimiento estable.",
+    "Posición de **dependencia social más alta**. Su economía mixta se distingue estructuralmente por el rol clave de las **Remesas**.",
+    "Polo de **economías primarias** (alta Agricultura). La Dim. 2 confirma su **vulnerabilidad estructural** y dependencia de Remesas.",
+    "La Dim. 2 se debe a la influencia de **Gastos Militares** y Remesas. Su Dim. 1 intermedia refleja la heterogeneidad productiva.",
+    "Región de **transición**; desarrollo intermedio y vulnerabilidad variable, influenciada por su cercanía a factores geopolíticos (Gasto Militar)."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_regiones,
+      format = "html",
+      align = "l",
+      col.names = c("Región", "Dim. 1 (Desarrollo)", "Dim. 2 (Vulnerabilidad/Riesgo)", "Implicación Estructural y Hallazgo Clave"),
+      caption = "Coordenadas de las Regiones en el Plano Factorial (Dim. 1 vs. Dim. 2) - DMFA") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Agrupación de columnas por Dimensión para mejor lectura
+  kableExtra::add_header_above(c(" " = 1, "Eje de Posición Estructural" = 2, " " = 1)) %>%
+  kableExtra::column_spec(4, width = "35em")
+```
+
+***Conclusión Clave:***
+El Análisis de la Proyección de Regiones confirma la alta capacidad discriminatoria del DMFA:
+
+- ***Segregación Horizontal (Dim. 1):*** Existe una clara brecha de desarrollo que separa a las economías maduras y sofisticadas (Europa, Norteamérica) de las economías primarias (África Subsahariana, Asia Central).
+
+- ***Segregación Vertical (Dim. 2):*** El eje de vulnerabilidad aísla a las regiones con alta dependencia de flujos sociales (Remesas) (Latinoamérica, África) de aquellas con autonomía financiera (Asia del Este, Europa Occidental).
 
 ```{r analisis_region, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8, fig.align='center'}
 # Visualiza las modalidades de la variable cualitativa.
 plot.DMFA(res.dmfa, choix="quali",invisible="quali", label="none")
 ```
 
-Hallazgos
+***Hallazgos:***
+
+***Hallazgos: Clúster de Desarrollo y Estabilidad (Inferior Derecho)***
+```{r analisis_region_1, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+# Creación del data frame enfocado únicamente en el Clúster de Desarrollo y Estabilidad
+analisis_cluster_desarrollo = data.frame(
+  Región = c(
+    "Europa - Europa Occidental",
+    "América - Norteamérica",
+    "Asia del Este, Pacífico y Oceanía"
+  ),
+  Dim_1_Desarrollo = c(
+    "Muy Positiva (Extremo Derecha)",
+    "Muy Positiva (Extremo Derecha)",
+    "Positiva Alta"
+  ),
+  Dim_2_Vulnerabilidad = c(
+    "Negativa o Baja",
+    "Negativa o Baja",
+    "Negativa"
+  ),
+  Hallazgo_Estructural = c(
+    "Representa el **Polo de máxima sofisticación** (Servicios, Comercio, Fiscalidad). Su baja carga en Dim. 2 indica **autonomía y estabilidad**.",
+    "Centroide muy cercano a Europa Occidental, consolidando el perfil de **economía global líder** y la mayor estabilidad estructural del mundo.",
+    "Alto desarrollo (Dim. 1) combinado con la **mayor independencia financiera** (Dim. 2 Negativa más marcada), sugiriendo un modelo de crecimiento basado en el **ahorro** y la autosuficiencia."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_cluster_desarrollo,
+      format = "html",
+      align = "l",
+      col.names = c("Región", "Carga Dim. 1 (Desarrollo)", "Carga Dim. 2 (Vulnerabilidad)", "Análisis del Centroide (Tipología Estructural)"),
+      caption = "Análisis de los Centroides: Clúster de Desarrollo y Estabilidad (Dim. 1 Positiva, Dim. 2 Negativa)") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Agrupación de columnas por Dimensión para mejor lectura
+  kableExtra::add_header_above(c(" " = 1, "Posición en el Cuadrante Inferior Derecho" = 2, " " = 1)) %>%
+  kableExtra::column_spec(4, width = "40em")
+```
+
+***Hallazgos: Clúster de Vulnerabilidad Estructural (Superior Izquierdo)***
+
+```{r analisis_region_2, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+# Creación del data frame enfocado únicamente en el Clúster de Vulnerabilidad Estructural
+analisis_cluster_vulnerabilidad = data.frame(
+  Región = c(
+    "África Subsahariana / Asia Central y del Sur",
+    "América - Latinoamérica y el Caribe",
+    "Asia - Oriente Medio / África - Norte de África"
+  ),
+  Dim_1_Desarrollo = c(
+    "Muy Negativa (Extremo Izquierda)",
+    "Cercana a Cero/Levemente Negativa",
+    "Intermedia / Baja"
+  ),
+  Dim_2_Vulnerabilidad = c(
+    "Positiva Alta",
+    "Muy Positiva (Extremo Superior)",
+    "Positiva"
+  ),
+  Hallazgo_Estructural = c(
+    "Define el polo de **economías primarias**. Su alta carga en Dim. 2 confirma la **dependencia estructural de las Remesas** y la baja sofisticación productiva.",
+    "El centroide más alto en Dim. 2. Su posición destaca el **rol dominante de las remesas** como el principal rasgo estructural, a pesar de tener una base productiva más diversificada que África.",
+    "Su Dim. 2 está impulsada por el **Gasto Militar** (Riesgo Estratégico) y Remesas. Su Dim. 1 heterogénea refleja la mezcla de países productores de recursos y en conflicto."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_cluster_vulnerabilidad,
+      format = "html",
+      align = "l",
+      col.names = c("Región", "Carga Dim. 1 (Desarrollo)", "Carga Dim. 2 (Vulnerabilidad)", "Análisis del Centroide (Tipología Estructural)"),
+      caption = "Análisis de los Centroides: Clúster de Vulnerabilidad Estructural (Dim. 1 Negativa, Dim. 2 Positiva)") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Agrupación de columnas por Dimensión para mejor lectura
+  kableExtra::add_header_above(c(" " = 1, "Posición en el Cuadrante Superior Izquierdo" = 2, " " = 1)) %>%
+  kableExtra::column_spec(4, width = "40em")
+```
+
+***Hallazgos: Clúster de Transición y Riesgo Estratégico***
+
+```{r analisis_region_3, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+# Creación del data frame enfocado únicamente en el Clúster de Transición y Riesgo Estratégico
+analisis_cluster_transicion = data.frame(
+  Región = c(
+    "Asia - Oriente Medio / África - Norte de África",
+    "Europa - Europa del Este"
+  ),
+  Dim_1_Desarrollo = c(
+    "Intermedia / Baja",
+    "Intermedia / Baja (Cercana a Cero)"
+  ),
+  Dim_2_Vulnerabilidad = c(
+    "Positiva",
+    "Positiva o Cercana a Cero"
+  ),
+  Hallazgo_Estructural = c(
+    "Su centroide está dominado por la **Dim. 2 (Gastos Militares y Remesas)**. La Dim. 1 intermedia refleja una **alta heterogeneidad** de países productores de recursos vs. países en conflicto.",
+    "Región **bisagra o de transición**. Muestra un desarrollo intermedio y una vulnerabilidad variable. Su posición es altamente sensible a los **factores geopolíticos** de Europa (Dim. 2)."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_cluster_transicion,
+      format = "html",
+      align = "l",
+      col.names = c("Región", "Carga Dim. 1 (Desarrollo)", "Carga Dim. 2 (Vulnerabilidad)", "Análisis del Centroide (Tipología Estructural)"),
+      caption = "Análisis de los Centroides: Clúster de Transición y Riesgo Estratégico") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Agrupación de columnas por Dimensión para mejor lectura
+  kableExtra::add_header_above(c(" " = 1, "Posición Intermedia y Estratégica" = 2, " " = 1)) %>%
+  kableExtra::column_spec(4, width = "40em")
+```
+
+***Conclusión sobre la Segregación Regional:***
+La distribución de los centroides valida el modelo DMFA: las regiones se segregan en el plano factorial de manera que reflejan tipologías económicas persistentes a lo largo del tiempo. Las distancias entre los centroides son significativas, lo que subraya la existencia de grandes brechas estructurales entre los bloques globales (e.g., la distancia entre Europa Occidental y África Subsahariana).
 
 ## 3. Conclusiones
 

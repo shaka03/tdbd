@@ -37,9 +37,11 @@ ul.task-list li input[type="checkbox"] {
 <link href="Modelo_DUAL_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Modelo_DUAL_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Modelo_DUAL_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Modelo_DUAL_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Modelo_DUAL_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="Modelo_DUAL_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
 <link href="Modelo_DUAL_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
 
 
 </head>
@@ -2687,7 +2689,55 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos y tratar de nombrar cada dimensión</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Interpretación de los Factores Latentes del DMFA (Dimensiones 1-4)</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Componente</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Varianza Explicada</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgos Clave</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Nombre Propuesto</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Dimensión 1</td>
+<td style="text-align: left;">Aprox. 24.2% (Eje principal)</td>
+<td style="text-align: left; width: 35em;">Correlación POSITIVA fuerte con: Producción, Servicios, Recaudación_Impuestos, Ahorro, Exportaciones, Importaciones, Gastos. Correlación NEGATIVA fuerte con: Agricultura. Conclusión: Contrasta **economías avanzadas** (Servicios/Fiscalidad alta) vs. **economías primarias** (Agricultura alta).</td>
+<td style="text-align: left;">Eje de Desarrollo y Modernización Económica</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dimensión 2</td>
+<td style="text-align: left;">Aprox. 15.6% (Segundo eje)</td>
+<td style="text-align: left; width: 35em;">Correlación POSITIVA fuerte con: Remesas (25.0%), Gastos_Militares (20.0%). Conclusión: Captura factores de **flujos sociales externos** (Remesas) y **prioridades de seguridad** (Gasto Militar), independientes del desarrollo estructural.</td>
+<td style="text-align: left;">Eje de Vulnerabilidad Externa y Dependencia Estratégica</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dimensión 3</td>
+<td style="text-align: left;">Aprox. 12.7%</td>
+<td style="text-align: left; width: 35em;">Correlación POSITIVA fuerte con: Ahorro (22.0%), Recaudación_Impuestos (15.0%), Gastos, Deuda. Conclusión: Eje relacionado con la **disciplina fiscal** y la capacidad de **gestión de la riqueza interna** (Ahorro/Deuda).</td>
+<td style="text-align: left;">Eje de Disciplina Fiscal y Ahorro Nacional</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dimensión 4</td>
+<td style="text-align: left;">Aprox. 10.1%</td>
+<td style="text-align: left; width: 35em;">Correlación POSITIVA fuerte con: Inversión Extranjera (Entrada/Salida), Exportaciones, Importaciones. Conclusión: Captura el **dinamismo de los flujos de capital** y el **intercambio comercial**, separando a las economías por su rol como receptoras/emisoras de inversión.</td>
+<td style="text-align: left;">Eje de Dinamismo de Flujos de Capital y Comercio</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Total (Dim. 1 - Dim. 4)</td>
+<td style="text-align: left;">Aproximadamente 62.6% del total.</td>
+<td style="text-align: left; width: 35em;"></td>
+<td style="text-align: left;">Suficiente para el Análisis de Trayectorias</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -2697,7 +2747,49 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Interpretación Detallada de los Factores Latentes del DMFA</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Dimensión</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Cargas Clave</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Nombre Propuesto</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Significado e Implicación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Dimensión 1</td>
+<td style="text-align: left; width: 25em;">Positivas Altas: Servicios, Recaudación_Impuestos, Importaciones, Exportaciones, Produccion, Gastos, Ahorro. Negativa Alta: Agricultura.</td>
+<td style="text-align: left;">Eje de Desarrollo y Sofisticación Económica</td>
+<td style="text-align: left; width: 35em;">Define el nivel de modernización y riqueza. Separa las economías avanzadas (Servicios, alta base fiscal y comercial) de las economías primarias (Agricultura). Es el eje de posicionamiento estructural.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dimensión 2</td>
+<td style="text-align: left; width: 25em;">Positiva Alta: Gastos_Militares. Negativa Alta: Remesas. Positiva Moderada: Inversion_Extranjera_Salida.</td>
+<td style="text-align: left;">Eje de Riesgo Geopolítico y Contraste de Dependencia</td>
+<td style="text-align: left; width: 35em;">Separa países con alta prioridad en Gasto Militar (Riesgo Geopolítico) de aquellos con alta dependencia de Remesas (Vulnerabilidad Socio-Financiera). Es un eje de flujos estratégicos/sociales.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dimensión 3</td>
+<td style="text-align: left; width: 25em;">Positiva Alta: Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida. Negativa Moderada: Servicios, Produccion.</td>
+<td style="text-align: left;">Eje de Profundidad de Capital Internacional (Flujo FDI)</td>
+<td style="text-align: left; width: 35em;">Captura la capacidad de una economía para participar en el flujo bidireccional de la Inversión Extranjera Directa (FDI). Indica sofisticación financiera y apertura a los mercados de capitales.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dimensión 4</td>
+<td style="text-align: left; width: 25em;">Positiva Alta: Remesas. Negativa Moderada: Gastos_Militares, Inversion_Extranjera (Entrada/Salida).</td>
+<td style="text-align: left;">Eje de Ingreso por Diáspora (Remesas)</td>
+<td style="text-align: left; width: 35em;">Aísla el efecto de las Remesas como un factor de ingreso externo único, desvinculado de otros gastos o flujos de inversión. Es crucial para analizar la resiliencia de hogares en regiones como Latinoamérica.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </section>
 <section id="análisis-por-individuo-países" class="level3">
 <h3 class="anchored" data-anchor-id="análisis-por-individuo-países"><strong>Análisis por individuo (países)</strong></h3>
@@ -2710,7 +2802,54 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de Agrupamiento por Cuadrantes en el Plano Factorial (Dim. 1 vs. Dim. 2)</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Cuadrante</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Posición Dim. 1 (Desarrollo)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Posición Dim. 2 (Vulnerabilidad)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Regiones Típicas</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Significado del Patrón (Cluster Económico)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Superior Izquierdo</td>
+<td style="text-align: left;">Baja (Negativa)</td>
+<td style="text-align: left;">Alta (Positiva)</td>
+<td style="text-align: left;">África Subsahariana, Latinoamérica (Parcial), Asia Central/Sur</td>
+<td style="text-align: left; width: 35em;">Vulnerabilidad Estructural: Bajo desarrollo (alta Agricultura) y fuerte dependencia de Remesas. Sus trayectorias muestran la lucha por salir del atraso estructural.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Superior Derecho</td>
+<td style="text-align: left;">Alta (Positiva)</td>
+<td style="text-align: left;">Alta (Positiva)</td>
+<td style="text-align: left;">Oriente Medio y Norte de África (Parcial), Europa del Este (Específico)</td>
+<td style="text-align: left; width: 35em;">Riesgo Estratégico: Países con alto desarrollo o recursos que priorizan el Gasto Militar y/o experimentan fuertes flujos externos (Remesas o Inversión Volátil).</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inferior Derecho</td>
+<td style="text-align: left;">Alta (Positiva)</td>
+<td style="text-align: left;">Baja (Negativa)</td>
+<td style="text-align: left;">Europa Occidental, Norteamérica, Asia del Este/Pacífico</td>
+<td style="text-align: left; width: 35em;">Modernización y Estabilidad (Liderazgo Global): El polo de máximo desarrollo (Servicios, Comercio, Fiscalidad) con baja dependencia de Remesas/Riesgo. Trayectorias cortas y estables (baja dispersión).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inferior Izquierdo</td>
+<td style="text-align: left;">Baja (Negativa)</td>
+<td style="text-align: left;">Baja (Negativa)</td>
+<td style="text-align: left;">Economías primarias sin dependencia de remesas significativas</td>
+<td style="text-align: left; width: 35em;">Aislamiento/Estructura Simple: Bajo desarrollo (Agricultura alta) sin las influencias externas de Remesas o de Gasto Militar. Es el grupo menos poblado y de menor influencia global.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </section>
 <section id="análisis-por-año" class="level3">
 <h3 class="anchored" data-anchor-id="análisis-por-año"><strong>Análisis por año</strong></h3>
@@ -2723,7 +2862,49 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2019</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Eje/Patrón</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variables Clave</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Proyección (Fuerza de Carga)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo Clave (Contexto 2019)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Dimensión 1: Polo Positivo</td>
+<td style="text-align: left;">Servicios, Recaudacion_Impuestos, Importaciones, Exportaciones, Produccion, Gastos, Ahorro</td>
+<td style="text-align: left;">Correlación muy fuerte (cerca del radio 1.0)</td>
+<td style="text-align: left; width: 35em;">La principal diferenciación económica en 2019 era la Sofisticación: alto peso de servicios y comercio, y una base fiscal sólida.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dimensión 1: Polo Negativo</td>
+<td style="text-align: left;">Agricultura</td>
+<td style="text-align: left;">Correlación muy fuerte (cerca del radio -1.0)</td>
+<td style="text-align: left; width: 35em;">Confirma la dicotomía Desarrollo vs. Primario, al oponerse directamente a todas las variables de modernización en Dim. 1.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dimensión 2: Polo Positivo (Riesgo/Estrategia)</td>
+<td style="text-align: left;">Gastos_Militares, Remesas</td>
+<td style="text-align: left;">Positivas, con posiciones divergentes en Dim. 1</td>
+<td style="text-align: left; width: 35em;">El Riesgo Estratégico (Gasto Militar, Cuadrante Superior Derecho) y la Dependencia Social (Remesas, Cuadrante Superior Izquierdo) son los principales factores laterales de diferenciación.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Flujos de Capital (Inversiones)</td>
+<td style="text-align: left;">Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida</td>
+<td style="text-align: left;">Correlación moderada en Dim. 1, baja en Dim. 2</td>
+<td style="text-align: left; width: 35em;">Los flujos de inversión extranjera se regían principalmente por el tamaño y la sofisticación del mercado (correlación con Dim. 1), y no eran el principal motor de la vulnerabilidad (Dim. 2).</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -2733,7 +2914,49 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2020</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Eje/Patrón</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variables Clave</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Cambio vs. 2019</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo Clave (Efecto de la Crisis en 2020)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Dimensión 1: Estabilidad Estructural</td>
+<td style="text-align: left;">Servicios, Produccion, Importaciones, Exportaciones, Agricultura</td>
+<td style="text-align: left;">Posición relativa sin cambios. Alta fuerza.</td>
+<td style="text-align: left; width: 35em;">El factor fundamental de **Desarrollo vs. Primario** se mantiene inmutable a pesar del shock, confirmando la estabilidad de la estructura económica base.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dimensión 2: Gasto y Crisis</td>
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: left;">Desplazamiento fuerte hacia Dim. 2 (arriba)</td>
+<td style="text-align: left; width: 35em;">El **Gasto Público** se disocia de su correlación 'normal' con el desarrollo (Dim. 1) para alinearse con la gestión de la crisis, funcionando como una variable de **respuesta fiscal**.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Flujos de Capital (Inversiones)</td>
+<td style="text-align: left;">Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida</td>
+<td style="text-align: left;">Desplazamiento hacia el centro (origen)</td>
+<td style="text-align: left; width: 35em;">Ambas inversiones se vuelven **menos correlacionadas** con los ejes principales. Esto refleja la **paralización de los flujos** transfronterizos debido a la incertidumbre y el riesgo global.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Remesas (Resiliencia Social)</td>
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: left;">Mantiene fuerte carga positiva en Dim. 2</td>
+<td style="text-align: left; width: 35em;">Las Remesas se confirman como una **fuente crucial de resiliencia** en países vulnerables. Su fuerza en Dim. 2 subraya la importancia de la diáspora en la mitigación del impacto de la crisis.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -2743,7 +2966,49 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2021</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Eje/Patrón</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variables Clave</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Cambio vs. 2020 (Recuperación)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo Clave (Contexto 2021)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Dimensión 1: Desarrollo Estructural</td>
+<td style="text-align: left;">Servicios, Produccion, Comercio, Fiscalidad, Ahorro, Agricultura</td>
+<td style="text-align: left;">Agrupamiento más compacto y fuerte en Dim. 1.</td>
+<td style="text-align: left; width: 35em;">La recuperación post-crisis reforzó la correlación entre variables de desarrollo. La diferenciación principal sigue siendo la estructura (Servicios/Industrial vs. Agrícola).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Política Fiscal (Gasto)</td>
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: left;">Regreso a la posición de 2019 (cerca de Dim. 1).</td>
+<td style="text-align: left; width: 35em;">El Gasto Público se desvincula de la gestión de la crisis (Dim. 2) y vuelve a correlacionarse con el tamaño y la capacidad fiscal de la economía (Dim. 1).</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Flujos de Capital (Inversiones)</td>
+<td style="text-align: left;">Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida</td>
+<td style="text-align: left;">Recuperación de la fuerza, alejándose del origen.</td>
+<td style="text-align: left; width: 35em;">El retorno de la confianza global impulsa la recuperación de los flujos de inversión, que vuelven a ser atraídos por los mercados más grandes y desarrollados (correlación con Dim. 1).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Vulnerabilidad Estructural (Remesas)</td>
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: left;">Mantiene fuerte carga positiva en Dim. 2 (inmutable).</td>
+<td style="text-align: left; width: 35em;">Se consolida como un rasgo estructural, no solo una reacción transitoria a la crisis. La Dim. 2 se mantiene como el eje que captura la dependencia de los ingresos externos de la diáspora.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -2753,7 +3018,49 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2022</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Eje/Patrón</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variables Clave</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Cambio vs. 2020 (Post-Crisis)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo Clave (Contexto 2022)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Dimensión 1: Estabilidad del Desarrollo</td>
+<td style="text-align: left;">Servicios, Produccion, Comercio, Fiscalidad, Agricultura</td>
+<td style="text-align: left;">Estructura inmutable (alta fuerza).</td>
+<td style="text-align: left; width: 35em;">El factor de diferenciación principal sigue siendo la estructura. La brecha entre economías de servicios/industrial y primaria es estructuralmente resistente a los shocks.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gasto Público (Normalización)</td>
+<td style="text-align: left;">Gastos</td>
+<td style="text-align: left;">Retorno a la correlación con Dim. 1 (desplazamiento hacia abajo).</td>
+<td style="text-align: left; width: 35em;">El Gasto vuelve a ser un indicador del tamaño y la capacidad fiscal de la economía (Dim. 1), desvinculándose de la política de respuesta de emergencia de la pandemia (Dim. 2).</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Flujos de Capital (Recuperación)</td>
+<td style="text-align: left;">Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida</td>
+<td style="text-align: left;">Fuerza renovada y alejamiento del centro.</td>
+<td style="text-align: left; width: 35em;">La confianza se recupera totalmente; los flujos de inversión vuelven a estar impulsados por el tamaño y la estabilidad del mercado. Se recuperan los patrones pre-crisis.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dimensión 2: Reforzamiento del Riesgo</td>
+<td style="text-align: left;">Gastos_Militares, Remesas</td>
+<td style="text-align: left;">Gastos Militares más prominente. Remesas persistentes.</td>
+<td style="text-align: left; width: 35em;">El Gasto Militar se solidifica como un factor clave de diferenciación en el contexto de tensión geopolítica (guerra en Ucrania). Las Remesas mantienen su rol como dependencia estructural.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -2763,7 +3070,49 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2023</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Eje/Patrón</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variables Clave</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Evolución Final (2023)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Hallazgo Clave (Nuevo Equilibrio)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Dimensión 1: Desarrollo Consolidado</td>
+<td style="text-align: left;">Servicios, Produccion, Comercio, Fiscalidad, Agricultura</td>
+<td style="text-align: left;">Máxima fuerza y compactación en Dim. 1.</td>
+<td style="text-align: left; width: 35em;">El factor principal de diferenciación es, de nuevo, la **estructura económica básica**. El sistema ha regresado a un estado donde la capacidad productiva define el desarrollo (Dim. 1).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Normalización de la Política y Finanzas</td>
+<td style="text-align: left;">Gastos, Inversion_Extranjera_Entrada/Salida</td>
+<td style="text-align: left;">Completamente reintegradas al clúster de Dim. 1.</td>
+<td style="text-align: left; width: 35em;">Las variables de Gasto e Inversión han dejado de ser indicadores de 'respuesta a la crisis' (Dim. 2) y ahora se rigen por la **capacidad y tamaño de la economía** (Dim. 1).</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dimensión 2: Riesgo Geopolítico (Persistente)</td>
+<td style="text-align: left;">Gastos_Militares</td>
+<td style="text-align: left;">Mantiene una fuerte carga positiva en Dim. 2 (Reforzada vs. 2019).</td>
+<td style="text-align: left; width: 35em;">El Gasto Militar se solidifica como un factor **estructural de la nueva era geopolítica**. Los países desarrollados se diferencian por el peso estratégico de su defensa.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dimensión 2: Dependencia Social (Estructural)</td>
+<td style="text-align: left;">Remesas</td>
+<td style="text-align: left;">Mantiene una carga inmutable y fuerte en Dim. 2 (Superior Izquierdo).</td>
+<td style="text-align: left; width: 35em;">Las Remesas se confirman como un **rasgo estructural, no transitorio**. La Dimensión 2 se convierte en el eje persistente que captura la vulnerabilidad y la dependencia de los ingresos de la diáspora.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </section>
 <section id="análisis-por-región" class="level3">
 <h3 class="anchored" data-anchor-id="análisis-por-región"><strong>Análisis por región</strong></h3>
@@ -2776,7 +3125,85 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Coordenadas de las Regiones en el Plano Factorial (Dim. 1 vs. Dim. 2) - DMFA</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Eje de Posición Estructural
+</div></th>
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Región</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Dim. 1 (Desarrollo)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Dim. 2 (Vulnerabilidad/Riesgo)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Implicación Estructural y Hallazgo Clave</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Europa - Europa Occidental</td>
+<td style="text-align: left;">Muy Positiva (Extremo Derecha)</td>
+<td style="text-align: left;">Negativa o Baja</td>
+<td style="text-align: left; width: 35em;">Polo de **máxima sofisticación** (Servicios, Comercio, Fiscalidad). Baja dependencia de factores de riesgo Dim. 2.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">América - Norteamérica</td>
+<td style="text-align: left;">Muy Positiva (Extremo Derecha)</td>
+<td style="text-align: left;">Negativa o Baja</td>
+<td style="text-align: left; width: 35em;">Similar a Europa, consolidando el clúster de **economías avanzadas y estables** en el tiempo.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Asia del Este, Pacífico y Oceanía</td>
+<td style="text-align: left;">Positiva</td>
+<td style="text-align: left;">Negativa o Baja</td>
+<td style="text-align: left; width: 35em;">Fuerte desarrollo (Dim. 1) combinado con **alta autonomía financiera** (Dim. 2 Negativa), indicando un modelo de crecimiento estable.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">América - Latinoamérica y el Caribe</td>
+<td style="text-align: left;">Cercana a Cero/Levemente Negativa</td>
+<td style="text-align: left;">Muy Positiva</td>
+<td style="text-align: left; width: 35em;">Posición de **dependencia social más alta**. Su economía mixta se distingue estructuralmente por el rol clave de las **Remesas**.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">África Subsahariana / Asia Central y del Sur</td>
+<td style="text-align: left;">Muy Negativa (Extremo Izquierda)</td>
+<td style="text-align: left;">Positiva</td>
+<td style="text-align: left; width: 35em;">Polo de **economías primarias** (alta Agricultura). La Dim. 2 confirma su **vulnerabilidad estructural** y dependencia de Remesas.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Asia - Oriente Medio / África - Norte de África</td>
+<td style="text-align: left;">Intermedia / Baja</td>
+<td style="text-align: left;">Positiva</td>
+<td style="text-align: left; width: 35em;">La Dim. 2 se debe a la influencia de **Gastos Militares** y Remesas. Su Dim. 1 intermedia refleja la heterogeneidad productiva.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Europa - Europa del Este</td>
+<td style="text-align: left;">Intermedia / Baja</td>
+<td style="text-align: left;">Positiva o Cero</td>
+<td style="text-align: left; width: 35em;">Región de **transición**; desarrollo intermedio y vulnerabilidad variable, influenciada por su cercanía a factores geopolíticos (Gasto Militar).</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><strong><em>Conclusión Clave:</em></strong> El Análisis de la Proyección de Regiones confirma la alta capacidad discriminatoria del DMFA:</p>
+<ul>
+<li><p><strong><em>Segregación Horizontal (Dim. 1):</em></strong> Existe una clara brecha de desarrollo que separa a las economías maduras y sofisticadas (Europa, Norteamérica) de las economías primarias (África Subsahariana, Asia Central).</p></li>
+<li><p><strong><em>Segregación Vertical (Dim. 2):</em></strong> El eje de vulnerabilidad aísla a las regiones con alta dependencia de flujos sociales (Remesas) (Latinoamérica, África) de aquellas con autonomía financiera (Asia del Este, Europa Occidental).</p></li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -2786,7 +3213,155 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Hallazgos</p>
+<p><strong><em>Hallazgos:</em></strong></p>
+<p><strong><em>Hallazgos: Clúster de Desarrollo y Estabilidad (Inferior Derecho)</em></strong></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de los Centroides: Clúster de Desarrollo y Estabilidad (Dim. 1 Positiva, Dim. 2 Negativa)</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Posición en el Cuadrante Inferior Derecho
+</div></th>
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Región</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Carga Dim. 1 (Desarrollo)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Carga Dim. 2 (Vulnerabilidad)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Análisis del Centroide (Tipología Estructural)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Europa - Europa Occidental</td>
+<td style="text-align: left;">Muy Positiva (Extremo Derecha)</td>
+<td style="text-align: left;">Negativa o Baja</td>
+<td style="text-align: left; width: 40em;">Representa el **Polo de máxima sofisticación** (Servicios, Comercio, Fiscalidad). Su baja carga en Dim. 2 indica **autonomía y estabilidad**.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">América - Norteamérica</td>
+<td style="text-align: left;">Muy Positiva (Extremo Derecha)</td>
+<td style="text-align: left;">Negativa o Baja</td>
+<td style="text-align: left; width: 40em;">Centroide muy cercano a Europa Occidental, consolidando el perfil de **economía global líder** y la mayor estabilidad estructural del mundo.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Asia del Este, Pacífico y Oceanía</td>
+<td style="text-align: left;">Positiva Alta</td>
+<td style="text-align: left;">Negativa</td>
+<td style="text-align: left; width: 40em;">Alto desarrollo (Dim. 1) combinado con la **mayor independencia financiera** (Dim. 2 Negativa más marcada), sugiriendo un modelo de crecimiento basado en el **ahorro** y la autosuficiencia.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><strong><em>Hallazgos: Clúster de Vulnerabilidad Estructural (Superior Izquierdo)</em></strong></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de los Centroides: Clúster de Vulnerabilidad Estructural (Dim. 1 Negativa, Dim. 2 Positiva)</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Posición en el Cuadrante Superior Izquierdo
+</div></th>
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Región</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Carga Dim. 1 (Desarrollo)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Carga Dim. 2 (Vulnerabilidad)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Análisis del Centroide (Tipología Estructural)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">África Subsahariana / Asia Central y del Sur</td>
+<td style="text-align: left;">Muy Negativa (Extremo Izquierda)</td>
+<td style="text-align: left;">Positiva Alta</td>
+<td style="text-align: left; width: 40em;">Define el polo de **economías primarias**. Su alta carga en Dim. 2 confirma la **dependencia estructural de las Remesas** y la baja sofisticación productiva.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">América - Latinoamérica y el Caribe</td>
+<td style="text-align: left;">Cercana a Cero/Levemente Negativa</td>
+<td style="text-align: left;">Muy Positiva (Extremo Superior)</td>
+<td style="text-align: left; width: 40em;">El centroide más alto en Dim. 2. Su posición destaca el **rol dominante de las remesas** como el principal rasgo estructural, a pesar de tener una base productiva más diversificada que África.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Asia - Oriente Medio / África - Norte de África</td>
+<td style="text-align: left;">Intermedia / Baja</td>
+<td style="text-align: left;">Positiva</td>
+<td style="text-align: left; width: 40em;">Su Dim. 2 está impulsada por el **Gasto Militar** (Riesgo Estratégico) y Remesas. Su Dim. 1 heterogénea refleja la mezcla de países productores de recursos y en conflicto.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><strong><em>Hallazgos: Clúster de Transición y Riesgo Estratégico</em></strong></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Análisis de los Centroides: Clúster de Transición y Riesgo Estratégico</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Posición Intermedia y Estratégica
+</div></th>
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Región</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Carga Dim. 1 (Desarrollo)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Carga Dim. 2 (Vulnerabilidad)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Análisis del Centroide (Tipología Estructural)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Asia - Oriente Medio / África - Norte de África</td>
+<td style="text-align: left;">Intermedia / Baja</td>
+<td style="text-align: left;">Positiva</td>
+<td style="text-align: left; width: 40em;">Su centroide está dominado por la **Dim. 2 (Gastos Militares y Remesas)**. La Dim. 1 intermedia refleja una **alta heterogeneidad** de países productores de recursos vs. países en conflicto.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Europa - Europa del Este</td>
+<td style="text-align: left;">Intermedia / Baja (Cercana a Cero)</td>
+<td style="text-align: left;">Positiva o Cercana a Cero</td>
+<td style="text-align: left; width: 40em;">Región **bisagra o de transición**. Muestra un desarrollo intermedio y una vulnerabilidad variable. Su posición es altamente sensible a los **factores geopolíticos** de Europa (Dim. 2).</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><strong><em>Conclusión sobre la Segregación Regional:</em></strong> La distribución de los centroides valida el modelo DMFA: las regiones se segregan en el plano factorial de manera que reflejan tipologías económicas persistentes a lo largo del tiempo. Las distancias entre los centroides son significativas, lo que subraya la existencia de grandes brechas estructurales entre los bloques globales (e.g., la distancia entre Europa Occidental y África Subsahariana).</p>
 </section>
 </section>
 <section id="conclusiones" class="level2">
