@@ -271,6 +271,48 @@ kable(
   )
 ```
 
+##### **Análisis de cada variable por región y año**
+```{r serie, fig.width=12, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE, message=FALSE}
+cat("\n")
+
+df_long = df_clean %>%
+  dplyr::select(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares,
+                Region,
+                Año) %>%
+  group_by(Region, Año) %>%
+  summarise(across(where(is.numeric), median, .names = "{.col}")) %>%
+  mutate(Año = as.character(Año)) %>%
+  pivot_longer(
+      cols = where(is.numeric),
+      names_to = "variable",
+      values_to = "mediana"
+    )
+
+ggplot(df_long, aes(x = Año, y = mediana, color = Region, group = Region)) +
+  geom_line(linewidth = 1) +      # Dibuja las líneas
+  facet_wrap(~ variable, scales = "free_y") + # Crea un panel por cada variable
+  labs(
+    title = "Mediana Anual por Región y Variable",
+    x = "Año",
+    y = "Valor de la Mediana",
+    color = "Región"
+  ) +
+  theme_light()
+```
+
+En la mayoría de las variables se tiene una caida en el año 2020 debido a la pandemia del COVID-19 (como las variables de ahorro, inversión extranjera, o Exportaciones/Importaciones), y otras suben (como los gastos). Luego, se presentan recuperaciones a niveles antes de la pandemia, o incluso superiores. A continuación, se presenta un análisis detallado por año y por región.
+
 ##### **Año 2019**
 ```{r multivariado_2019, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
 cat("\n")
