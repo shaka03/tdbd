@@ -34,7 +34,13 @@ library(factoextra)
 
 ## **0. Información general**
 
-En este trabajo se realizará un análisis factorial multiple con el fin de examinar trayectorias y agrupamientos de diferentes variables económicas, para identificar factores latentes, similitudes y diferencias a lo largo de los últimos cinco años (2019 al 2023), desagregado por regiones geográficas. Los datos están a nivel país, pero se realizó un procedimiento para agrupar los países en 14 regiones, con base en sus similitudes geográficas y étnicas. Las regiones son: Asia Central y del Sur, Oriente Medio, Asia del Este, Pacífico y Oceanía, Europa Occidental, Europa del Este, Norte de África, África Subsahariana, Latinoamérica y el Caribe y Norteamérica. 
+- ***Unidad de Estudio (Individuos):***	La unidad de observación básica es el país, pero los resultados se interpretan a nivel de región, dado que los países han sido agrupados en nueve regiones geográficas y étnicas. Las reguines son: Asia Central y del Sur, Oriente Medio, Asia del Este, Pacífico y Oceanía, Europa Occidental, Europa del Este, Norte de África, África Subsahariana, Latinoamérica y el Caribe y Norteamérica. 
+
+- ***Horizonte Temporal:***	El estudio abarca un periodo de cinco años (2019 al 2023). Este marco es crítico, ya que incluye el impacto y la recuperación de la crisis global iniciada en 2020, lo que potencia el análisis de trayectorias.
+
+- ***Variables Activas (Cuantitativas):***	Se emplearán 13 variables económicas (e.g., Servicios, Gastos, Deuda, Exportaciones, Remesas) para construir el espacio factorial. Todas son expresadas como porcentaje del PIB (%), asegurando que miden la estructura económica relativa y no el tamaño absoluto.
+
+- ***Variables de Agrupamiento/Clasificación:***	El análisis está desagregado por nueve Regiones geográficas predefinidas (e.g., Latinoamérica y el Caribe, Europa Occidental, África Subsahariana), lo que facilita una interpretación geopolítica de los resultados.
 
 Las variables a analizar son las siguientes:
 
@@ -100,14 +106,6 @@ kable(variables, format = "html", caption = "Descripción de variables del estud
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
                 full_width = FALSE, position = "center")
 ```
-
-- ***Unidad de Estudio (Individuos):***	La unidad de observación básica es el país, pero los resultados se interpretan a nivel de región, dado que los países han sido agrupados en 14 regiones geográficas y étnicas.
-
-- ***Horizonte Temporal:***	El estudio abarca un periodo de cinco años (2019 al 2023). Este marco es crítico, ya que incluye el impacto y la recuperación de la crisis global iniciada en 2020, lo que potencia el análisis de trayectorias.
-
-- ***Variables Activas (Cuantitativas):***	Se emplearán 13 variables económicas (e.g., Servicios, Gastos, Deuda, Exportaciones, Remesas) para construir el espacio factorial. Todas son expresadas como porcentaje del PIB (%), asegurando que miden la estructura económica relativa y no el tamaño absoluto.
-
-- ***Variables de Agrupamiento/Clasificación:***	El análisis está desagregado por 14 Regiones geográficas predefinidas (e.g., Latinoamérica y el Caribe, Europa Occidental, África Subsahariana), lo que facilita una interpretación geopolítica de los resultados.
 
 ## **1. Análisis exploratorio**
 
@@ -209,27 +207,6 @@ df_long = df_clean %>%
                 Gastos_Militares,
                 Region)
 
-df_stats = df_long %>%
-  group_by(Region) %>%
-  summarise(across(where(is.numeric), list(
-      mediana = ~round(median(.x, na.rm = TRUE), 2)
-    ), .names = "{.col}"))
-
-kable(t(df_stats), format = "html", caption = "Mediana por Región", align = "c") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-                full_width = TRUE, position = "center")
-
-df_stats = df_long %>%
-  group_by(Region) %>%
-  summarise(across(where(is.numeric), list(
-      sd = ~round(sd(.x, na.rm = TRUE), 2)
-    ), .names = "{.col}"))
-
-kable(t(df_stats), format = "html", caption = "Desviación estándar por Región - Año 2019", align = "c") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-                full_width = TRUE, position = "center")
-
-
 df_long = df_long %>%
   pivot_longer(cols = c(Agricultura,
                 Gastos,
@@ -313,27 +290,6 @@ df_long = df_clean %>%
                 Ahorro,
                 Gastos_Militares,
                 Region)
-
-df_stats = df_long %>%
-  group_by(Region) %>%
-  summarise(across(where(is.numeric), list(
-      mediana = ~round(median(.x, na.rm = TRUE), 2)
-    ), .names = "{.col}"))
-
-kable(t(df_stats), format = "html", caption = "Mediana por Región - Año 2019", align = "c") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-                full_width = TRUE, position = "center")
-
-df_stats = df_long %>%
-  group_by(Region) %>%
-  summarise(across(where(is.numeric), list(
-      sd = ~round(sd(.x, na.rm = TRUE), 2)
-    ), .names = "{.col}"))
-
-kable(t(df_stats), format = "html", caption = "Desviación estándar por Región - Año 2019", align = "c") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-                full_width = TRUE, position = "center")
-
 
 df_long = df_long %>%
   pivot_longer(cols = c(Agricultura,
@@ -419,27 +375,6 @@ df_long = df_clean %>%
                 Gastos_Militares,
                 Region)
 
-df_stats = df_long %>%
-  group_by(Region) %>%
-  summarise(across(where(is.numeric), list(
-      mediana = ~round(median(.x, na.rm = TRUE), 2)
-    ), .names = "{.col}"))
-
-kable(t(df_stats), format = "html", caption = "Mediana por Región - Año 2020", align = "c") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-                full_width = TRUE, position = "center")
-
-df_stats = df_long %>%
-  group_by(Region) %>%
-  summarise(across(where(is.numeric), list(
-      sd = ~round(sd(.x, na.rm = TRUE), 2)
-    ), .names = "{.col}"))
-
-kable(t(df_stats), format = "html", caption = "Desviación estándar por Región - Año 2020", align = "c") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-                full_width = TRUE, position = "center")
-
-
 df_long = df_long %>%
   pivot_longer(cols = c(Agricultura,
                 Gastos,
@@ -468,7 +403,7 @@ geom_boxplot() +
 boxplots
 ```
 
-Para el 2020, la pandemia del COVID-19 afectó en cuánto a los gastos, recaudación de impuestos o ahorros. sin embargo, los patrones siguen siendo similares. A continuación, se resumen los hallazgos:
+Para el 2020, la pandemia del COVID-19 afectó  los gastos, recaudación de impuestos o ahorros. sin embargo, los patrones siguen siendo similares al análisis sin temporalidad. A continuación, se resumen los hallazgos:
 ```{r analisis_multivariado_2020, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
 cat("\n")
 analisis_2020 = data.frame(
@@ -523,26 +458,6 @@ df_long = df_clean %>%
                 Ahorro,
                 Gastos_Militares,
                 Region)
-
-df_stats = df_long %>%
-  group_by(Region) %>%
-  summarise(across(where(is.numeric), list(
-      mediana = ~round(median(.x, na.rm = TRUE), 2)
-    ), .names = "{.col}"))
-
-kable(t(df_stats), format = "html", caption = "Mediana por Región - Año 2021", align = "c") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-                full_width = TRUE, position = "center")
-
-df_stats = df_long %>%
-  group_by(Region) %>%
-  summarise(across(where(is.numeric), list(
-      sd = ~round(sd(.x, na.rm = TRUE), 2)
-    ), .names = "{.col}"))
-
-kable(t(df_stats), format = "html", caption = "Desviación estándar por Región - Año 2021", align = "c") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-                full_width = TRUE, position = "center")
 
 df_long = df_long %>%
   pivot_longer(cols = c(Agricultura,
@@ -628,26 +543,6 @@ df_long = df_clean %>%
                 Gastos_Militares,
                 Region)
 
-df_stats = df_long %>%
-  group_by(Region) %>%
-  summarise(across(where(is.numeric), list(
-      mediana = ~round(median(.x, na.rm = TRUE), 2)
-    ), .names = "{.col}"))
-
-kable(t(df_stats), format = "html", caption = "Mediana por Región - Año 2022", align = "c") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-                full_width = TRUE, position = "center")
-
-df_stats = df_long %>%
-  group_by(Region) %>%
-  summarise(across(where(is.numeric), list(
-      sd = ~round(sd(.x, na.rm = TRUE), 2)
-    ), .names = "{.col}"))
-
-kable(t(df_stats), format = "html", caption = "Desviación estándar por Región - Año 2022", align = "c") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-                full_width = TRUE, position = "center")
-
 df_long = df_long %>%
   pivot_longer(cols = c(Agricultura,
                 Gastos,
@@ -731,26 +626,6 @@ df_long = df_clean %>%
                 Ahorro,
                 Gastos_Militares,
                 Region)
-
-df_stats = df_long %>%
-  group_by(Region) %>%
-  summarise(across(where(is.numeric), list(
-      mediana = ~round(median(.x, na.rm = TRUE), 2)
-    ), .names = "{.col}"))
-
-kable(t(df_stats), format = "html", caption = "Mediana por Región - Año 2023", align = "c") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-                full_width = TRUE, position = "center")
-
-df_stats = df_long %>%
-  group_by(Region) %>%
-  summarise(across(where(is.numeric), list(
-      sd = ~round(sd(.x, na.rm = TRUE), 2)
-    ), .names = "{.col}"))
-
-kable(t(df_stats), format = "html", caption = "Desviación estándar por Región - Año 2023", align = "c") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-                full_width = TRUE, position = "center")
 
 df_long = df_long %>%
   pivot_longer(cols = c(Agricultura,
@@ -888,6 +763,8 @@ res.dmfa = DMFA(
 ```
 
 ### **Varianza explicada y contribuciones de las variables por dimensión**
+
+A continuación se muestran las dimensiones junto a sus porcentajes de cada variable:
 ```{r eigenvalues, echo=FALSE, warning=FALSE, fig.align='center'}
 eig = as.data.frame(res.dmfa$eig)
 eig$Dim = seq_len(nrow(eig))
@@ -921,8 +798,6 @@ ggplot(eig, aes(x = Dim)) +
   theme(plot.title = element_text(hjust = 0.5, face = "bold"))
 ```
 
-A continuación se muestran las dimensiones junto a sus porcentajes de cada variable:
-
 ```{r contribuciones, fig.width=8, echo=FALSE, warning=FALSE, dpi=150, fig.align='center'}
 # Contribución
 coords = as.data.frame(res.dmfa$var$coord)
@@ -950,55 +825,6 @@ ggplot(coord_long, aes(x = Carga, y = Variable, fill = Signo)) +
   )
 ```
 
-```{r analisis_eigenvalues, echo=FALSE, warning=FALSE, fig.align='center'}
-# Creación del data frame con los hallazgos e interpretación de las cuatro dimensiones principales.
-analisis_dmfa_4dim_refinado = data.frame(
-  Componente = c(
-    "Dimensión 1",
-    "Dimensión 2",
-    "Dimensión 3",
-    "Dimensión 4",
-    "Total (Dim. 1 - Dim. 4)"
-  ),
-  Varianza_Explicada = c(
-    "Aprox. 24.2% (Eje principal)",
-    "Aprox. 15.6% (Segundo eje)",
-    "Aprox. 12.7%",
-    "Aprox. 10.1%",
-    "Aproximadamente 62.7% del total."
-  ),
-  Hallazgos_Clave = c(
-    "Correlación POSITIVA fuerte con: Servicios, Recaudación_Impuestos, Gastos, Exportaciones, Importaciones.\nCorrelación NEGATIVA fuerte con: Agricultura.\n\nConclusión: Contrasta **economías avanzadas** (Servicios/Fiscalidad alta) vs. **economías primarias** (Agricultura).",
-    "Correlación POSITIVA fuerte con: Inversión Extranjera (Entrada/Salida).\n\nConclusión: Captura el **dinamismo de los flujos de capital internacional**, diferenciando economías según su rol como receptoras/emisoras de inversión.",
-    "Correlación POSITIVA fuerte con: Ahorro y Producción.\nCorrelación NEGATIVA moderada con: Servicios.\n\nConclusión: Relacionado con la **disciplina fiscal** y la capacidad de generar riqueza interna vía ahorro y producción.",
-    "Correlación POSITIVA fuerte con: Remesas.\nCorrelación NEGATIVA fuerte con: Gastos Militares.\n\nConclusión: Captura factores de **ingreso social externo** (Remesas) frente a **prioridades de seguridad/estratégicas** (Gasto Militar).",
-    " "
-  ),
-  Nombre_Propuesto = c(
-    "Eje de Desarrollo y Modernización Económica",
-    "Eje de Flujos de Capital Internacional",
-    "Eje de Ahorro Interno y Producción",
-    "Eje de Vulnerabilidad Externa (Remesas vs. Seguridad)",
-    "Suficiente para el Análisis de Trayectorias"
-  )
-)
-
-# Generación de la tabla usando kable y kableExtra
-knitr::kable(analisis_dmfa_4dim_refinado,
-      format = "html",
-      align = "l",
-      col.names = c("Componente", "Varianza Explicada", "Hallazgos Clave", "Nombre Propuesto"),
-      caption = "Interpretación Refinada de los Factores Latentes del DMFA (Dimensiones 1-4)") %>%
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-    full_width = TRUE,
-    position = "center"
-  ) %>%
-  # Formato específico para que el texto de hallazgos se vea mejor
-  kableExtra::column_spec(3, width = "35em")
-```
-
-
 ```{r analisis_contribuciones, fig.width=8, echo=FALSE, warning=FALSE, dpi=150, fig.align='center'}
 # Creación del data frame con los hallazgos e interpretación de las cuatro dimensiones principales.
 #-----------------------------------------------
@@ -1009,29 +835,31 @@ analisis_dmfa_extendido = data.frame(
     "Dimensión 3",
     "Dimensión 4"
   ),
-  Cargas_Clave = c(
-    "Positivas Altas: Servicios, Recaudación_Impuestos, Importaciones, Exportaciones, Produccion, Gastos, Ahorro.\nNegativa Alta: Agricultura.",
-    # Ahora lo que estaba en Dim 3
-    "Positiva Alta: Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida.\nNegativa Moderada: Servicios, Produccion.",
-    # Ahora lo que estaba en Dim 2
-    "////Positiva Alta: Gastos_Militares.\nNegativa Alta: Remesas.\nPositiva Moderada: Inversion_Extranjera_Salida.",
-    "Positiva Alta: Remesas.\nNegativa Moderada: Gastos_Militares, Inversion_Extranjera (Entrada/Salida)."
+  Hallazgos_Clave = c(
+    "Correlación POSITIVA fuerte con: Servicios, Recaudación_Impuestos, Gastos, Exportaciones, Importaciones.\nCorrelación NEGATIVA fuerte con: Agricultura.\n\nConclusión: Contrasta **economías avanzadas** (Servicios/Fiscalidad alta) vs. **economías primarias** (Agricultura).",
+    "Correlación POSITIVA fuerte con: Inversión Extranjera (Entrada/Salida).\n\nConclusión: Captura el **dinamismo de los flujos de capital internacional**, diferenciando economías según su rol como receptoras/emisoras de inversión.",
+    "Correlación POSITIVA fuerte con: Ahorro y Producción.\nCorrelación NEGATIVA moderada con: Servicios.\n\nConclusión: Relacionado con la **disciplina fiscal** y la capacidad de generar riqueza interna vía ahorro y producción.",
+    "Correlación POSITIVA fuerte con: Remesas.\nCorrelación NEGATIVA fuerte con: Gastos Militares.\n\nConclusión: Captura factores de **ingreso social externo** (Remesas) frente a **prioridades de seguridad/estratégicas** (Gasto Militar)."
   ),
   Nombre_Propuesto = c(
-    "Eje de Desarrollo y Sofisticación Económica",
-    # Lo que estaba en Dim 3
-    "Eje de Profundidad de Capital Internacional (Flujo FDI)",
-    # Lo que estaba en Dim 2
-    "Eje de Riesgo Geopolítico y Contraste de Dependencia",
-    "Eje de Ingreso por Diáspora (Remesas)"
+    "Eje de Desarrollo y Modernización Económica",
+    "Eje de Flujos de Capital Internacional",
+    "Eje de Ahorro Interno y Producción",
+    "Eje de Vulnerabilidad Externa (Remesas vs. Seguridad)"
   ),
   Significado_Implicacion = c(
     "Define el nivel de modernización y riqueza. Separa las economías avanzadas (Servicios, alta base fiscal y comercial) de las economías primarias (Agricultura). Es el eje de posicionamiento estructural.",
     # Lo que estaba en Dim 3
     "Captura la capacidad de una economía para participar en el flujo bidireccional de la Inversión Extranjera Directa (FDI). Indica sofisticación financiera y apertura a los mercados de capitales.",
     # Lo que estaba en Dim 2
-    "Separa países con alta prioridad en Gasto Militar (Riesgo Geopolítico) de aquellos con alta dependencia de Remesas (Vulnerabilidad Socio-Financiera). Es un eje de flujos estratégicos/sociales.",
-    "Aísla el efecto de las Remesas como un factor de ingreso externo único, desvinculado de otros gastos o flujos de inversión. Es crucial para analizar la resiliencia de hogares en regiones como Latinoamérica."
+    "Indica países con capacidad de generar riqueza interna vía ahorro y producción.",
+    "Separa países con alta prioridad en Gasto Militar (Riesgo Geopolítico) de aquellos con alta dependencia de Remesas (Vulnerabilidad Socio-Financiera). Es un eje de flujos estratégicos/sociales."
+  ),
+  Varianza_Explicada = c(
+    "Aprox. 24.2% (Eje principal)",
+    "Aprox. 15.6% (Segundo eje)",
+    "Aprox. 12.7%",
+    "Aprox. 10.1%"
   )
 )
 
@@ -1040,7 +868,7 @@ analisis_dmfa_extendido = data.frame(
 knitr::kable(analisis_dmfa_extendido,
       format = "html",
       align = "l",
-      col.names = c("Dimensión", "Cargas Clave", "Nombre Propuesto", "Significado e Implicación"),
+      col.names = c("Dimensión", "Hallazgos Clave", "Nombre Propuesto", "Significado e Implicación", "Varianza Explicada"),
       caption = "Interpretación Detallada de los Factores Latentes del DMFA") %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "responsive"),
@@ -1051,6 +879,8 @@ knitr::kable(analisis_dmfa_extendido,
   kableExtra::column_spec(2, width = "25em") %>%
   kableExtra::column_spec(4, width = "35em")
 ```
+
+En total, las cuatro dimensiones seleccionadas explican el aproximandamente el **62.7% del total**.
 
 ### **Análisis por individuo (países)**
 ```{r analisis_paises, echo=FALSE, warning=FALSE, fig.align='center'}
@@ -1187,7 +1017,7 @@ analisis_vars_2019 = data.frame(
     "Correlación muy fuerte (cerca del radio 1.0)",
     "Correlación muy fuerte (cerca del radio -1.0)",
     "Positivas, con posiciones divergentes en Dim. 1",
-    "Correlación moderada en Dim. 1, baja en Dim. 2"
+    "Correlación alta en Dim. 1, baja en Dim. 2"
   ),
   Hallazgo_Clave = c(
     "La principal diferenciación económica en 2019 era la Sofisticación: alto peso de servicios y comercio, y una base fiscal sólida.",
@@ -1254,7 +1084,7 @@ analisis_vars_2020 = data.frame(
     "Mantiene fuerte carga positiva en Dim. 2"
   ),
   Hallazgo_Clave = c(
-    "El factor fundamental de **Desarrollo vs. Primario** se mantiene inmutable a pesar del shock, confirmando la estabilidad de la estructura económica base.",
+    "El factor fundamental de **Desarrollo vs. Primario** se mantiene inmutable a pesar del shock por la pandemia, confirmando la estabilidad de la estructura económica base.",
     "El **Gasto Público** se disocia de su correlación 'normal' con el desarrollo (Dim. 1) para alinearse con la gestión de la crisis, funcionando como una variable de **respuesta fiscal**.",
     "Ambas inversiones se vuelven **menos correlacionadas** con los ejes principales. Esto refleja la **paralización de los flujos** transfronterizos debido a la incertidumbre y el riesgo global.",
     "Las Remesas se confirman como una **fuente crucial de resiliencia** en países vulnerables. Su fuerza en Dim. 2 subraya la importancia de la diáspora en la mitigación del impacto de la crisis."
@@ -1718,9 +1548,9 @@ La distribución de los centroides valida el modelo DMFA: las regiones se segreg
 - Los países se agrupan de manera coherente con su nivel de desarrollo:  
   - Europa y Norteamérica se ubican en el eje de modernización económica.  
   - Latinoamérica y otras regiones muestran mayor dependencia de remesas y flujos externos.  
-- Se evidencia un patrón de estabilidad en la estructura de los ejes a lo largo de los años, lo que indica consistencia en las trayectorias de desarrollo económico.  
-- El modelo DMFA logra sintetizar aproximadamente el 62-65% de la varianza total con las primeras cuatro dimensiones, lo cual es suficiente para un análisis robusto de trayectorias.  
-- Los hallazgos son útiles para identificar vulnerabilidades estratégicas (dependencia de remesas, gasto militar) y fortalezas estructurales (servicios, fiscalidad, comercio internacional) en diferentes economías.  
+- Se evidencia un patrón de estabilidad en la estructura de los ejes a lo largo de los años, lo que indica consistencia en las trayectorias de desarrollo económico. Sin embargo, se puede ver como el año 2020 hay cierta afectación por la pandemia del COVID-19 y a medida que iba pasando, las economías en las diferentes regiones del planeta se fueron re-ajustando, llegando a patrones similares antes de pandemia o mejorando algunos rubros.
+- El modelo DMFA logra sintetizar aproximadamente el 62-65% de la varianza total con las primeras cuatro dimensiones, lo cual es suficiente para un análisis robusto de trayectorias.
+- La pandemia del COVID-19 tuvo cierta afectación en los páises en general (año 2020). Sin embargo, los resultados permiten evidenciar como las regiones fueron ajustándose a sus patrones "normales" antes de pandemia, e inclusive mejorando cierto aspectos, a medida que se iban recuperando.
 - En conjunto, el análisis permite comparar países, regiones y periodos de tiempo, aportando una visión integral de la evolución de los factores económicos latentes.  
 
 
