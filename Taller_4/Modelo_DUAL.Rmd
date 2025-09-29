@@ -101,7 +101,7 @@ kable(variables, format = "html", caption = "Descripción de variables del estud
                 full_width = FALSE, position = "center")
 ```
 
-- ***Unidad de Estudio (Individuos):***	La unidad de observación principal es el País, cuyas características económicas varían en el tiempo.
+- ***Unidad de Estudio (Individuos):***	La unidad de observación básica es el país, pero los resultados se interpretan a nivel de región, dado que los países han sido agrupados en 14 regiones geográficas y étnicas.
 
 - ***Horizonte Temporal:***	El estudio abarca un periodo de cinco años (2019 al 2023). Este marco es crítico, ya que incluye el impacto y la recuperación de la crisis global iniciada en 2020, lo que potencia el análisis de trayectorias.
 
@@ -248,10 +248,13 @@ df_long = df_long %>%
 
 # Crear el gráfico de boxplots
 boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
-geom_boxplot() +
+  geom_boxplot() +
   facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
   theme_light() +
-  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"), # centrado y negrilla
+    strip.text = element_text(face = "bold", hjust = 0.5)  # títulos de facetas en negrilla y centrados
+  ) +
   labs(title = "Distribución de las variables numéricas por región")
 print(boxplots)
 ```
@@ -277,10 +280,13 @@ analisis_multivariado_general = data.frame(
 )
 
 # Generamos la tabla con kableExtra
-kable(analisis_multivariado_general,
-      format = "html",
-      align = "l",
-      caption = "Análisis de Patrones de Variables por Región (General)") %>%
+kable(
+  analisis_multivariado_general,
+  format = "html",
+  align = "l",
+  caption = "Análisis de Patrones de Variables por Región (General)",
+  col.names = c("Hallazgo Clave por Variable", "Patrones Destacados")
+) %>%
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "responsive"),
     full_width = FALSE,
@@ -350,7 +356,9 @@ boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
 geom_boxplot() +
   facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
   theme_light() +
-  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")  # centrado + negrilla
+  ) +
   labs(title = "Distribución de las variables numéricas por región para el año 2019")
 boxplots
 ```
@@ -376,15 +384,19 @@ analisis_2019 = data.frame(
 )
 
 # Generamos la tabla con kableExtra
-kable(analisis_2019,
-      format = "html",
-      align = "l",
-      caption = "Análisis de Patrones Regionales - Año 2019") %>%
+kable(
+  analisis_2019,
+  format = "html",
+  align = "l",
+  caption = "Análisis de Patrones Regionales - Año 2019",
+  col.names = c("Categoría", "Patrones Destacados")   # 👈 ESTA ES LA LÍNEA NUEVA
+) %>%
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "responsive"),
     full_width = FALSE,
     position = "center"
   )
+
 ```
 
 ##### **Año 2020**
@@ -449,7 +461,9 @@ boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
 geom_boxplot() +
   facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
   theme_light() +
-  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")  # centrado + negrilla
+  ) +
   labs(title = "Distribución de las variables numéricas por región para el año 2020")
 boxplots
 ```
@@ -475,15 +489,19 @@ analisis_2020 = data.frame(
 )
 
 # Generamos la tabla con kableExtra
-kable(analisis_2020,
-      format = "html",
-      align = "l",
-      caption = "Análisis de Patrones Regionales - Año 2020") %>%
+kable(
+  analisis_2020,
+  format = "html",
+  align = "l",
+  caption = "Análisis de Patrones Regionales - Año 2019",
+  col.names = c("Categoría", "Patrones Destacados")   # 👈 ESTA ES LA LÍNEA NUEVA
+) %>%
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "responsive"),
     full_width = FALSE,
     position = "center"
   )
+
 ```
 
 ##### **Año 2021**
@@ -547,7 +565,9 @@ boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
 geom_boxplot() +
   facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
   theme_light() +
-  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")  # centrado + negrilla
+  ) +
   labs(title = "Distribución de las variables numéricas por región para el año 2021")
 boxplots
 ```
@@ -573,15 +593,19 @@ analisis_2021 = data.frame(
 )
 
 # Generamos la tabla con kableExtra
-kable(analisis_2021,
-      format = "html",
-      align = "l",
-      caption = "Análisis de Patrones Regionales - Año 2021") %>%
+kable(
+  analisis_2021,
+  format = "html",
+  align = "l",
+  caption = "Análisis de Patrones Regionales - Año 2019",
+  col.names = c("Categoría", "Patrones Destacados")   # 👈 ESTA ES LA LÍNEA NUEVA
+) %>%
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "responsive"),
     full_width = FALSE,
     position = "center"
   )
+
 ```
 
 ##### **Año 2022**
@@ -645,7 +669,9 @@ boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
 geom_boxplot() +
   facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
   theme_light() +
-  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")  # centrado + negrilla
+  ) +
   labs(title = "Distribución de las variables numéricas por región para el año 2022")
 boxplots
 ```
@@ -671,15 +697,19 @@ analisis_2022 = data.frame(
 )
 
 # Generamos la tabla con kableExtra
-kable(analisis_2022,
-      format = "html",
-      align = "l",
-      caption = "Análisis de Patrones Regionales - Año 2022") %>%
+kable(
+  analisis_2022,
+  format = "html",
+  align = "l",
+  caption = "Análisis de Patrones Regionales - Año 2019",
+  col.names = c("Categoría", "Patrones Destacados")   # 👈 ESTA ES LA LÍNEA NUEVA
+) %>%
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "responsive"),
     full_width = FALSE,
     position = "center"
   )
+
 ```
 
 ##### **Año 2023**
@@ -743,7 +773,9 @@ boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
 geom_boxplot() +
   facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
   theme_light() +
-  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")  # centrado + negrilla
+  ) +
   labs(title = "Distribución de las variables numéricas por región para el año 2023")
 boxplots
 ```
@@ -770,15 +802,19 @@ analisis_2023 = data.frame(
 )
 
 # Generamos la tabla con kableExtra
-kable(analisis_2023,
-      format = "html",
-      align = "l",
-      caption = "Análisis de Patrones Regionales - Año 2022") %>%
+kable(
+  analisis_2023,
+  format = "html",
+  align = "l",
+  caption = "Análisis de Patrones Regionales - Año 2019",
+  col.names = c("Categoría", "Patrones Destacados")   # 👈 ESTA ES LA LÍNEA NUEVA
+) %>%
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "responsive"),
     full_width = FALSE,
     position = "center"
   )
+
 ```
 
 ##### **Correlación**
@@ -856,68 +892,36 @@ res.dmfa = DMFA(
 eig = as.data.frame(res.dmfa$eig)
 eig$Dim = seq_len(nrow(eig))
 eig$Dim = factor(paste0("Dim ", eig$Dim),
-                    levels = paste0("Dim ", eig$Dim))
+                 levels = paste0("Dim ", eig$Dim))
+
+# Calcular varianza acumulada
+eig$acumulada <- cumsum(eig$`percentage of variance`)
 
 ggplot(eig, aes(x = Dim)) +
+  # Barras de porcentaje explicado
   geom_col(aes(y = `percentage of variance`), fill = "#2C7FB8", width = 0.7) +
-  geom_text(aes(y = `percentage of variance`, label = paste0(round(`percentage of variance`, 1), "%")),
+  # Etiquetas sobre las barras
+  geom_text(aes(y = `percentage of variance`, 
+                label = paste0(round(`percentage of variance`, 1), "%")),
             vjust = -0.5, size = 3.3) +
+  # Línea de varianza acumulada
+  geom_line(aes(y = acumulada, group = 1), color = "red", size = 1) +
+  geom_point(aes(y = acumulada), color = "red", size = 2) +
+  geom_text(aes(y = acumulada, 
+                label = paste0(round(acumulada, 1), "%")), 
+            vjust = -1, color = "red", size = 3.2) +
+  # Escala y ejes
   scale_y_continuous(labels = function(x) paste0(x, "%")) +
   labs(
-    title = "Porcentaje de varianza explicada",
+    title = "Porcentaje de varianza explicada y acumulada",
     x = "Dimensión",
     y = "Porcentaje"
   ) +
-  theme_minimal(base_size = 12)
+  theme_minimal(base_size = 12) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
 ```
 
-```{r analisis_eigenvalues, echo=FALSE, warning=FALSE, fig.align='center'}
-# Creación del data frame con los hallazgos e interpretación de las cuatro dimensiones principales.
-analisis_dmfa_4dim = data.frame(
-  Componente = c(
-    "Dimensión 1",
-    "Dimensión 2",
-    "Dimensión 3",
-    "Dimensión 4",
-    "Total (Dim. 1 - Dim. 4)"
-  ),
-  Varianza_Explicada = c(
-    "Aprox. 24.2% (Eje principal)",
-    "Aprox. 15.6% (Segundo eje)",
-    "Aprox. 12.7%",
-    "Aprox. 10.1%",
-    "Aproximadamente 62.6% del total."
-  ),
-  Hallazgos_Clave = c(
-    "Correlación POSITIVA fuerte con: Producción, Servicios, Recaudación_Impuestos, Ahorro, Exportaciones, Importaciones, Gastos.\nCorrelación NEGATIVA fuerte con: Agricultura.\n\nConclusión: Contrasta **economías avanzadas** (Servicios/Fiscalidad alta) vs. **economías primarias** (Agricultura alta).",
-    "Correlación POSITIVA fuerte con: Remesas (25.0%), Gastos_Militares (20.0%).\n\nConclusión: Captura factores de **flujos sociales externos** (Remesas) y **prioridades de seguridad** (Gasto Militar), independientes del desarrollo estructural.",
-    "Correlación POSITIVA fuerte con: Ahorro (22.0%), Recaudación_Impuestos (15.0%), Gastos, Deuda.\n\nConclusión: Eje relacionado con la **disciplina fiscal** y la capacidad de **gestión de la riqueza interna** (Ahorro/Deuda).",
-    "Correlación POSITIVA fuerte con: Inversión Extranjera (Entrada/Salida), Exportaciones, Importaciones.\n\nConclusión: Captura el **dinamismo de los flujos de capital** y el **intercambio comercial**, separando a las economías por su rol como receptoras/emisoras de inversión.",
-    " "
-  ),
-  Nombre_Propuesto = c(
-    "Eje de Desarrollo y Modernización Económica",
-    "Eje de Vulnerabilidad Externa y Dependencia Estratégica",
-    "Eje de Disciplina Fiscal y Ahorro Nacional",
-    "Eje de Dinamismo de Flujos de Capital y Comercio",
-    "Suficiente para el Análisis de Trayectorias"
-  )
-)
-
-# Generación de la tabla usando kable y kableExtra
-knitr::kable(analisis_dmfa_4dim,
-      format = "html",
-      align = "l",
-      col.names = c("Componente", "Varianza Explicada", "Hallazgos Clave", "Nombre Propuesto"),
-      caption = "Interpretación de los Factores Latentes del DMFA (Dimensiones 1-4)") %>%
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-    full_width = TRUE,
-    position = "center"
-  ) %>%
-  # Formato específico para que el texto de hallazgos se vea mejor
-  kableExtra::column_spec(3, width = "35em")
-```
+A continuación se muestran las dimensiones junto a sus porcentajes de cada variable:
 
 ```{r contribuciones, fig.width=8, echo=FALSE, warning=FALSE, dpi=150, fig.align='center'}
 # Contribución
@@ -940,11 +944,64 @@ ggplot(coord_long, aes(x = Carga, y = Variable, fill = Signo)) +
     fill = ""
   ) +
   theme_light() +
-  theme(legend.position = "none")
+  theme(
+    legend.position = "none",
+    plot.title = element_text(hjust = 0.5, face = "bold") # centrado y en negrilla
+  )
 ```
+
+```{r analisis_eigenvalues, echo=FALSE, warning=FALSE, fig.align='center'}
+# Creación del data frame con los hallazgos e interpretación de las cuatro dimensiones principales.
+analisis_dmfa_4dim_refinado = data.frame(
+  Componente = c(
+    "Dimensión 1",
+    "Dimensión 2",
+    "Dimensión 3",
+    "Dimensión 4",
+    "Total (Dim. 1 - Dim. 4)"
+  ),
+  Varianza_Explicada = c(
+    "Aprox. 24.2% (Eje principal)",
+    "Aprox. 15.6% (Segundo eje)",
+    "Aprox. 12.7%",
+    "Aprox. 10.1%",
+    "Aproximadamente 62.7% del total."
+  ),
+  Hallazgos_Clave = c(
+    "Correlación POSITIVA fuerte con: Servicios, Recaudación_Impuestos, Gastos, Exportaciones, Importaciones.\nCorrelación NEGATIVA fuerte con: Agricultura.\n\nConclusión: Contrasta **economías avanzadas** (Servicios/Fiscalidad alta) vs. **economías primarias** (Agricultura).",
+    "Correlación POSITIVA fuerte con: Inversión Extranjera (Entrada/Salida).\n\nConclusión: Captura el **dinamismo de los flujos de capital internacional**, diferenciando economías según su rol como receptoras/emisoras de inversión.",
+    "Correlación POSITIVA fuerte con: Ahorro y Producción.\nCorrelación NEGATIVA moderada con: Servicios.\n\nConclusión: Relacionado con la **disciplina fiscal** y la capacidad de generar riqueza interna vía ahorro y producción.",
+    "Correlación POSITIVA fuerte con: Remesas.\nCorrelación NEGATIVA fuerte con: Gastos Militares.\n\nConclusión: Captura factores de **ingreso social externo** (Remesas) frente a **prioridades de seguridad/estratégicas** (Gasto Militar).",
+    " "
+  ),
+  Nombre_Propuesto = c(
+    "Eje de Desarrollo y Modernización Económica",
+    "Eje de Flujos de Capital Internacional",
+    "Eje de Ahorro Interno y Producción",
+    "Eje de Vulnerabilidad Externa (Remesas vs. Seguridad)",
+    "Suficiente para el Análisis de Trayectorias"
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_dmfa_4dim_refinado,
+      format = "html",
+      align = "l",
+      col.names = c("Componente", "Varianza Explicada", "Hallazgos Clave", "Nombre Propuesto"),
+      caption = "Interpretación Refinada de los Factores Latentes del DMFA (Dimensiones 1-4)") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Formato específico para que el texto de hallazgos se vea mejor
+  kableExtra::column_spec(3, width = "35em")
+```
+
 
 ```{r analisis_contribuciones, fig.width=8, echo=FALSE, warning=FALSE, dpi=150, fig.align='center'}
 # Creación del data frame con los hallazgos e interpretación de las cuatro dimensiones principales.
+#-----------------------------------------------
 analisis_dmfa_extendido = data.frame(
   Componente = c(
     "Dimensión 1",
@@ -954,24 +1011,31 @@ analisis_dmfa_extendido = data.frame(
   ),
   Cargas_Clave = c(
     "Positivas Altas: Servicios, Recaudación_Impuestos, Importaciones, Exportaciones, Produccion, Gastos, Ahorro.\nNegativa Alta: Agricultura.",
-    "Positiva Alta: Gastos_Militares.\nNegativa Alta: Remesas.\nPositiva Moderada: Inversion_Extranjera_Salida.",
+    # Ahora lo que estaba en Dim 3
     "Positiva Alta: Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida.\nNegativa Moderada: Servicios, Produccion.",
+    # Ahora lo que estaba en Dim 2
+    "////Positiva Alta: Gastos_Militares.\nNegativa Alta: Remesas.\nPositiva Moderada: Inversion_Extranjera_Salida.",
     "Positiva Alta: Remesas.\nNegativa Moderada: Gastos_Militares, Inversion_Extranjera (Entrada/Salida)."
   ),
   Nombre_Propuesto = c(
     "Eje de Desarrollo y Sofisticación Económica",
-    "Eje de Riesgo Geopolítico y Contraste de Dependencia",
+    # Lo que estaba en Dim 3
     "Eje de Profundidad de Capital Internacional (Flujo FDI)",
+    # Lo que estaba en Dim 2
+    "Eje de Riesgo Geopolítico y Contraste de Dependencia",
     "Eje de Ingreso por Diáspora (Remesas)"
   ),
   Significado_Implicacion = c(
     "Define el nivel de modernización y riqueza. Separa las economías avanzadas (Servicios, alta base fiscal y comercial) de las economías primarias (Agricultura). Es el eje de posicionamiento estructural.",
-    "Separa países con alta prioridad en Gasto Militar (Riesgo Geopolítico) de aquellos con alta dependencia de Remesas (Vulnerabilidad Socio-Financiera). Es un eje de flujos estratégicos/sociales.",
+    # Lo que estaba en Dim 3
     "Captura la capacidad de una economía para participar en el flujo bidireccional de la Inversión Extranjera Directa (FDI). Indica sofisticación financiera y apertura a los mercados de capitales.",
+    # Lo que estaba en Dim 2
+    "Separa países con alta prioridad en Gasto Militar (Riesgo Geopolítico) de aquellos con alta dependencia de Remesas (Vulnerabilidad Socio-Financiera). Es un eje de flujos estratégicos/sociales.",
     "Aísla el efecto de las Remesas como un factor de ingreso externo único, desvinculado de otros gastos o flujos de inversión. Es crucial para analizar la resiliencia de hogares en regiones como Latinoamérica."
   )
 )
 
+#----------------------------------------------------------------
 # Generación de la tabla usando kable y kableExtra
 knitr::kable(analisis_dmfa_extendido,
       format = "html",
@@ -1086,19 +1150,22 @@ circunferencias = do.call(rbind, lapply(radios, circle))
 
 group_vars_filt = group_vars %>%
   filter(Año == "2019")
-ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
-  geom_point() +
-  geom_path(data = circunferencias, aes(x = x, y = y, group = r), color = "gray85") +
-  geom_text(aes(label = Variable), vjust = -0.5, size = 3) +
+
+ggplot(group_vars_filt, aes(x = Dim.1, y = Dim.2, color = Variable)) +
+  geom_point(size = 3) +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), 
+            color = "gray85", inherit.aes = FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
   coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
   theme_light() +
-  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2019") +
+  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2019",
+       color = "Variables") +
   theme(
-    legend.position = "none",
-    panel.grid = element_blank()
+    panel.grid = element_blank(),
+    plot.title = element_text(hjust = 0.5, face = "bold")  # Centrado y en negrilla
   )
+
 ```
 
 ```{r hallazgos_2019, echo=FALSE, warning=FALSE, fig.align='center'}
@@ -1148,18 +1215,20 @@ knitr::kable(analisis_vars_2019,
 ```{r analisis_2020, echo=FALSE, warning=FALSE, fig.align='center'}
 group_vars_filt = group_vars %>%
   filter(Año == "2020")
-ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
-  geom_point() +
-  geom_path(data = circunferencias, aes(x = x, y = y, group = r), color = "gray85") +
-  geom_text(aes(label = Variable), vjust = -0.5, size = 3) +
+
+ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2, color = Variable)) +
+  geom_point(size = 3) +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), 
+            color = "gray85", inherit.aes = FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
   coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
   theme_light() +
-  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2020") +
+    labs(title = "Biplot entre Dimensiones 1 y 2 por año 2020",
+       color = "Variables") +
   theme(
-    legend.position = "none",
-    panel.grid = element_blank()
+    panel.grid = element_blank(),
+    plot.title = element_text(hjust = 0.5, face = "bold")  # Centrado y en negrilla
   )
 ```
 
@@ -1210,19 +1279,22 @@ knitr::kable(analisis_vars_2020,
 ```{r analisis_2021, echo=FALSE, warning=FALSE, fig.align='center'}
 group_vars_filt = group_vars %>%
   filter(Año == "2021")
-ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
-  geom_point() +
-  geom_path(data = circunferencias, aes(x = x, y = y, group = r), color = "gray85") +
-  geom_text(aes(label = Variable), vjust = -0.5, size = 3) +
+
+ggplot(group_vars_filt, aes(x = Dim.1, y = Dim.2, color = Variable)) +
+  geom_point(size = 3) +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), 
+            color = "gray85", inherit.aes = FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
   coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
   theme_light() +
-  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2021") +
+  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2021",
+       color = "Variables") +
   theme(
-    legend.position = "none",
-    panel.grid = element_blank()
+    panel.grid = element_blank(),
+    plot.title = element_text(hjust = 0.5, face = "bold")  # Centrado y en negrilla
   )
+
 ```
 
 ```{r hallazgos_2021, echo=FALSE, warning=FALSE, fig.align='center'}
@@ -1272,19 +1344,22 @@ knitr::kable(analisis_vars_2021,
 ```{r analisis_2022, echo=FALSE, warning=FALSE, fig.align='center'}
 group_vars_filt = group_vars %>%
   filter(Año == "2022")
-ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
-  geom_point() +
-  geom_path(data = circunferencias, aes(x = x, y = y, group = r), color = "gray85") +
-  geom_text(aes(label = Variable), vjust = -0.5, size = 3) +
+
+ggplot(group_vars_filt, aes(x = Dim.1, y = Dim.2, color = Variable)) +
+  geom_point(size = 3) +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), 
+            color = "gray85", inherit.aes = FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
   coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
   theme_light() +
-  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2022") +
+  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2022",
+       color = "Variables") +
   theme(
-    legend.position = "none",
-    panel.grid = element_blank()
+    panel.grid = element_blank(),
+    plot.title = element_text(hjust = 0.5, face = "bold")  # Centrado y en negrilla
   )
+
 ```
 
 ```{r hallazgos_2022, echo=FALSE, warning=FALSE, fig.align='center'}
@@ -1320,7 +1395,7 @@ analisis_vars_2022 = data.frame(
 knitr::kable(analisis_vars_2022,
       format = "html",
       align = "l",
-      col.names = c("Eje/Patrón", "Variables Clave", "Cambio vs. 2020 (Post-Crisis)", "Hallazgo Clave (Contexto 2022)"),
+      col.names = c("Eje/Patrón", "Variables Clave", "Cambio vs. 2021 (Post-Crisis)", "Hallazgo Clave (Contexto 2022)"),
       caption = "Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2022") %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "responsive"),
@@ -1334,19 +1409,22 @@ knitr::kable(analisis_vars_2022,
 ```{r analisis_2023, echo=FALSE, warning=FALSE, fig.align='center'}
 group_vars_filt = group_vars %>%
   filter(Año == "2023")
-ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2)) +
-  geom_point() +
-  geom_path(data = circunferencias, aes(x = x, y = y, group = r), color = "gray85") +
-  geom_text(aes(label = Variable), vjust = -0.5, size = 3) +
+
+ggplot(group_vars_filt, aes(x = Dim.1, y = Dim.2, color = Variable)) +
+  geom_point(size = 3) +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), 
+            color = "gray85", inherit.aes = FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
   coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
   theme_light() +
-  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2023") +
+  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2023",
+       color = "Variables") +
   theme(
-    legend.position = "none",
-    panel.grid = element_blank()
+    panel.grid = element_blank(),
+    plot.title = element_text(hjust = 0.5, face = "bold")  # Centrado y en negrilla
   )
+
 ```
 
 ```{r hallazgos_2023, echo=FALSE, warning=FALSE, fig.align='center'}
@@ -1498,7 +1576,9 @@ El Análisis de la Proyección de Regiones confirma la alta capacidad discrimina
 ```{r analisis_region, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8, fig.align='center'}
 # Visualiza las modalidades de la variable cualitativa.
 plot.DMFA(res.dmfa, choix="quali",invisible="quali", label="none")
+
 ```
+
 
 ***Hallazgos:***
 
@@ -1630,5 +1710,17 @@ knitr::kable(analisis_cluster_transicion,
 La distribución de los centroides valida el modelo DMFA: las regiones se segregan en el plano factorial de manera que reflejan tipologías económicas persistentes a lo largo del tiempo. Las distancias entre los centroides son significativas, lo que subraya la existencia de grandes brechas estructurales entre los bloques globales (e.g., la distancia entre Europa Occidental y África Subsahariana).
 
 ## 3. Conclusiones
+- La Dimensión 1 explica el contraste estructural entre economías avanzadas (altos niveles de servicios, comercio exterior y recaudación fiscal) frente a economías primarias (dependientes de la agricultura).  
+- La Dimensión 2 refleja la participación en flujos de inversión extranjera (entrada y salida), diferenciando economías con mayor apertura financiera de aquellas más cerradas.  
+- Las Dimensiones 3 y 4 capturan dinámicas complementarias:  
+  - Disciplina fiscal y ahorro nacional.  
+  - Factores externos como remesas y gasto militar que influyen en la vulnerabilidad socioeconómica.  
+- Los países se agrupan de manera coherente con su nivel de desarrollo:  
+  - Europa y Norteamérica se ubican en el eje de modernización económica.  
+  - Latinoamérica y otras regiones muestran mayor dependencia de remesas y flujos externos.  
+- Se evidencia un patrón de estabilidad en la estructura de los ejes a lo largo de los años, lo que indica consistencia en las trayectorias de desarrollo económico.  
+- El modelo DMFA logra sintetizar aproximadamente el 62-65% de la varianza total con las primeras cuatro dimensiones, lo cual es suficiente para un análisis robusto de trayectorias.  
+- Los hallazgos son útiles para identificar vulnerabilidades estratégicas (dependencia de remesas, gasto militar) y fortalezas estructurales (servicios, fiscalidad, comercio internacional) en diferentes economías.  
+- En conjunto, el análisis permite comparar países, regiones y periodos de tiempo, aportando una visión integral de la evolución de los factores económicos latentes.  
 
-Resuma las implicaciones del análisis, comentando sobre los patrones encontrados y su relevancia para la comprensión del desarrollo global.
+
