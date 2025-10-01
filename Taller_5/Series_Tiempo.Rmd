@@ -1,0 +1,1598 @@
+---
+title: "Taller 4 - Modelo DUAL"
+author:
+  - name: "Jhon Fernando Tascon Velasco"
+  - name: "Lino Alexander Sinisterra"
+  - name: "Juan Sebastian Chacón"
+date: "2025-09-29"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+library(readxl)
+library(dplyr)
+library(tidyverse)
+library(plotly)
+library(ggcorrplot)
+library(ggplot2)
+library(reshape2)
+library(ResourceSelection)
+library(knitr)
+library(kableExtra)
+library(FactoMineR)
+library(scales)
+library(zoo)
+library(factoextra)
+```
+
+## **0. Información general**
+
+- ***Unidad de Estudio (Individuos):***	La unidad de observación básica es el país, pero los resultados se interpretan a nivel de región, dado que los países han sido agrupados en nueve regiones geográficas y étnicas. Las reguines son: Asia Central y del Sur, Oriente Medio, Asia del Este, Pacífico y Oceanía, Europa Occidental, Europa del Este, Norte de África, África Subsahariana, Latinoamérica y el Caribe y Norteamérica. 
+
+- ***Horizonte Temporal:***	El estudio abarca un periodo de cinco años (2019 al 2023). Este marco es crítico, ya que incluye el impacto y la recuperación de la crisis global iniciada en 2020, lo que potencia el análisis de trayectorias.
+
+- ***Variables Activas (Cuantitativas):***	Se emplearán 13 variables económicas (e.g., Servicios, Gastos, Deuda, Exportaciones, Remesas) para construir el espacio factorial. Todas son expresadas como porcentaje del PIB (%), asegurando que miden la estructura económica relativa y no el tamaño absoluto.
+
+- ***Variables de Agrupamiento/Clasificación:***	El análisis está desagregado por nueve Regiones geográficas predefinidas (e.g., Latinoamérica y el Caribe, Europa Occidental, África Subsahariana), lo que facilita una interpretación geopolítica de los resultados.
+
+Las variables a analizar son las siguientes:
+
+```{r tabla_variables, echo=FALSE}
+variables <- data.frame(
+  Variables = c(
+    "Pais",
+    "Año",
+    "Region",
+    "Servicios",
+    "Gastos",
+    "Ahorro",
+    "Exportaciones",
+    "Importaciones",
+    "Produccion",
+    "Inversion_Extranjera_Entrada",
+    "Inversion_Extranjera_Salida",
+    "Deuda",
+    "Recaudacion_Impuestos",
+    "Agricultura",
+    "Remesas",
+    "Gastos_Militares"
+  ),
+  Tipo_Variable = c(
+    "Nominal",
+    "Ordinal",
+    "Nominal",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa",
+    "Cuantitativa"
+  ),
+  Descripción = c(
+    "País",
+    "Año",
+    "Región",
+    "Servicios, valor agregado (% PIB)",
+    "Gastos (% PIB)",
+    "Ahorro bruto (% PIB)",
+    "Exportaciones de bienes y sevicios (% PIB)",
+    "Importaciones de bienes y servicios (% PIB)",
+    "Producción, valor agregado (% PIB)",
+    "Inversión extranjera, entrada neta de capital (% PIB)",
+    "Inversión extranjera, salidad neta de capital (% PIB)",
+    "Total Deuda (% PIB)",
+    "Recaudación impostivia (% PIB)",
+    "Agricultura, silvicultura y pesca, valor agregado (% PIB)",
+    "Remesas de trabajdores y compensación de empleados recibidas (% PIB)",
+    "Gastos militares (%PIB)"
+  )
+)
+
+kable(variables, format = "html", caption = "Descripción de variables del estudio", align = "c") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                full_width = FALSE, position = "center")
+```
+
+## **1. Análisis exploratorio**
+
+```{r carga_datos, echo=FALSE}
+df = read_excel("Datos.xlsx", sheet="Data", na="..")
+df = df %>%
+  mutate(
+    Servicios = as.numeric(Servicios),
+    Gastos = as.numeric(Gastos),
+    Ahorro = as.numeric(Ahorro),
+    Exportaciones = as.numeric(Exportaciones),
+    Importaciones = as.numeric(Importaciones),
+    Produccion = as.numeric(Produccion),
+    Inversion_Extranjera_Entrada = as.numeric(Inversion_Extranjera_Entrada),
+    Inversion_Extranjera_Salida = as.numeric(Inversion_Extranjera_Salida),
+    Deuda = as.numeric(Deuda),
+    Recaudacion_Impuestos = as.numeric(Recaudacion_Impuestos),
+    Agricultura = as.numeric(Agricultura),
+    Remesas = as.numeric(Remesas),
+    Gastos_Militares = as.numeric(Gastos_Militares)
+  )
+```
+
+### **1.1. Revisión de datos faltantes**
+
+```{r nulos, echo=FALSE}
+# Revisar si hay faltantes
+nulos = colSums(is.na(df))
+
+kable(nulos, caption = "Datos faltantes") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+***Limpiar faltantes:*** El proceso de aseguramiento de la calidad de los datos es fundamental antes de aplicar el Análisis Factorial Múltiple Dual (DMFA). La fase de limpieza de nulos se centra en la correcta identificación y conversión de los valores ausentes (.. a NA). Para mejorar la robustez del modelo, es imperativo eliminar registros completos si estos carecen de datos en la totalidad de las variables activas, o considerar la eliminación de variables cuyo volumen de nulos sea tan extremo que comprometa la estructura factorial. No obstante, para preservar las trayectorias de los países y mantener la máxima cantidad de información valiosa, el método preferido para los pocos nulos restantes será la imputación de datos faltantes. a conitnuación, se detalla el paso a paso realizado para la limpiea de datos faltantes:
+
+- Interpolación de variables, usando el método na.spline.
+- Exclusión de registros, en los casos en los que todos los datos sean faltantes para las series numéricas.
+- Eliminación de variables, si la cantidad sigue siendo significativa: una cantidad mayor a 40% de datos faltantes serán eliminadas.
+- Si quedan faltantes en algunos países, se imputarán los registros con base en la mediana de la región al que pertenecen y el año.
+
+```{r limpieza_nulos, echo=FALSE}
+# Limpiar faltantes
+df_clean = df %>%
+  group_by(Pais) %>%
+  arrange(Año) %>%
+  mutate(across(where(is.numeric), ~na.spline(.x, x=Año, na.rm = FALSE))) %>%
+  mutate(Año = as.character(Año))
+
+# Eliminar registros completos si todas las filas son faltantes
+df_clean <- df_clean %>%
+  ungroup() %>%  # Desagrupa para evitar conflictos
+  filter(rowSums(!is.na(select(., where(is.numeric)))) > 0)
+
+# Eliminación de variables
+df_clean = df_clean %>%
+  select(where(~ mean(is.na(.)) <= 0.4))
+
+# Imputación de datos faltantes
+df_clean = df_clean %>%
+  group_by(Año, Region) %>%
+  mutate(across(where(is.numeric), ~ ifelse(is.na(.), median(. , na.rm = TRUE), .))) %>%
+  mutate(Año = as.character(Año))
+
+df_clean = df_clean %>%
+  ungroup()
+```
+
+
+```{r nulos2, echo=FALSE}
+# Revisar si hay faltantes
+nulos = colSums(is.na(df_clean))
+
+kable(nulos, caption = "Datos faltantes") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+Con los datos limpios, se procede a hacer el análisis exploratorio.
+
+### **1.2. Análisis multivariado**
+
+#### **Variables numéricas vs. Año y Región**
+
+##### **Análisis general por región**
+```{r multivariado_general, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+
+df_long = df_clean %>%
+  dplyr::select(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares,
+                Region)
+
+df_long = df_long %>%
+  pivot_longer(cols = c(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares),
+               names_to = "Variable",
+               values_to = "Valor")
+
+# Crear el gráfico de boxplots
+boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
+  geom_boxplot() +
+  facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
+  theme_light() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"), # centrado y negrilla
+    strip.text = element_text(face = "bold", hjust = 0.5)  # títulos de facetas en negrilla y centrados
+  ) +
+  labs(title = "Distribución de las variables numéricas por región")
+print(boxplots)
+```
+
+En términos generales, haciendo una desagregación de cada variable económica por región, se puede decir que:
+
+```{r multivariado_general_analisis, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+analisis_multivariado_general = data.frame(
+  "Hallazgo Clave por Variable" = c(
+    "Estructura Productiva (Agricultura/Producción/Servicios)",
+    "Solidez Fiscal y Ahorro",
+    "Apertura Comercial (Exp. e Imp.)",
+    "Flujos de Capital (Remesas)",
+    "Gasto y Seguridad (Gastos/Gastos Militares)"
+  ),
+  "Patrones Destacados" = c(
+    "África Subsahariana y Asia Central/Sur: Alta dependencia agrícola (valores altos y dispersos).\nNorteamérica y Europa Occidental son regiones que se destacan con valores altos en el rubro de servicios, y los países de Lationamérica también es destacable lo que aporta el sector servicio en el PIB de estos países. Por otro lado, África Subsahariana y Asia Central/Sur tienen los valores más bajos. En producción, las regiones son similares, pero Norteamérica es la región más baja en este rubro.",
+    "En general, los países asiáticos al parecen tienen una mayor tendencia al ahorro, con base en la mediana de estas regiones con respecto a las demás regiones. Destacan Asia del Este y Europa Occidental, con mayor tendencia al Ahorro y variabilidad.\nÁfrica Subsahariana y Norte de África: Valores de Ahorro más bajos.\nEn cuanto a recaudación de impuestos, Europa Occidental presenta una mediana elevada en esta variable, mientras Oriente Medio el que tiene la mediana más baja.",
+    "Europa (Occidental/Este): mayor integración comercial (Altas Exportaciones e Importaciones).\nNorteamérica/Asia del Este: Grandes Importadores.",
+    "Latinoamérica y el Caribe y Asia Central/Sur: Valores altos y dependencia estructural de Remesas.",
+    "Oriente Medio: Alta prioridad y gasto en la dimensión militar.\nNorteamérica y Europa Occidental: Alto Gasto Total del gobierno."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(
+  analisis_multivariado_general,
+  format = "html",
+  align = "l",
+  caption = "Análisis de Patrones de Variables por Región (General)",
+  col.names = c("Hallazgo Clave por Variable", "Patrones Destacados")
+) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
+
+##### **Análisis de cada variable por región y año**
+```{r serie, fig.width=12, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE, message=FALSE}
+cat("\n")
+
+df_long = df_clean %>%
+  dplyr::select(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares,
+                Region,
+                Año) %>%
+  group_by(Region, Año) %>%
+  summarise(across(where(is.numeric), median, .names = "{.col}")) %>%
+  mutate(Año = as.character(Año)) %>%
+  pivot_longer(
+      cols = where(is.numeric),
+      names_to = "variable",
+      values_to = "mediana"
+    )
+
+ggplot(df_long, aes(x = Año, y = mediana, color = Region, group = Region)) +
+  geom_line(linewidth = 1) +      # Dibuja las líneas
+  facet_wrap(~ variable, scales = "free_y") + # Crea un panel por cada variable
+  labs(
+    title = "Mediana Anual por Región y Variable",
+    x = "Año",
+    y = "Valor de la Mediana",
+    color = "Región"
+  ) +
+  theme_light()
+```
+
+En la mayoría de las variables se tiene una caída en el año 2020 debido a la pandemia del COVID-19 (como las variables de ahorro, inversión extranjera, o Exportaciones/Importaciones), sin embargo otras suben (como los gastos) en el mismo por la misma razón. Luego, se presentan recuperaciones a niveles antes de la pandemia, o incluso superiores para estas variables. A continuación, se presenta un análisis detallado por año y por región.
+
+##### **Año 2019**
+```{r multivariado_2019, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+
+df_long = df_clean %>%
+  filter(Año == "2019") %>%
+  dplyr::select(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares,
+                Region)
+
+df_long = df_long %>%
+  pivot_longer(cols = c(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares),
+               names_to = "Variable",
+               values_to = "Valor")
+
+# Crear el gráfico de boxplots
+boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
+geom_boxplot() +
+  facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
+  theme_light() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")  # centrado + negrilla
+  ) +
+  labs(title = "Distribución de las variables numéricas por región para el año 2019")
+boxplots
+```
+
+Haciendo un análisis por región, para el año 2019 se tiene lo siguiente:
+```{r analisis_multivariado_2019, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+analisis_2019 = data.frame(
+  Categoria = c(
+    "Estructura Productiva (Agricultura/Producción/Servicios)",
+    "Solidez Fiscal y Ahorro",
+    "Apertura Comercial (Exp. e Imp.)",
+    "Flujos de Capital (Remesas)",
+    "Gasto y Seguridad (Gastos/Gastos Militares)"
+  ),
+  "Patrones Destacados" = c(
+    "Agricultura: muy alta y dispersa en África Subsahariana y Asia Central/Sur; baja y estable en Europa Occidental y Norteamérica.\nProducción: Norteamérica, Europa Occidental y Asia del Este/Pacífico por encima de las demás regiones; África Subsahariana y Asia Central/Sur rezagadas.\nServicios: altos en Europa Occidental y Norteamérica; medios-altos en Asia del Este/Pacífico; bajos en África Subsahariana y Asia Central/Sur.\n\n En términos generales, se mantienen los mismos patrones y las jerarquías regionales comparado con el análisis global (sin temporalidad), reforzando el patrón global, con contrastes más marcados (especialmente en Agricultura alta en regiones emergentes y Servicios/Producción altos en avanzadas).",
+    "Recaudación: alta y consistente en Europa Occidental y Norteamérica; baja y muy heterogénea en África Subsahariana y Asia Central/Sur; intermedia en Latinoamérica.\nAhorro: alto en Asia del Este/Pacífico y Europa Occidental; bajo en África Subsahariana; variabilidad visible en Europa del Este y Latinoamérica.\nsimilar al grupo anterior, 2019 mantiene consistencia con el análisis sin temporalidad, pero se observa un poco más de heterogeneidad intra-regional en regiones de menor ingreso.",
+    "Exportaciones/Importaciones con medianas altas en Europa Occidental, Norteamérica y Asia del Este/Pacífico; bajas en África Subsahariana y Asia Central/Sur. Latinoamérica y Europa del Este muestran dispersión notable (combinación de economías muy abiertas y otras menos).\nEn general, 2019 es congruente con el patrón sin temporalidad; resalta más heterogeneidad en regiones intermedias (LatAm o Europa del Este).",
+    "Muy altas (y muy dispersas) en Asia Central/Sur y Latinoamérica; bajas o casi nulas en Europa Occidental, Norteamérica y Asia del Este/Pacífico. Distribuciones con colas superiores marcadas por países puntuales en estas regiones.\n Esta categoria ern el año 2019 replica el patrón sin temporalidad.",
+    "Gasto total: alto en Norteamérica y Europa Occidental; bajo en África Subsahariana; intermedio en Latinoamérica y Europa del Este.\nGasto militar: Oriente Medio muestra valores muy elevados con outliers pronunciados; Norteamérica alto pero más estable; las demás regiones en niveles moderados a bajos.\n El año 2019 acentúa los picos de gasto militar en Oriente Medio (debido a la constante tensión con Israeel y sus países vecinos) y mantiene el liderazgo de gasto total en regiones avanzadas."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(
+  analisis_2019,
+  format = "html",
+  align = "l",
+  caption = "Análisis de Patrones Regionales - Año 2019",
+  col.names = c("Categoría", "Patrones Destacados")   # 👈 ESTA ES LA LÍNEA NUEVA
+) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+
+```
+
+##### **Año 2020**
+```{r multivariado_2020, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+
+df_long = df_clean %>%
+  filter(Año == "2020") %>%
+  dplyr::select(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares,
+                Region)
+
+df_long = df_long %>%
+  pivot_longer(cols = c(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares),
+               names_to = "Variable",
+               values_to = "Valor")
+
+# Crear el gráfico de boxplots
+boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
+geom_boxplot() +
+  facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
+  theme_light() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")  # centrado + negrilla
+  ) +
+  labs(title = "Distribución de las variables numéricas por región para el año 2020")
+boxplots
+```
+
+Para el 2020, la pandemia del COVID-19 afectó  los gastos, recaudación de impuestos o ahorros. sin embargo, los patrones siguen siendo similares al análisis sin temporalidad. A continuación, se resumen los hallazgos:
+```{r analisis_multivariado_2020, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+analisis_2020 = data.frame(
+  Categoria = c(
+    "Estructura Productiva (Agricultura/Producción/Servicios)",
+    "Solidez Fiscal y Ahorro",
+    "Apertura Comercial (Exp. e Imp.)",
+    "Flujos de Capital (Remesas)",
+    "Gasto y Seguridad (Gastos/Gastos Militares)"
+  ),
+  "Patrones Destacados" = c(
+    "En el 2020, África Subsahariana y Asia Central/Sur mantienen sus patrones con Agricultura alta y dispersa; Europa Occidental y Norteamérica con Agricultura baja y estable.\nProducción/Servicios altos y más compactos en Europa Occidental, Norteamérica y Asia del Este/Pacífico, pero ligeramente más bajos que el 2019 (efecto pandemia); bajos en África Subsahariana y Asia Central/Sur; mayor heterogeneidad en regiones emergentes.\nComparando con el 2019 y patrón sin temporalidad, se mantienen las jerarquías regionales, aunque en 2020 se observan contrastes algo más marcados en extremos y ligero aumento de dispersión en regiones intermedias (Latinoamérica, Europa del Este).",
+    "En 2020, Recaudación sigue siendo alta y consistente en Europa Occidental/Norteamérica; baja y heterogénea en África Subsahariana/Asia Central-Sur; intermedia en Latinoamérica y ligeramente bajo vs 2019.\nAhorro elevado en Asia del Este/Pacífico y Europa Occidental; bajo en África Subsahariana; variabilidad en Europa del Este y Latinoamérica.\nComparando con 2019 hay un ligero aumento de heterogeneidad en 2020 en grupos intermedios para ahorros, sin cambios en el orden relativo, y es un poco más homogéneo en recaudación de impuestos. Versus el patrón sin temporalidad, no hay cambios mayores.",
+    "Exportaciones/Importaciones con medianas altas en Europa Occidental/Norteamérica/Asia del Este-Pacífico; bajas en África Subsahariana/Asia Central-Sur. Latinoamérica y Europa del Este con dispersión notable (brechas intra-regionales).\nvs 2019: el patrón es similar; 2020 muestra algo más de heterogeneidad en regiones mixtas, pero medianas bajas vs 2019, acentuando el efecto de pandemia. vs patrones sin temporalidad: Misma jerarquía; el global presenta dispersión más moderada; 2020 acentúa diferencias dentro de regiones intermedias.",
+    "En el 2020, las remsesas siguen siendo muy altas y muy dispersas en Asia Central/Sur y Latinoamérica; bajas o casi nulas en Europa Occidental/Norteamérica/Asia del Este-Pacífico. Distribuciones con colas superiores dominadas por pocos países.\nvs 2019 y patrón sin temporalidad, el 2020 hace más visibles los máximos y colas en la distribución de las remesas a nivel regional.",
+    "Gasto total alto en Norteamérica/Europa Occidental; bajo en África Subsahariana; intermedio en Latinoamérica/Europa del Este.\nGasto militar: Oriente Medio con outliers muy elevados; Norteamérica alto pero más estable; las demás regiones moderado-bajo. esto indica la influencia de la pandemia, en el que los gastos fueron llevados más a controlar la epidemia y a la salud de las personas, inviertiendo menos en otros rubreos como el militar."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(
+  analisis_2020,
+  format = "html",
+  align = "l",
+  caption = "Análisis de Patrones Regionales - Año 2019",
+  col.names = c("Categoría", "Patrones Destacados")   # 👈 ESTA ES LA LÍNEA NUEVA
+) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+
+```
+
+##### **Año 2021**
+```{r multivariado_2021, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+
+df_long = df_clean %>%
+  filter(Año == "2021") %>%
+  dplyr::select(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares,
+                Region)
+
+df_long = df_long %>%
+  pivot_longer(cols = c(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares),
+               names_to = "Variable",
+               values_to = "Valor")
+
+# Crear el gráfico de boxplots
+boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
+geom_boxplot() +
+  facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
+  theme_light() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")  # centrado + negrilla
+  ) +
+  labs(title = "Distribución de las variables numéricas por región para el año 2021")
+boxplots
+```
+
+El 2021 presenta una leve recuperación comparando con el 2020, debido a la "normalidad" pos-COVID19. A continuación, se presentan los siguientes hallazgos:
+```{r analisis_multivariado_2021, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+analisis_2021 = data.frame(
+  Categoria = c(
+    "Estructura Productiva (Agricultura/Producción/Servicios)",
+    "Solidez Fiscal y Ahorro",
+    "Apertura Comercial (Exp. e Imp.)",
+    "Flujos de Capital (Remesas)",
+    "Gasto y Seguridad (Gastos/Gastos Militares)"
+  ),
+  "Patrones Destacados" = c(
+    "En el 2021 se mantiene la jerarquía: Europa Occidental y Norteamérica con Producción/Servicios altos y compactos y Agricultura baja; África Subsahariana y Asia Central/Sur con Agricultura alta y dispersa y Producción/Servicios bajos; Asia del Este/Pacífico en niveles altos/intermedios con menor dispersión.\nComparando con el 2020: Se recuperan ligeramente las medianas de Producción/Servicios en regiones avanzadas (leve repunte respecto al bache de 2020); Agricultura sin cambios sustantivos de posición. vs patrón sin temporalidad: coincide la ordenación estructural; el general suaviza picos/colas; 2021 enfatiza extremos puntuales.",
+    "Recaudación alta y estable en Europa Occidental/Norteamérica; baja y heterogénea en África Subsahariana/Asia Central-Sur; Latinoamérica intermedia. Ahorro elevado en Asia del Este/Pacífico y Europa Occidental; bajo en África Subsahariana; variabilidad visible en Europa del Este y LatAm.\nvs 2020: se recupera levementa la Recaudación y Ahorro en regiones avanzadas, aunque en regiones emergentes persiste heterogeneidad. vs patrones sin temporalidad: se exhibe menor variabilidad interna.",
+    "Para el año 2021, las Exportaciones/Importaciones mantienen medianas altas en Europa Occidental/Norteamérica/Asia del Este-Pacífico; bajas en África Subsahariana/Asia Central-Sur; LatAm y Europa del Este con dispersión notable, por la mezcla de economías muy abiertas y menos abiertas.\nvs 2020: se observa un incremento en medianas (reapertura y normalización del comercio) en regiones avanzadas y parte de Asia del Este/Pacífico; regiones rezagadas permanecen por debajo. vs patrón sin temporalidad: 2021 muestra brechas intra-regionales más visibles en regiones mixtas.",
+    "En el 2021, las remesas se mantienen muy altas y dispersas en Asia Central/Sur y Latinoamérica; bajas o casi nulas en Europa Occidental/Norteamérica/Asia del Este-Pacífico. Se mantienen colas superiores por pocos países.\nvs 2020: Igual o ligeramente mayor en las regiones líderes (las medianas se ven tan altas o un poco más); regiones avanzadas siguen bajas. vs patrones sin temporalidad: El global amortigua extremos; 2021 hace más visibles picos concentrados.",
+    "Gasto total sin cambio en sus patrones: alto en Europa Occidental/Norteamérica; bajo en África Subsahariana; intermedio en LatAm/Europa del Este. Gasto militar: Oriente Medio conserva outliers muy elevados; Norteamérica alto pero más estable; el resto moderado/bajo.\nvs 2020: Niveles similares o ligeramente superiores en Gasto total en avanzadas (continúa la senda de normalización); Gasto militar mantiene picos en Oriente Medio sin cambios de orden. vs Global: Mismo patrón; el global suaviza outliers, mientras 2021 resalta máximos."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(
+  analisis_2021,
+  format = "html",
+  align = "l",
+  caption = "Análisis de Patrones Regionales - Año 2019",
+  col.names = c("Categoría", "Patrones Destacados")   # 👈 ESTA ES LA LÍNEA NUEVA
+) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+
+```
+
+##### **Año 2022**
+```{r multivariado_2022, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+
+df_long = df_clean %>%
+  filter(Año == "2022") %>%
+  dplyr::select(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares,
+                Region)
+
+df_long = df_long %>%
+  pivot_longer(cols = c(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares),
+               names_to = "Variable",
+               values_to = "Valor")
+
+# Crear el gráfico de boxplots
+boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
+geom_boxplot() +
+  facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
+  theme_light() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")  # centrado + negrilla
+  ) +
+  labs(title = "Distribución de las variables numéricas por región para el año 2022")
+boxplots
+```
+
+El año 2022 sigue en recuperación luego de la pandemia del 2020, por ende, la mayoría de los indicadores tienden a aumentar. a continuación, se repsentan los hallazgos para este año:
+```{r analisis_multivariado_2022, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+analisis_2022 = data.frame(
+  Categoria = c(
+    "Estructura Productiva (Agricultura/Producción/Servicios)",
+    "Solidez Fiscal y Ahorro",
+    "Apertura Comercial (Exp. e Imp.)",
+    "Flujos de Capital (Remesas)",
+    "Gasto y Seguridad (Gastos/Gastos Militares)"
+  ),
+  "Patrones Destacados" = c(
+    "Agricultura: 2022 mantiene medianas altas en África Subsahariana y Asia Central/Sur (sin cambios relevantes vs 2019–2021) y bajas en Europa Occidental/Norteamérica.\nProducción: 2022 muestra medianas ligeramente superiores a 2021 en Europa Occidental/Norteamérica (consolidación tras 2020) y altas estables en Asia del Este/Pacífico; bajas estables en África Subsahariana/Asia Central-Sur.\nServicios: 2022 con medianas iguales o algo mayores que 2021 en Europa Occidental; Norteamérica se mantiene alta; LatAm intermedia con dispersión; África Subsahariana baja.",
+    "Recaudación: 2022 con medianas levemente por encima de 2021 en Europa Occidental; Norteamérica estable-alta; África Subsahariana baja estable; LatAm intermedia estable.\nAhorro: 2022 alto y estable en Asia del Este/Pacífico; Europa Occidental ligero incremento vs 2021; África Subsahariana baja; Europa del Este con variabilidad.\nVs 2019–2021: no hay cambios de jerarquía; se observan ajustes menores al alza en economías avanzadas.",
+    "Para el año 2022, las Exportaciones/Importaciones presentan medianas más altas que 2021 en Europa Occidental/Norteamérica y ligero aumento en Asia del Este/Pacífico (normalización pos-pandemia); LatAm y Europa del Este mantienen medianas intermedias con amplia dispersión; África Subsahariana/Asia Central-Sur bajas estables. Vs 2020: 2022 se ubica claramente por encima (continuación de la recuperación). Vs 2019: 2022 aparece similar o levemente superior en economís avanzadas; similar en economías rezagadas. ",
+    "El año 2022 mantiene medianas altas en Asia Central/Sur y LatAm, similares o marginalmente superiores a 2021; Europa Occidental/Norteamérica/Asia del Este-Pacífico permanecen bajas.",
+    "Gasto total: año 2022 alto y estable en Europa Occidental/Norteamérica (medianas igualwa o ligeramente superiores vs 2021), bajo en África Subsahariana, intermedio en LatAm/Europa del Este.\nGasto militar: 2022 sin cambios de mediana relevantes a simple vista; Oriente Medio conserva valores altos con outliers; Norteamérica alto y estable; resto moderado-bajo."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(
+  analisis_2022,
+  format = "html",
+  align = "l",
+  caption = "Análisis de Patrones Regionales - Año 2019",
+  col.names = c("Categoría", "Patrones Destacados")   # 👈 ESTA ES LA LÍNEA NUEVA
+) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+
+```
+
+##### **Año 2023**
+```{r multivariado_2023, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+
+df_long = df_clean %>%
+  filter(Año == "2023") %>%
+  dplyr::select(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares,
+                Region)
+
+df_long = df_long %>%
+  pivot_longer(cols = c(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares),
+               names_to = "Variable",
+               values_to = "Valor")
+
+# Crear el gráfico de boxplots
+boxplots = ggplot(df_long, aes(x = Variable, y = Valor, fill = Region)) +
+geom_boxplot() +
+  facet_wrap(~Variable, scales = "free", ncol=3, nrow=4) +
+  theme_light() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")  # centrado + negrilla
+  ) +
+  labs(title = "Distribución de las variables numéricas por región para el año 2023")
+boxplots
+```
+
+El año 2023 presenta una recuperación consolidad luego de la pandemia del COVID-19, y persisten brechas en algunas regiones como África Subsahariana y Asia Central/Sur.
+
+```{r analisis_multivariado_2023, fig.width=10, fig.height=8, fig.align='center', echo=FALSE, warning=FALSE}
+cat("\n")
+analisis_2023 = data.frame(
+  Categoria = c(
+    "Estructura Productiva (Agricultura/Producción/Servicios)",
+    "Solidez Fiscal y Ahorro",
+    "Apertura Comercial (Exp. e Imp.)",
+    "Flujos de Capital (Remesas)",
+    "Gasto y Seguridad (Gastos/Gastos Militares)"
+  ),
+  "Patrones Destacados" = c(
+    "Agricultura: 2023 mantiene consistencia en África Subsahariana y Asia Central/Sur, sin cambios relevantes vs 2022; dispersión ligeramente menor (menos outliers).\nProducción: medianas levemente altas en Europa Occidental y Norteamérica (recuperación consolidada),pero similar en Asia del Este/Pacífico vs el año anterior; regiones rezagadas sin mejora visible.\nServicios: medianas levemente altas en Europa Occidental y Norteamérica vs 2022; LatAm estable; África Subsahariana sigue baja.\nPatrón nuevo: ligera reducción de dispersión en regiones avanzadas (cajas más compactas).",
+    "Recaudación: medianas con aumento leve en Europa Occidental y Norteamérica vs 2022; LatAm estable; África Subsahariana sigue baja.\nAhorro: medianas altas en Asia del Este/Pacífico y Europa Occidental (máximos del periodo); LatAm y África Subsahariana sin cambios.\nPatrón nuevo: Asia del Este/Pacífico consolida liderazgo en ahorro con menor dispersión.",
+    "Exportaciones: medianas altas en Europa Occidental y Norteamérica (superan niveles 2022 y se acercan a 2019); LatAm y Europa del Este con dispersión alta; África Subsahariana estable.\nImportaciones: patrón similar; medianas ↑ en avanzadas, ≈ en rezagadas.\nPatrón nuevo: 2023 marca máximos post-2020 en comercio para regiones avanzadas.",
+    "Medianas similares en Asia Central/Sur y LatAm (altas); ligero aumento en LatAm vs 2022; regiones avanzadas siguen bajas. Dispersión alta persiste (colas superiores). Se mantiene concentración en pocas economías.",
+    "Gasto total: medianas levemente superiores en Europa Occidental y Norteamérica (máximos del periodo); LatAm estable; África Subsahariana baja.\nGasto militar: sin cambios sustantivos; Oriente Medio sigue con outliers altos, especialmente por la guErra Israel-Palestina.\nPatrón nuevo: consolidación de gasto público alto en economías avanzadas."
+  )
+)
+
+# Generamos la tabla con kableExtra
+kable(
+  analisis_2023,
+  format = "html",
+  align = "l",
+  caption = "Análisis de Patrones Regionales - Año 2019",
+  col.names = c("Categoría", "Patrones Destacados")   # 👈 ESTA ES LA LÍNEA NUEVA
+) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "center"
+  )
+
+```
+
+##### **Correlación**
+```{r correlacion, fig.width=10, fig.height=10, fig.align='center', echo=FALSE}
+df_sel = df_clean %>%
+  dplyr::select(Agricultura,
+                Gastos,
+                Produccion,
+                Exportaciones,
+                Importaciones,
+                Remesas,
+                Servicios,
+                Recaudacion_Impuestos,
+                Inversion_Extranjera_Entrada,
+                Inversion_Extranjera_Salida,
+                Ahorro,
+                Gastos_Militares
+    )
+                
+# Calcula la matriz de correlación
+corr_matrix = round(cor(df_sel), 2)
+
+ggcorrplot(corr_matrix,
+  lab = TRUE,             # Muestra los coeficientes de correlación en el gráfico
+  type = "lower",         # Muestra solo la matriz triangular inferior
+  outline.col = "white",  # Color del borde de los cuadrados
+  ggtheme = ggplot2::theme_gray, # Tema de ggplot
+  colors = c("#6D9EC1", "white", "#E46726") # Colores para correlaciones negativas, cero y positivas
+) +
+labs(title = "Matriz de Correlación") +
+theme(
+  plot.title = element_text(hjust = 0.5, face = "bold", size = 14)
+)
+```
+
+En cuanto a las asociaciones entre variables presentan lo siguiente:
+
+- **Comercio exterior:** Exportaciones ↔ Importaciones muestran una correlación alta (≈ 0.81), lo que se puede deducir en que actúan como un mismo factor de apertura comercial; países que exportan más, también importan más.
+- **Flujos de capital internacional:** Inversión Extranjera – Entrada ↔ Salida presentan una correlación casi perfecta (≈ 0.93), reflejando un mismo perfil financiero; economías que reciben capital también invierten fuera (profundidad/sofisticación financiera).
+- **Estructura productiva moderna:** Producción y Servicios se correlacionan positivamente (alta–moderada), además de que Recaudación de impuestos y Ahorro también tienden a correlacionar positivamente con Producción y Servicios. Lo anterior puede conducir a que hay un núcleo de desarrollo interno (mayor producción y terciarización) asociado a mejor base fiscal y mayor ahorro.
+- **Agricultura inverso a producción y servicios:** mayor peso agrícola se asocia con menor capacidad fiscal y menor terciarización, actuando como indicador inverso de modernización.
+- **Remesas:** tiene correlaciones bajas con la mayoría de variables, por lo que estas pueden capturar una dinámica específica (migración/ingreso externo de hogares) poco alineada con los ejes de comercio, capital y estructura productiva.
+
+## **2. Análisis factorial múltiple**
+```{r modelo, echo=FALSE, warning=FALSE}
+BaseDUAL = df_clean %>%
+  dplyr::select(
+    Region,
+    Año,
+    Agricultura,
+    Gastos,
+    Produccion,
+    Exportaciones,
+    Importaciones,
+    Remesas,
+    Servicios,
+    Recaudacion_Impuestos,
+    Inversion_Extranjera_Entrada,
+    Inversion_Extranjera_Salida,
+    Ahorro,
+    Gastos_Militares
+  )
+
+# Aplicar análisis multifactorial
+res.dmfa = DMFA(
+  BaseDUAL,
+  num.fact = 2,
+  quali.sup = 1,
+  graph = FALSE
+)
+```
+
+### **Varianza explicada y contribuciones de las variables por dimensión**
+
+A continuación se muestran las dimensiones junto a sus porcentajes de cada variable:
+```{r eigenvalues, echo=FALSE, warning=FALSE, fig.align='center'}
+eig = as.data.frame(res.dmfa$eig)
+eig$Dim = seq_len(nrow(eig))
+eig$Dim = factor(paste0("Dim ", eig$Dim),
+                 levels = paste0("Dim ", eig$Dim))
+
+# Calcular varianza acumulada
+eig$acumulada <- cumsum(eig$`percentage of variance`)
+
+ggplot(eig, aes(x = Dim)) +
+  # Barras de porcentaje explicado
+  geom_col(aes(y = `percentage of variance`), fill = "#2C7FB8", width = 0.7) +
+  # Etiquetas sobre las barras
+  geom_text(aes(y = `percentage of variance`, 
+                label = paste0(round(`percentage of variance`, 1), "%")),
+            vjust = -0.5, size = 3.3) +
+  # Línea de varianza acumulada
+  geom_line(aes(y = acumulada, group = 1), color = "red", size = 1) +
+  geom_point(aes(y = acumulada), color = "red", size = 2) +
+  geom_text(aes(y = acumulada, 
+                label = paste0(round(acumulada, 1), "%")), 
+            vjust = -1, color = "red", size = 3.2) +
+  # Escala y ejes
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
+  labs(
+    title = "Porcentaje de varianza explicada y acumulada",
+    x = "Dimensión",
+    y = "Porcentaje"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+```
+
+```{r contribuciones, fig.width=8, echo=FALSE, warning=FALSE, dpi=150, fig.align='center'}
+# Contribución
+coords = as.data.frame(res.dmfa$var$coord)
+dims_plot = names(coords)
+coords$Variable = rownames(coords)
+
+coord_long = coords %>%
+  pivot_longer(cols = dims_plot, names_to = "Dim", values_to = "Carga") %>%
+  mutate(Signo = if_else(Carga >= 0, "Positivo", "Negativo"))
+
+ggplot(coord_long, aes(x = Carga, y = Variable, fill = Signo)) +
+  geom_col(width = 0.8, alpha = 0.95) +
+  facet_wrap(~ Dim, scales = "free_y") +
+  scale_fill_manual(values = c("Positivo" = "#2E8B57", "Negativo" = "#D73027")) + # verde/rojo
+  labs(
+    title = "Cargas por variable y dimensión",
+    x = "Carga (coordenada en la dimensión)",
+    y = "Variable",
+    fill = ""
+  ) +
+  theme_light() +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(hjust = 0.5, face = "bold") # centrado y en negrilla
+  )
+```
+
+```{r analisis_contribuciones, fig.width=8, echo=FALSE, warning=FALSE, dpi=150, fig.align='center'}
+# Creación del data frame con los hallazgos e interpretación de las cuatro dimensiones principales.
+#-----------------------------------------------
+analisis_dmfa_extendido = data.frame(
+  Componente = c(
+    "Dimensión 1",
+    "Dimensión 2",
+    "Dimensión 3",
+    "Dimensión 4"
+  ),
+  Hallazgos_Clave = c(
+    "Correlación POSITIVA fuerte con: Servicios, Recaudación_Impuestos, Gastos, Exportaciones, Importaciones.\nCorrelación NEGATIVA fuerte con: Agricultura.\n\nConclusión: Contrasta **economías avanzadas** (Servicios/Fiscalidad alta) vs. **economías primarias** (Agricultura).",
+    "Correlación POSITIVA fuerte con: Inversión Extranjera (Entrada/Salida).\n\nConclusión: Captura el **dinamismo de los flujos de capital internacional**, diferenciando economías según su rol como receptoras/emisoras de inversión.",
+    "Correlación POSITIVA fuerte con: Ahorro y Producción.\nCorrelación NEGATIVA moderada con: Servicios.\n\nConclusión: Relacionado con la **disciplina fiscal** y la capacidad de generar riqueza interna vía ahorro y producción.",
+    "Correlación POSITIVA fuerte con: Remesas.\nCorrelación NEGATIVA fuerte con: Gastos Militares.\n\nConclusión: Captura factores de **ingreso social externo** (Remesas) frente a **prioridades de seguridad/estratégicas** (Gasto Militar)."
+  ),
+  Nombre_Propuesto = c(
+    "Eje de Desarrollo y Modernización Económica",
+    "Eje de Flujos de Capital Internacional",
+    "Eje de Ahorro Interno y Producción",
+    "Eje de Vulnerabilidad Externa (Remesas vs. Seguridad)"
+  ),
+  Significado_Implicacion = c(
+    "Define el nivel de modernización y riqueza. Separa las economías avanzadas (Servicios, alta base fiscal y comercial) de las economías primarias (Agricultura). Es el eje de posicionamiento estructural.",
+    # Lo que estaba en Dim 3
+    "Captura la capacidad de una economía para participar en el flujo bidireccional de la Inversión Extranjera Directa (FDI). Indica sofisticación financiera y apertura a los mercados de capitales.",
+    # Lo que estaba en Dim 2
+    "Indica países con capacidad de generar riqueza interna vía ahorro y producción.",
+    "Separa países con alta prioridad en Gasto Militar (Riesgo Geopolítico) de aquellos con alta dependencia de Remesas (Vulnerabilidad Socio-Financiera). Es un eje de flujos estratégicos/sociales."
+  ),
+  Varianza_Explicada = c(
+    "Aprox. 24.2% (Eje principal)",
+    "Aprox. 15.6% (Segundo eje)",
+    "Aprox. 12.7%",
+    "Aprox. 10.1%"
+  )
+)
+
+#----------------------------------------------------------------
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_dmfa_extendido,
+      format = "html",
+      align = "l",
+      col.names = c("Dimensión", "Hallazgos Clave", "Nombre Propuesto", "Significado e Implicación", "Varianza Explicada"),
+      caption = "Interpretación Detallada de los Factores Latentes del DMFA") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Ajuste el ancho para que el texto de las implicaciones se vea mejor
+  kableExtra::column_spec(2, width = "25em") %>%
+  kableExtra::column_spec(4, width = "35em")
+```
+
+En total, las cuatro dimensiones seleccionadas explican el aproximandamente el **62.7% del total**.
+
+### **Análisis por individuo (países)**
+```{r analisis_paises, echo=FALSE, warning=FALSE, fig.align='center'}
+# Muestra a los individuos (países) en el plano factorial.
+plot.DMFA(res.dmfa, choix="ind",invisible="quali", label="none", new.plot=TRUE)
+```
+
+```{r analisis_hallazgos_paises, echo=FALSE, warning=FALSE, fig.align='center'}
+# Creación del data frame con el análisis de los cuadrantes y patrones regionales.
+analisis_cuadrantes = data.frame(
+  Cuadrante = c(
+    "Superior Izquierdo",
+    "Superior Derecho",
+    "Inferior Derecho",
+    "Inferior Izquierdo"
+  ),
+  Posicion_Dim1 = c(
+    "Baja (Negativa)",
+    "Alta (Positiva)",
+    "Alta (Positiva)",
+    "Baja (Negativa)"
+  ),
+  Posicion_Dim2 = c(
+    "Alta (Positiva)",
+    "Alta (Positiva)",
+    "Baja (Negativa)",
+    "Baja (Negativa)"
+  ),
+  Regiones_Típicas = c(
+    "África Subsahariana, Latinoamérica (Parcial), Asia Central/Sur",
+    "Oriente Medio y Norte de África (Parcial), Europa del Este (Específico)",
+    "Europa Occidental, Norteamérica, Asia del Este/Pacífico",
+    "Economías primarias sin dependencia de remesas significativas"
+  ),
+  # Texto sin formato de negrita (sin **)
+  Significado_del_Patrón = c(
+    "Vulnerabilidad Estructural: Bajo desarrollo (alta Agricultura) y fuerte dependencia de Remesas. Sus trayectorias muestran la lucha por salir del atraso estructural.",
+    "Riesgo Estratégico: Países con alto desarrollo o recursos que priorizan el Gasto Militar y/o experimentan fuertes flujos externos (Remesas o Inversión Volátil).",
+    "Modernización y Estabilidad (Liderazgo Global): El polo de máximo desarrollo (Servicios, Comercio, Fiscalidad) con baja dependencia de Remesas/Riesgo. Trayectorias cortas y estables (baja dispersión).",
+    "Aislamiento/Estructura Simple: Bajo desarrollo (Agricultura alta) sin las influencias externas de Remesas o de Gasto Militar. Es el grupo menos poblado y de menor influencia global."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_cuadrantes,
+      format = "html",
+      align = "l",
+      col.names = c("Cuadrante", "Posición Dim. 1 (Desarrollo)", "Posición Dim. 2 (Vulnerabilidad)", "Regiones Típicas", "Significado del Patrón (Cluster Económico)"),
+      caption = "Análisis de Agrupamiento por Cuadrantes en el Plano Factorial (Dim. 1 vs. Dim. 2)") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Ajuste el ancho para que el texto se vea mejor
+  kableExtra::column_spec(5, width = "35em")
+```
+
+### **Análisis por año**
+```{r analisis_2019, echo=FALSE, warning=FALSE, fig.align='center'}
+group_vars1 = as.data.frame(res.dmfa$var.partiel$Gr2019)
+group_vars1$Variable = rownames(group_vars1)
+group_vars1$Año = "2019"
+
+group_vars2 = as.data.frame(res.dmfa$var.partiel$Gr2020)
+group_vars2$Variable = rownames(group_vars2)
+group_vars2$Año = "2020"
+
+group_vars3 = as.data.frame(res.dmfa$var.partiel$Gr2021)
+group_vars3$Variable = rownames(group_vars3)
+group_vars3$Año = "2021"
+
+group_vars4 = as.data.frame(res.dmfa$var.partiel$Gr2022)
+group_vars4$Variable = rownames(group_vars4)
+group_vars4$Año = "2022"
+
+group_vars5 = as.data.frame(res.dmfa$var.partiel$Gr2023)
+group_vars5$Variable = rownames(group_vars5)
+group_vars5$Año = "2023"
+
+lista_dfs = list(group_vars1, group_vars2, group_vars3, group_vars4, group_vars5)
+group_vars = bind_rows(lista_dfs)
+
+# Función para generar puntos de una circunferencia
+circle = function(radio, n = 100) {
+  theta <- seq(0, 2*pi, length.out = n)
+  data.frame(
+    x = radio * cos(theta),
+    y = radio * sin(theta),
+    r = radio
+  )
+}
+
+# Crear circunferencias con radios desde 0.2 hasta 1.2
+radios = seq(0.2, 1.0, by = 0.2)
+circunferencias = do.call(rbind, lapply(radios, circle))
+
+group_vars_filt = group_vars %>%
+  filter(Año == "2019")
+
+ggplot(group_vars_filt, aes(x = Dim.1, y = Dim.2, color = Variable)) +
+  geom_point(size = 3) +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), 
+            color = "gray85", inherit.aes = FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
+  theme_light() +
+  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2019",
+       color = "Variables") +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(hjust = 0.5, face = "bold")  # Centrado y en negrilla
+  )
+
+```
+
+```{r hallazgos_2019, echo=FALSE, warning=FALSE, fig.align='center'}
+# Creación del data frame con el análisis de las variables en 2019.
+analisis_vars_2019 = data.frame(
+  Eje_Patron = c(
+    "Dimensión 1: Polo Positivo",
+    "Dimensión 1: Polo Negativo",
+    "Dimensión 2: Polo Positivo (Riesgo/Estrategia)",
+    "Flujos de Capital (Inversiones)"
+  ),
+  Variables_Clave = c(
+    "Servicios, Recaudacion_Impuestos, Importaciones, Exportaciones, Produccion, Gastos, Ahorro",
+    "Agricultura",
+    "Gastos_Militares, Remesas",
+    "Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida"
+  ),
+  Proyeccion_Fuerza = c(
+    "Correlación muy fuerte (cerca del radio 1.0)",
+    "Correlación muy fuerte (cerca del radio -1.0)",
+    "Positivas, con posiciones divergentes en Dim. 1",
+    "Correlación alta en Dim. 1, baja en Dim. 2"
+  ),
+  Hallazgo_Clave = c(
+    "La principal diferenciación económica en 2019 era la Sofisticación: alto peso de servicios y comercio, y una base fiscal sólida.",
+    "Confirma la dicotomía Desarrollo vs. Primario, al oponerse directamente a todas las variables de modernización en Dim. 1.",
+    "El Riesgo Estratégico (Gasto Militar, Cuadrante Superior Derecho) y la Dependencia Social (Remesas, Cuadrante Superior Izquierdo) son los principales factores laterales de diferenciación.",
+    "Los flujos de inversión extranjera se regían principalmente por el tamaño y la sofisticación del mercado (correlación con Dim. 1), y no eran el principal motor de la vulnerabilidad (Dim. 2)."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_vars_2019,
+      format = "html",
+      align = "l",
+      col.names = c("Eje/Patrón", "Variables Clave", "Proyección (Fuerza de Carga)", "Hallazgo Clave (Contexto 2019)"),
+      caption = "Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2019") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Ajuste el ancho para que el texto se vea mejor
+  kableExtra::column_spec(4, width = "35em")
+```
+
+```{r analisis_2020, echo=FALSE, warning=FALSE, fig.align='center'}
+group_vars_filt = group_vars %>%
+  filter(Año == "2020")
+
+ggplot(group_vars_filt, aes(x=Dim.1, y=Dim.2, color = Variable)) +
+  geom_point(size = 3) +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), 
+            color = "gray85", inherit.aes = FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
+  theme_light() +
+    labs(title = "Biplot entre Dimensiones 1 y 2 por año 2020",
+       color = "Variables") +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(hjust = 0.5, face = "bold")  # Centrado y en negrilla
+  )
+```
+
+```{r hallazgos_2020, echo=FALSE, warning=FALSE, fig.align='center'}
+# Creación del data frame con el análisis de las variables en 2020.
+analisis_vars_2020 = data.frame(
+  Eje_Patron = c(
+    "Dimensión 1: Estabilidad Estructural",
+    "Dimensión 2: Gasto y Crisis",
+    "Flujos de Capital (Inversiones)",
+    "Remesas (Resiliencia Social)"
+  ),
+  Variables_Clave = c(
+    "Servicios, Produccion, Importaciones, Exportaciones, Agricultura",
+    "Gastos",
+    "Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida",
+    "Remesas"
+  ),
+  Cambio_vs_2019 = c(
+    "Posición relativa sin cambios. Alta fuerza.",
+    "Desplazamiento fuerte hacia Dim. 2 (arriba)",
+    "Desplazamiento hacia el centro (origen)",
+    "Mantiene fuerte carga positiva en Dim. 2"
+  ),
+  Hallazgo_Clave = c(
+    "El factor fundamental de **Desarrollo vs. Primario** se mantiene inmutable a pesar del shock por la pandemia, confirmando la estabilidad de la estructura económica base.",
+    "El **Gasto Público** se disocia de su correlación 'normal' con el desarrollo (Dim. 1) para alinearse con la gestión de la crisis, funcionando como una variable de **respuesta fiscal**.",
+    "Ambas inversiones se vuelven **menos correlacionadas** con los ejes principales. Esto refleja la **paralización de los flujos** transfronterizos debido a la incertidumbre y el riesgo global.",
+    "Las Remesas se confirman como una **fuente crucial de resiliencia** en países vulnerables. Su fuerza en Dim. 2 subraya la importancia de la diáspora en la mitigación del impacto de la crisis."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_vars_2020,
+      format = "html",
+      align = "l",
+      col.names = c("Eje/Patrón", "Variables Clave", "Cambio vs. 2019", "Hallazgo Clave (Efecto de la Crisis en 2020)"),
+      caption = "Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2020") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Ajuste el ancho para que el texto se vea mejor
+  kableExtra::column_spec(4, width = "35em")
+```
+
+```{r analisis_2021, echo=FALSE, warning=FALSE, fig.align='center'}
+group_vars_filt = group_vars %>%
+  filter(Año == "2021")
+
+ggplot(group_vars_filt, aes(x = Dim.1, y = Dim.2, color = Variable)) +
+  geom_point(size = 3) +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), 
+            color = "gray85", inherit.aes = FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
+  theme_light() +
+  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2021",
+       color = "Variables") +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(hjust = 0.5, face = "bold")  # Centrado y en negrilla
+  )
+
+```
+
+```{r hallazgos_2021, echo=FALSE, warning=FALSE, fig.align='center'}
+# Creación del data frame con el análisis de las variables en 2021.
+analisis_vars_2021 = data.frame(
+  Eje_Patron = c(
+    "Dimensión 1: Desarrollo Estructural",
+    "Política Fiscal (Gasto)",
+    "Flujos de Capital (Inversiones)",
+    "Vulnerabilidad Estructural (Remesas)"
+  ),
+  Variables_Clave = c(
+    "Servicios, Produccion, Comercio, Fiscalidad, Ahorro, Agricultura",
+    "Gastos",
+    "Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida",
+    "Remesas"
+  ),
+  Cambio_vs_2020 = c(
+    "Agrupamiento más compacto y fuerte en Dim. 1.",
+    "Regreso a la posición de 2019 (cerca de Dim. 1).",
+    "Recuperación de la fuerza, alejándose del origen.",
+    "Mantiene fuerte carga positiva en Dim. 2 (inmutable)."
+  ),
+  Hallazgo_Clave = c(
+    "La recuperación post-crisis reforzó la correlación entre variables de desarrollo. La diferenciación principal sigue siendo la estructura (Servicios/Industrial vs. Agrícola).",
+    "El Gasto Público se desvincula de la gestión de la crisis (Dim. 2) y vuelve a correlacionarse con el tamaño y la capacidad fiscal de la economía (Dim. 1).",
+    "El retorno de la confianza global impulsa la recuperación de los flujos de inversión, que vuelven a ser atraídos por los mercados más grandes y desarrollados (correlación con Dim. 1).",
+    "Se consolida como un rasgo estructural, no solo una reacción transitoria a la crisis. La Dim. 2 se mantiene como el eje que captura la dependencia de los ingresos externos de la diáspora."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_vars_2021,
+      format = "html",
+      align = "l",
+      col.names = c("Eje/Patrón", "Variables Clave", "Cambio vs. 2020 (Recuperación)", "Hallazgo Clave (Contexto 2021)"),
+      caption = "Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2021") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Ajuste el ancho para que el texto se vea mejor
+  kableExtra::column_spec(4, width = "35em")
+```
+
+```{r analisis_2022, echo=FALSE, warning=FALSE, fig.align='center'}
+group_vars_filt = group_vars %>%
+  filter(Año == "2022")
+
+ggplot(group_vars_filt, aes(x = Dim.1, y = Dim.2, color = Variable)) +
+  geom_point(size = 3) +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), 
+            color = "gray85", inherit.aes = FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
+  theme_light() +
+  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2022",
+       color = "Variables") +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(hjust = 0.5, face = "bold")  # Centrado y en negrilla
+  )
+
+```
+
+```{r hallazgos_2022, echo=FALSE, warning=FALSE, fig.align='center'}
+# Creación del data frame con el análisis de las variables en 2022.
+analisis_vars_2022 = data.frame(
+  Eje_Patron = c(
+    "Dimensión 1: Estabilidad del Desarrollo",
+    "Gasto Público (Normalización)",
+    "Flujos de Capital (Recuperación)",
+    "Dimensión 2: Reforzamiento del Riesgo"
+  ),
+  Variables_Clave = c(
+    "Servicios, Produccion, Comercio, Fiscalidad, Agricultura",
+    "Gastos",
+    "Inversion_Extranjera_Entrada, Inversion_Extranjera_Salida",
+    "Gastos_Militares, Remesas"
+  ),
+  Cambio_vs_2020 = c(
+    "Estructura inmutable (alta fuerza).",
+    "Retorno a la correlación con Dim. 1 (desplazamiento hacia abajo).",
+    "Fuerza renovada y alejamiento del centro.",
+    "Gastos Militares más prominente. Remesas persistentes."
+  ),
+  Hallazgo_Clave = c(
+    "El factor de diferenciación principal sigue siendo la estructura. La brecha entre economías de servicios/industrial y primaria es estructuralmente resistente a los shocks.",
+    "El Gasto vuelve a ser un indicador del tamaño y la capacidad fiscal de la economía (Dim. 1), desvinculándose de la política de respuesta de emergencia de la pandemia (Dim. 2).",
+    "La confianza se recupera totalmente; los flujos de inversión vuelven a estar impulsados por el tamaño y la estabilidad del mercado. Se recuperan los patrones pre-crisis.",
+    "El Gasto Militar se solidifica como un factor clave de diferenciación en el contexto de tensión geopolítica (guerra en Ucrania). Las Remesas mantienen su rol como dependencia estructural."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_vars_2022,
+      format = "html",
+      align = "l",
+      col.names = c("Eje/Patrón", "Variables Clave", "Cambio vs. 2021 (Post-Crisis)", "Hallazgo Clave (Contexto 2022)"),
+      caption = "Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2022") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Ajuste el ancho para que el texto se vea mejor
+  kableExtra::column_spec(4, width = "35em")
+```
+
+```{r analisis_2023, echo=FALSE, warning=FALSE, fig.align='center'}
+group_vars_filt = group_vars %>%
+  filter(Año == "2023")
+
+ggplot(group_vars_filt, aes(x = Dim.1, y = Dim.2, color = Variable)) +
+  geom_point(size = 3) +
+  geom_path(data = circunferencias, aes(x = x, y = y, group = r), 
+            color = "gray85", inherit.aes = FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  coord_cartesian(xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2)) +
+  theme_light() +
+  labs(title = "Biplot entre Dimensiones 1 y 2 por año 2023",
+       color = "Variables") +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(hjust = 0.5, face = "bold")  # Centrado y en negrilla
+  )
+
+```
+
+```{r hallazgos_2023, echo=FALSE, warning=FALSE, fig.align='center'}
+# Creación del data frame con el análisis de las variables en 2023.
+analisis_vars_2023 = data.frame(
+  Eje_Patron = c(
+    "Dimensión 1: Desarrollo Consolidado",
+    "Normalización de la Política y Finanzas",
+    "Dimensión 2: Riesgo Geopolítico (Persistente)",
+    "Dimensión 2: Dependencia Social (Estructural)"
+  ),
+  Variables_Clave = c(
+    "Servicios, Produccion, Comercio, Fiscalidad, Agricultura",
+    "Gastos, Inversion_Extranjera_Entrada/Salida",
+    "Gastos_Militares",
+    "Remesas"
+  ),
+  Evolucion_Final = c(
+    "Máxima fuerza y compactación en Dim. 1.",
+    "Completamente reintegradas al clúster de Dim. 1.",
+    "Mantiene una fuerte carga positiva en Dim. 2 (Reforzada vs. 2019).",
+    "Mantiene una carga inmutable y fuerte en Dim. 2 (Superior Izquierdo)."
+  ),
+  Hallazgo_Clave = c(
+    "El factor principal de diferenciación es, de nuevo, la **estructura económica básica**. El sistema ha regresado a un estado donde la capacidad productiva define el desarrollo (Dim. 1).",
+    "Las variables de Gasto e Inversión han dejado de ser indicadores de 'respuesta a la crisis' (Dim. 2) y ahora se rigen por la **capacidad y tamaño de la economía** (Dim. 1).",
+    "El Gasto Militar se solidifica como un factor **estructural de la nueva era geopolítica**. Los países desarrollados se diferencian por el peso estratégico de su defensa.",
+    "Las Remesas se confirman como un **rasgo estructural, no transitorio**. La Dimensión 2 se convierte en el eje persistente que captura la vulnerabilidad y la dependencia de los ingresos de la diáspora."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_vars_2023,
+      format = "html",
+      align = "l",
+      col.names = c("Eje/Patrón", "Variables Clave", "Evolución Final (2023)", "Hallazgo Clave (Nuevo Equilibrio)"),
+      caption = "Análisis de Correlaciones de Variables en el Plano Factorial (Dim. 1 vs. Dim. 2) - Año 2023") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Ajuste el ancho para que el texto se vea mejor
+  kableExtra::column_spec(4, width = "35em")
+```
+
+### **Análisis por región**
+
+```{r modelo_regiones_contr, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+region_list = c(
+    "África - África Subsahariana",
+    "África - Norte de África",
+    "América - Latinoamérica y el Caribe",
+    "América - Norteamérica",
+    "Asia - Asia Central y del Sur",
+    "Asia - Oriente Medio",
+    "Asia del Este, Pacífico y Oceanía",
+    "Europa - Europa del Este",
+    "Europa - Europa Occidental"
+  )
+regions = as.data.frame(res.dmfa$quali.sup$coord)
+regions$Region = rownames(regions)
+
+regions_filt = regions %>%
+  filter(Region == region_list)
+
+regions_filt = regions_filt %>%
+  pivot_longer(cols = dims_plot, names_to = "Dim", values_to = "Carga") %>%
+  mutate(Signo = if_else(Carga >= 0, "Positivo", "Negativo"))
+
+ggplot(regions_filt, aes(x = Carga, y = Region, fill = Signo)) +
+  geom_col(width = 0.8, alpha = 0.95) +
+  facet_wrap(~ Dim, scales = "free_y") +
+  scale_fill_manual(values = c("Positivo" = "#2E8B57", "Negativo" = "#D73027")) + # verde/rojo
+  labs(
+    title = "Cargas por región y dimensión",
+    x = "Carga (coordenada en la dimensión)",
+    y = "Variable",
+    fill = ""
+  ) +
+  theme_light() +
+  theme(legend.position = "none")
+```
+
+```{r hallazgos_modelo_regiones_contr, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+# Creación del data frame con el análisis de las coordenadas regionales.
+analisis_regiones = data.frame(
+  Región = c(
+    "Europa - Europa Occidental",
+    "América - Norteamérica",
+    "Asia del Este, Pacífico y Oceanía",
+    "América - Latinoamérica y el Caribe",
+    "África Subsahariana / Asia Central y del Sur",
+    "Asia - Oriente Medio / África - Norte de África",
+    "Europa - Europa del Este" # Asumiendo una posición en el gráfico
+  ),
+  Dim_1_Desarrollo = c(
+    "Muy Positiva (Extremo Derecha)",
+    "Muy Positiva (Extremo Derecha)",
+    "Positiva",
+    "Cercana a Cero/Levemente Negativa",
+    "Muy Negativa (Extremo Izquierda)",
+    "Intermedia / Baja",
+    "Intermedia / Baja"
+  ),
+  Dim_2_Vulnerabilidad = c(
+    "Negativa o Baja",
+    "Negativa o Baja",
+    "Negativa o Baja",
+    "Muy Positiva",
+    "Positiva",
+    "Positiva",
+    "Positiva o Cero"
+  ),
+  Implicacion_Estructural = c(
+    "Polo de **máxima sofisticación** (Servicios, Comercio, Fiscalidad). Baja dependencia de factores de riesgo Dim. 2.",
+    "Similar a Europa, consolidando el clúster de **economías avanzadas y estables** en el tiempo.",
+    "Fuerte desarrollo (Dim. 1) combinado con **alta autonomía financiera** (Dim. 2 Negativa), indicando un modelo de crecimiento estable.",
+    "Posición de **dependencia social más alta**. Su economía mixta se distingue estructuralmente por el rol clave de las **Remesas**.",
+    "Polo de **economías primarias** (alta Agricultura). La Dim. 2 confirma su **vulnerabilidad estructural** y dependencia de Remesas.",
+    "La Dim. 2 se debe a la influencia de **Gastos Militares** y Remesas. Su Dim. 1 intermedia refleja la heterogeneidad productiva.",
+    "Región de **transición**; desarrollo intermedio y vulnerabilidad variable, influenciada por su cercanía a factores geopolíticos (Gasto Militar)."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_regiones,
+      format = "html",
+      align = "l",
+      col.names = c("Región", "Dim. 1 (Desarrollo)", "Dim. 2 (Vulnerabilidad/Riesgo)", "Implicación Estructural y Hallazgo Clave"),
+      caption = "Coordenadas de las Regiones en el Plano Factorial (Dim. 1 vs. Dim. 2) - DMFA") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Agrupación de columnas por Dimensión para mejor lectura
+  kableExtra::add_header_above(c(" " = 1, "Eje de Posición Estructural" = 2, " " = 1)) %>%
+  kableExtra::column_spec(4, width = "35em")
+```
+
+***Conclusión Clave:***
+El Análisis de la Proyección de Regiones confirma la alta capacidad discriminatoria del DMFA:
+
+- ***Segregación Horizontal (Dim. 1):*** Existe una clara brecha de desarrollo que separa a las economías maduras y sofisticadas (Europa, Norteamérica) de las economías primarias (África Subsahariana, Asia Central).
+
+- ***Segregación Vertical (Dim. 2):*** El eje de vulnerabilidad aísla a las regiones con alta dependencia de flujos sociales (Remesas) (Latinoamérica, África) de aquellas con autonomía financiera (Asia del Este, Europa Occidental).
+
+```{r analisis_region, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+# Visualiza las modalidades de la variable cualitativa.
+plot.DMFA(res.dmfa, choix="quali",invisible="quali", label="none")
+
+```
+
+
+***Hallazgos:***
+
+***Hallazgos: Clúster de Desarrollo y Estabilidad (Inferior Derecho)***
+```{r analisis_region_1, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+# Creación del data frame enfocado únicamente en el Clúster de Desarrollo y Estabilidad
+analisis_cluster_desarrollo = data.frame(
+  Región = c(
+    "Europa - Europa Occidental",
+    "América - Norteamérica",
+    "Asia del Este, Pacífico y Oceanía"
+  ),
+  Dim_1_Desarrollo = c(
+    "Muy Positiva (Extremo Derecha)",
+    "Muy Positiva (Extremo Derecha)",
+    "Positiva Alta"
+  ),
+  Dim_2_Vulnerabilidad = c(
+    "Negativa o Baja",
+    "Negativa o Baja",
+    "Negativa"
+  ),
+  Hallazgo_Estructural = c(
+    "Representa el **Polo de máxima sofisticación** (Servicios, Comercio, Fiscalidad). Su baja carga en Dim. 2 indica **autonomía y estabilidad**.",
+    "Centroide muy cercano a Europa Occidental, consolidando el perfil de **economía global líder** y la mayor estabilidad estructural del mundo.",
+    "Alto desarrollo (Dim. 1) combinado con la **mayor independencia financiera** (Dim. 2 Negativa más marcada), sugiriendo un modelo de crecimiento basado en el **ahorro** y la autosuficiencia."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_cluster_desarrollo,
+      format = "html",
+      align = "l",
+      col.names = c("Región", "Carga Dim. 1 (Desarrollo)", "Carga Dim. 2 (Vulnerabilidad)", "Análisis del Centroide (Tipología Estructural)"),
+      caption = "Análisis de los Centroides: Clúster de Desarrollo y Estabilidad (Dim. 1 Positiva, Dim. 2 Negativa)") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Agrupación de columnas por Dimensión para mejor lectura
+  kableExtra::add_header_above(c(" " = 1, "Posición en el Cuadrante Inferior Derecho" = 2, " " = 1)) %>%
+  kableExtra::column_spec(4, width = "40em")
+```
+
+***Hallazgos: Clúster de Vulnerabilidad Estructural (Superior Izquierdo)***
+
+```{r analisis_region_2, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+# Creación del data frame enfocado únicamente en el Clúster de Vulnerabilidad Estructural
+analisis_cluster_vulnerabilidad = data.frame(
+  Región = c(
+    "África Subsahariana / Asia Central y del Sur",
+    "América - Latinoamérica y el Caribe",
+    "Asia - Oriente Medio / África - Norte de África"
+  ),
+  Dim_1_Desarrollo = c(
+    "Muy Negativa (Extremo Izquierda)",
+    "Cercana a Cero/Levemente Negativa",
+    "Intermedia / Baja"
+  ),
+  Dim_2_Vulnerabilidad = c(
+    "Positiva Alta",
+    "Muy Positiva (Extremo Superior)",
+    "Positiva"
+  ),
+  Hallazgo_Estructural = c(
+    "Define el polo de **economías primarias**. Su alta carga en Dim. 2 confirma la **dependencia estructural de las Remesas** y la baja sofisticación productiva.",
+    "El centroide más alto en Dim. 2. Su posición destaca el **rol dominante de las remesas** como el principal rasgo estructural, a pesar de tener una base productiva más diversificada que África.",
+    "Su Dim. 2 está impulsada por el **Gasto Militar** (Riesgo Estratégico) y Remesas. Su Dim. 1 heterogénea refleja la mezcla de países productores de recursos y en conflicto."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_cluster_vulnerabilidad,
+      format = "html",
+      align = "l",
+      col.names = c("Región", "Carga Dim. 1 (Desarrollo)", "Carga Dim. 2 (Vulnerabilidad)", "Análisis del Centroide (Tipología Estructural)"),
+      caption = "Análisis de los Centroides: Clúster de Vulnerabilidad Estructural (Dim. 1 Negativa, Dim. 2 Positiva)") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Agrupación de columnas por Dimensión para mejor lectura
+  kableExtra::add_header_above(c(" " = 1, "Posición en el Cuadrante Superior Izquierdo" = 2, " " = 1)) %>%
+  kableExtra::column_spec(4, width = "40em")
+```
+
+***Hallazgos: Clúster de Transición y Riesgo Estratégico***
+
+```{r analisis_region_3, echo=FALSE, warning=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+# Creación del data frame enfocado únicamente en el Clúster de Transición y Riesgo Estratégico
+analisis_cluster_transicion = data.frame(
+  Región = c(
+    "Asia - Oriente Medio / África - Norte de África",
+    "Europa - Europa del Este"
+  ),
+  Dim_1_Desarrollo = c(
+    "Intermedia / Baja",
+    "Intermedia / Baja (Cercana a Cero)"
+  ),
+  Dim_2_Vulnerabilidad = c(
+    "Positiva",
+    "Positiva o Cercana a Cero"
+  ),
+  Hallazgo_Estructural = c(
+    "Su centroide está dominado por la **Dim. 2 (Gastos Militares y Remesas)**. La Dim. 1 intermedia refleja una **alta heterogeneidad** de países productores de recursos vs. países en conflicto.",
+    "Región **bisagra o de transición**. Muestra un desarrollo intermedio y una vulnerabilidad variable. Su posición es altamente sensible a los **factores geopolíticos** de Europa (Dim. 2)."
+  )
+)
+
+# Generación de la tabla usando kable y kableExtra
+knitr::kable(analisis_cluster_transicion,
+      format = "html",
+      align = "l",
+      col.names = c("Región", "Carga Dim. 1 (Desarrollo)", "Carga Dim. 2 (Vulnerabilidad)", "Análisis del Centroide (Tipología Estructural)"),
+      caption = "Análisis de los Centroides: Clúster de Transición y Riesgo Estratégico") %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  # Agrupación de columnas por Dimensión para mejor lectura
+  kableExtra::add_header_above(c(" " = 1, "Posición Intermedia y Estratégica" = 2, " " = 1)) %>%
+  kableExtra::column_spec(4, width = "40em")
+```
+
+***Conclusión sobre la Segregación Regional:***
+La distribución de los centroides valida el modelo DMFA: las regiones se segregan en el plano factorial de manera que reflejan tipologías económicas persistentes a lo largo del tiempo. Las distancias entre los centroides son significativas, lo que subraya la existencia de grandes brechas estructurales entre los bloques globales (e.g., la distancia entre Europa Occidental y África Subsahariana).
+
+## 3. Conclusiones
+- La Dimensión 1 explica el contraste estructural entre economías avanzadas (altos niveles de servicios, comercio exterior y recaudación fiscal) frente a economías primarias (dependientes de la agricultura).  
+- La Dimensión 2 refleja la participación en flujos de inversión extranjera (entrada y salida), diferenciando economías con mayor apertura financiera de aquellas más cerradas.  
+- Las Dimensiones 3 y 4 capturan dinámicas complementarias:  
+  - Disciplina fiscal y ahorro nacional.  
+  - Factores externos como remesas y gasto militar que influyen en la vulnerabilidad socioeconómica.  
+- Los países se agrupan de manera coherente con su nivel de desarrollo:  
+  - Europa y Norteamérica se ubican en el eje de modernización económica.  
+  - Latinoamérica y otras regiones muestran mayor dependencia de remesas y flujos externos.  
+- Se evidencia un patrón de estabilidad en la estructura de los ejes a lo largo de los años, lo que indica consistencia en las trayectorias de desarrollo económico. Sin embargo, se puede ver como el año 2020 hay cierta afectación por la pandemia del COVID-19 y a medida que iba pasando, las economías en las diferentes regiones del planeta se fueron re-ajustando, llegando a patrones similares antes de pandemia o mejorando algunos rubros.
+- El modelo DMFA logra sintetizar aproximadamente el 62-65% de la varianza total con las primeras cuatro dimensiones, lo cual es suficiente para un análisis robusto de trayectorias.
+- La pandemia del COVID-19 tuvo cierta afectación en los páises en general (año 2020). Sin embargo, los resultados permiten evidenciar como las regiones fueron ajustándose a sus patrones "normales" antes de pandemia, e inclusive mejorando cierto aspectos, a medida que se iban recuperando.
+- En conjunto, el análisis permite comparar países, regiones y periodos de tiempo, aportando una visión integral de la evolución de los factores económicos latentes.  
+
+
