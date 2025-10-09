@@ -29,6 +29,7 @@ library(fpp2)
 library(tseries)
 library(gridExtra)
 library(xts)
+library(forecast)
 ```
 
 ## **0. Información general**
@@ -132,8 +133,8 @@ Con base en el gráfico anterior, no hay mucha diferencia entre la mediana y la 
 # Convertir los datos a serie de tiempo
 df_clean = xts(df_clean$Precio_Promedio, order.by = as.Date(df_clean$Fecha))
 
-train = window(df_clean, end = "2024-03-31") # ventana de entrenamiento
-test = window(df_clean, start = "2024-04-01") # ventana de prueba
+train = window(df_clean, end = "2025-03-31") # ventana de entrenamiento
+test = window(df_clean, start = "2025-04-01") # ventana de prueba
 
 autoplot(train)
 ggAcf(train, lag.max=50, main="Función de Autocorrelación (ACF) de los precio de energía (COP/kWh)")
@@ -142,25 +143,20 @@ ggAcf(train, lag.max=50, main="Función de Autocorrelación (ACF) de los precio 
 Con base en el gráfico ACF, se evidencia que la serie de tiempo no es estacionariam ya que las autocorrelaciones son altas y persistentes a lo largos de los retrasos. A continuación, se identificará cuál sería el retraso "óptimo".
 
 ```{r retrasos, echo=FALSE, warning=FALSE}
-p_value = 0.05
+p_value = 0.04
 best_lag = 0
 for (i in c(1:60)) {
   adf_test = adf.test(train, k=i)
   print(adf_test)
-  p = adf_test$p.value
-  if (p > p_value) {
-    best_lag = i
-  }
 }
-
-cat(paste("El lag 'óptimo' es:", best_lag))
-cat("\nA continuación, se presentan los resultados del Dickey-Fuller Test:")
-adf.test(train, k=best_lag)
 ```
 
-```{r diferenciar, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
-diff_precios = diff(train, 7) %>% na.omit()
-autoplot(diff_precios)
+Explicar qué podría ssignificar, y por qué estos valores para la serie de tiempo de precios de energía
+
+### **2.1. Modelamiento**
+```{r diferenciar_1, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
+diff_precios = diff(train) %>% na.omit()
+autoplot(diff_precios, main="Diferenciación de primer orden")
 grid.arrange(ggAcf(diff_precios),
              ggPacf(diff_precios),
              nrow=2,
@@ -170,22 +166,230 @@ grid.arrange(ggAcf(diff_precios),
 adf.test(diff_precios)
 ```
 
-Con base en el ACF y PACF, tenemos que p podría ser 2 y q podría ser 1. A continuación presentamos los análisis. La diferenciación es de primer orden.
+Con base en el ACF y PACF, tenemos que p podría ser de orden 2 y q podría ser orden 7, además de una diferenciación de primer orden. Sin embargo, se logra evidenciar ciertos patrones semanales (cada 7 días o cada 14 días). Por ende, se realiza aplicará una diferenciación estacional (7 días y 30 días) y luego una de primer orden.
 
-```{r modelo1, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
-p = 2
-q = 1
-d = 1
+```{r diferenciar_2, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
+diff_precios = diff(diff(train, 7), 1) %>% na.omit()
+autoplot(diff_precios, main="Diferenciación estacional (7 días) y luego diferenciación del primer orden")
+grid.arrange(ggAcf(diff_precios),
+             ggPacf(diff_precios),
+             nrow=2,
+             ncol=1
+)
 
-#cat(paste("Modelo Arima 1: p =", 1))
-
-
+adf.test(diff_precios)
 ```
+
+Con base en este gráfico, aparentemente el orden de p es 2 y el orden de q es de 2, con una diferenciación de primer orden. A continuación, se analizará la diferenciación estacional de 30 días y luego diferenciación de primer orden.
+
+```{r diferenciar_3, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
+diff_precios = diff(diff(train, 14), 1) %>% na.omit()
+autoplot(diff_precios, main="Diferenciación estacional (30 días) y luego diferenciación del primer orden")
+grid.arrange(ggAcf(diff_precios),
+             ggPacf(diff_precios),
+             nrow=2,
+             ncol=1
+)
+
+adf.test(diff_precios)
+```
+
+Con base en este gráfico, aparentemente el orden de p es 4 y el orden de q es de 3, con una diferenciación de primer orden. Con base en los resultados anteriores, se aplciarán los siguientes modelos:
+
+- Auto-Arima
+- Modelo 1: Arima(2, 1, 2)
+- Modelo 2: Arima(2, 1, 7)
 
 ```{r modelo_auto, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
-auto.arima(train)
-
+modelo_auto = auto.arima(train)
 ```
+
+```{r modelo1, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
+p1 = 2
+d1 = 1
+q1 = 2
+modelo1 = Arima(train, order = c(p1,d1,q1))
+```
+
+```{r modelo2, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
+p2 = 2
+d2 = 1
+q2 = 7
+modelo2 = Arima(train, order = c(p2,d2,q2))
+```
+
+#### **Resumen de los resultados Arima**
+```{r resumen, echo=FALSE, warning=FALSE}
+resumen_df = data.frame(
+  Modelo = c(
+    "Auto-Arima",
+    "Modelo 1",
+    "Modelo 2"
+  ),
+  Orden_p = c(
+    modelo_auto$arma[1],
+    p1,
+    p2
+  ),
+  Orden_d = c(
+    modelo_auto$arma[6],
+    d1,
+    d2
+  ),
+  Orden_q = c(
+    modelo_auto$arma[2],
+    q1,
+    q2
+  ),
+  AIC = c(
+    modelo_auto$aic,
+    modelo1$aic,
+    modelo2$aic
+  ),
+  AICc = c(
+    modelo_auto$aicc,
+    modelo1$aicc,
+    modelo2$aicc
+  ),
+  BIC = c(
+    modelo_auto$bic,
+    modelo1$bic,
+    modelo2$bic
+  )
+)
+
+kable(resumen_df, caption = "Resumen modelos Arima") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+Interpretar
+
+#### **Modelo Sarima**
+```{r parameteros, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
+diff_precios = diff(train) %>% na.omit()
+autoplot(diff_precios, main="Diferenciación de primer orden")
+grid.arrange(ggAcf(diff_precios),
+             ggPacf(diff_precios),
+             nrow=2,
+             ncol=1
+)
+
+adf.test(diff_precios)
+```
+
+Interpretar
+
+```{r sarima1, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
+p_sarima = 2
+d_sarima = 1
+q_sarima = 2
+P_sarima = 2
+D_sarima = 1
+Q_sarima = 2
+
+modelo_sarima = Arima(train, order = c(p_sarima,d_sarima,q_sarima),
+                       seasonal = list(order = c(P_sarima,D_sarima,Q_sarima), period = 7))
+modelo_sarima
+```
+
+Interpretar
+
+#### **Resumen de los resultados totales**
+```{r resumen2, echo=FALSE, warning=FALSE}
+resumen_df = data.frame(
+  Modelo = c(
+    "Auto-ARIMA",
+    "Modelo 1",
+    "Modelo 2",
+    "SARIMA"
+  ),
+  Orden_p = c(
+    modelo_auto$arma[1],
+    p1,
+    p2,
+    p_sarima
+  ),
+  Orden_d = c(
+    modelo_auto$arma[6],
+    d1,
+    d2,
+    d_sarima
+  ),
+  Orden_q = c(
+    modelo_auto$arma[2],
+    q1,
+    q2,
+    q_sarima
+  ),
+  Orden_P = c(
+    0,
+    0,
+    0,
+    P_sarima
+  ),
+  Orden_D = c(
+    0,
+    0,
+    0,
+    D_sarima
+  ),
+  Orden_Q = c(
+    0,
+    0,
+    0,
+    Q_sarima
+  ),
+  AIC = c(
+    modelo_auto$aic,
+    modelo1$aic,
+    modelo2$aic,
+    modelo_sarima$aic
+  ),
+  AICc = c(
+    modelo_auto$aicc,
+    modelo1$aicc,
+    modelo2$aicc,
+    modelo_sarima$aicc
+  ),
+  BIC = c(
+    modelo_auto$bic,
+    modelo1$bic,
+    modelo2$bic,
+    modelo_sarima$bic
+  )
+)
+
+kable(resumen_df, caption = "Resumen modelos ARIMA") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+Interpretar
+
+#### **Evaluación de residuos**
+```{r evaluacion_residuos, echo=FALSE, warning=FALSE}
+checkresiduals(modelo_sarima)
+```
+
+Interpretar
+
+#### **Evaluación de resultados**
+```{r eval_resultados, echo=FALSE, warning=FALSE}
+h = length(test)  # horizonte de pronóstico
+pronostico = forecast(modelo_sarima, h = h)
+
+accuracy(pronostico, test)
+```
+
+#### Generación de pronósticos
+```{r pronmosticos, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
+#Pronostico
+#Gráfico
+modelo2 %>% 
+  forecast(h=7) %>%  # (Realizo 5 pronósticos)
+  autoplot(include=80)   # Gráfico los últimos 80 valores + pronóstico (se puede cambiar el 80)
+```
+
+Interpretar
 
 ## **3. Conclusiones**
 asdasdfasdf
