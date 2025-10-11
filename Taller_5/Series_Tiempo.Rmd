@@ -166,7 +166,7 @@ grid.arrange(ggAcf(diff_precios),
 adf.test(diff_precios)
 ```
 
-Con base en el ACF y PACF, tenemos que p podría ser de orden 2 y q podría ser orden 7, además de una diferenciación de primer orden. Sin embargo, se logra evidenciar ciertos patrones semanales (cada 7 días o cada 14 días). Por ende, se realiza aplicará una diferenciación estacional (7 días y 30 días) y luego una de primer orden.
+Con base en el ACF y PACF, tenemos que p podría ser de orden 2 y q podría ser orden 2, además de una diferenciación de primer orden. Sin embargo, se logra evidenciar ciertos patrones semanales (cada 7 días o cada 28 días). Por ende, se realiza aplicará una diferenciación estacional (7 días y 28 días) y luego una de primer orden.
 
 ```{r diferenciar_2, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
 diff_precios = diff(diff(train, 7), 1) %>% na.omit()
@@ -180,11 +180,11 @@ grid.arrange(ggAcf(diff_precios),
 adf.test(diff_precios)
 ```
 
-Con base en este gráfico, aparentemente el orden de p es 2 y el orden de q es de 2, con una diferenciación de primer orden. A continuación, se analizará la diferenciación estacional de 30 días y luego diferenciación de primer orden.
+Con base en este gráfico, aparentemente el orden de p es 2 y el orden de q es de 2, con una diferenciación de primer orden. A continuación, se analizará la diferenciación estacional de 28 días y luego diferenciación de primer orden.
 
 ```{r diferenciar_3, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
-diff_precios = diff(diff(train, 14), 1) %>% na.omit()
-autoplot(diff_precios, main="Diferenciación estacional (30 días) y luego diferenciación del primer orden")
+diff_precios = diff(diff(train, 28), 1) %>% na.omit()
+autoplot(diff_precios, main="Diferenciación estacional (28 días) y luego diferenciación del primer orden")
 grid.arrange(ggAcf(diff_precios),
              ggPacf(diff_precios),
              nrow=2,
@@ -194,11 +194,11 @@ grid.arrange(ggAcf(diff_precios),
 adf.test(diff_precios)
 ```
 
-Con base en este gráfico, aparentemente el orden de p es 4 y el orden de q es de 3, con una diferenciación de primer orden. Con base en los resultados anteriores, se aplciarán los siguientes modelos:
+Con base en este gráfico, aparentemente el orden de p sigue siendo 2 y el orden de q también es de 2, con una diferenciación de primer orden. Con base en los resultados anteriores, se aplciarán los siguientes modelos:
 
-- Auto-Arima
-- Modelo 1: Arima(2, 1, 2)
-- Modelo 2: Arima(2, 1, 7)
+- Auto-ARIMA
+- Modelo 1: ARIMA(2, 1, 2)
+- Modelo 2: ARIMA(1, 1, 2)
 
 ```{r modelo_auto, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
 modelo_auto = auto.arima(train)
@@ -212,17 +212,17 @@ modelo1 = Arima(train, order = c(p1,d1,q1))
 ```
 
 ```{r modelo2, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
-p2 = 2
+p2 = 1
 d2 = 1
-q2 = 7
+q2 = 2
 modelo2 = Arima(train, order = c(p2,d2,q2))
 ```
 
-#### **Resumen de los resultados Arima**
+#### **Resumen de los resultados ARIMA**
 ```{r resumen, echo=FALSE, warning=FALSE}
 resumen_df = data.frame(
   Modelo = c(
-    "Auto-Arima",
+    "Auto-ARIMA",
     "Modelo 1",
     "Modelo 2"
   ),
@@ -264,7 +264,7 @@ kable(resumen_df, caption = "Resumen modelos Arima") %>%
 
 Interpretar
 
-#### **Modelo Sarima**
+#### **Modelo SARIMA**
 ```{r parameteros, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
 diff_precios = diff(train) %>% na.omit()
 autoplot(diff_precios, main="Diferenciación de primer orden")
@@ -277,19 +277,32 @@ grid.arrange(ggAcf(diff_precios),
 adf.test(diff_precios)
 ```
 
-Interpretar
+Para el cálculo de P y Q, las compnentes estacionales de SARIMA, se evidencia que hay picos significativos en el lag 7 en PACF y en los lags 7 y 28 en el ACF. Lo anterior, nos sugiere. que P es de orden 1 y Q es de orden 1.
 
 ```{r sarima1, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
-p_sarima = 2
-d_sarima = 1
-q_sarima = 2
-P_sarima = 2
-D_sarima = 1
-Q_sarima = 2
+p_sarima1 = 1
+d_sarima1 = 1
+q_sarima1 = 1
+P_sarima1 = 1
+D_sarima1 = 1
+Q_sarima1 = 1
 
-modelo_sarima = Arima(train, order = c(p_sarima,d_sarima,q_sarima),
-                       seasonal = list(order = c(P_sarima,D_sarima,Q_sarima), period = 7))
-modelo_sarima
+modelo_sarima1 = Arima(train, order = c(p_sarima1,d_sarima1,q_sarima1),
+                       seasonal = list(order = c(P_sarima1,D_sarima1,Q_sarima1), period = 7))
+modelo_sarima1
+```
+
+```{r sarima2, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
+p_sarima2 = 2
+d_sarima2 = 1
+q_sarima2 = 2
+P_sarima2 = 1
+D_sarima2 = 1
+Q_sarima2 = 1
+
+modelo_sarima2 = Arima(train, order = c(p_sarima2,d_sarima2,q_sarima2),
+                       seasonal = list(order = c(P_sarima2,D_sarima2,Q_sarima2), period = 7))
+modelo_sarima2
 ```
 
 Interpretar
@@ -301,61 +314,71 @@ resumen_df = data.frame(
     "Auto-ARIMA",
     "Modelo 1",
     "Modelo 2",
-    "SARIMA"
+    "SARIMA 1",
+    "SARIMA 2"
   ),
   Orden_p = c(
     modelo_auto$arma[1],
     p1,
     p2,
-    p_sarima
+    p_sarima1,
+    p_sarima2
   ),
   Orden_d = c(
     modelo_auto$arma[6],
     d1,
     d2,
-    d_sarima
+    d_sarima1,
+    d_sarima2
   ),
   Orden_q = c(
     modelo_auto$arma[2],
     q1,
     q2,
-    q_sarima
+    q_sarima1,
+    q_sarima2
   ),
   Orden_P = c(
     0,
     0,
     0,
-    P_sarima
+    P_sarima1,
+    P_sarima2
   ),
   Orden_D = c(
     0,
     0,
     0,
-    D_sarima
+    D_sarima1,
+    D_sarima2
   ),
   Orden_Q = c(
     0,
     0,
     0,
-    Q_sarima
+    Q_sarima1,
+    Q_sarima2
   ),
   AIC = c(
     modelo_auto$aic,
     modelo1$aic,
     modelo2$aic,
-    modelo_sarima$aic
+    modelo_sarima1$aic,
+    modelo_sarima2$aic
   ),
   AICc = c(
     modelo_auto$aicc,
     modelo1$aicc,
     modelo2$aicc,
-    modelo_sarima$aicc
+    modelo_sarima1$aicc,
+    modelo_sarima2$aicc
   ),
   BIC = c(
     modelo_auto$bic,
     modelo1$bic,
     modelo2$bic,
-    modelo_sarima$bic
+    modelo_sarima1$bic,
+    modelo_sarima2$bic
   )
 )
 
@@ -367,7 +390,7 @@ Interpretar
 
 #### **Evaluación de residuos**
 ```{r evaluacion_residuos, echo=FALSE, warning=FALSE}
-checkresiduals(modelo_sarima)
+checkresiduals(modelo_sarima2)
 ```
 
 Interpretar
@@ -375,18 +398,18 @@ Interpretar
 #### **Evaluación de resultados**
 ```{r eval_resultados, echo=FALSE, warning=FALSE}
 h = length(test)  # horizonte de pronóstico
-pronostico = forecast(modelo_sarima, h = h)
+pronostico = forecast(modelo_sarima2, h = h)
 
 accuracy(pronostico, test)
 ```
 
 #### Generación de pronósticos
-```{r pronmosticos, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
+```{r pronosticos, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
 #Pronostico
 #Gráfico
-modelo2 %>% 
-  forecast(h=7) %>%  # (Realizo 5 pronósticos)
-  autoplot(include=80)   # Gráfico los últimos 80 valores + pronóstico (se puede cambiar el 80)
+modelo_sarima2 %>% 
+  forecast(h=7) %>%  # (Realizo 7 pronósticos)
+  autoplot(include=100)   # Gráfico los últimos 100 valores + pronóstico (se puede cambiar el 80)
 ```
 
 Interpretar

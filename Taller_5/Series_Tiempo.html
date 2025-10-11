@@ -727,7 +727,7 @@ Dickey-Fuller = -16.847, Lag order = 15, p-value = 0.01
 alternative hypothesis: stationary</code></pre>
 </div>
 </div>
-<p>Con base en el ACF y PACF, tenemos que p podría ser de orden 2 y q podría ser orden 7, además de una diferenciación de primer orden. Sin embargo, se logra evidenciar ciertos patrones semanales (cada 7 días o cada 14 días). Por ende, se realiza aplicará una diferenciación estacional (7 días y 30 días) y luego una de primer orden.</p>
+<p>Con base en el ACF y PACF, tenemos que p podría ser de orden 2 y q podría ser orden 2, además de una diferenciación de primer orden. Sin embargo, se logra evidenciar ciertos patrones semanales (cada 7 días o cada 28 días). Por ende, se realiza aplicará una diferenciación estacional (7 días y 28 días) y luego una de primer orden.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -752,7 +752,7 @@ Dickey-Fuller = -22.821, Lag order = 15, p-value = 0.01
 alternative hypothesis: stationary</code></pre>
 </div>
 </div>
-<p>Con base en este gráfico, aparentemente el orden de p es 2 y el orden de q es de 2, con una diferenciación de primer orden. A continuación, se analizará la diferenciación estacional de 30 días y luego diferenciación de primer orden.</p>
+<p>Con base en este gráfico, aparentemente el orden de p es 2 y el orden de q es de 2, con una diferenciación de primer orden. A continuación, se analizará la diferenciación estacional de 28 días y luego diferenciación de primer orden.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -773,18 +773,18 @@ alternative hypothesis: stationary</code></pre>
     Augmented Dickey-Fuller Test
 
 data:  diff_precios
-Dickey-Fuller = -23.606, Lag order = 15, p-value = 0.01
+Dickey-Fuller = -15.86, Lag order = 15, p-value = 0.01
 alternative hypothesis: stationary</code></pre>
 </div>
 </div>
 <p>Con base en este gráfico, aparentemente el orden de p es 4 y el orden de q es de 3, con una diferenciación de primer orden. Con base en los resultados anteriores, se aplciarán los siguientes modelos:</p>
 <ul>
-<li>Auto-Arima</li>
-<li>Modelo 1: Arima(2, 1, 2)</li>
-<li>Modelo 2: Arima(2, 1, 7)</li>
+<li>Auto-ARIMA</li>
+<li>Modelo 1: ARIMA(2, 1, 2)</li>
+<li>Modelo 2: ARIMA(1, 1, 2)</li>
 </ul>
 <section id="resumen-de-los-resultados-arima" class="level4">
-<h4 class="anchored" data-anchor-id="resumen-de-los-resultados-arima"><strong>Resumen de los resultados Arima</strong></h4>
+<h4 class="anchored" data-anchor-id="resumen-de-los-resultados-arima"><strong>Resumen de los resultados ARIMA</strong></h4>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
@@ -802,7 +802,7 @@ alternative hypothesis: stationary</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Auto-Arima</td>
+<td style="text-align: left;">Auto-ARIMA</td>
 <td style="text-align: right;">4</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">2</td>
@@ -821,12 +821,12 @@ alternative hypothesis: stationary</code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Modelo 2</td>
-<td style="text-align: right;">2</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">7</td>
-<td style="text-align: right;">42612.69</td>
-<td style="text-align: right;">42612.75</td>
-<td style="text-align: right;">42674.97</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">42658.34</td>
+<td style="text-align: right;">42658.35</td>
+<td style="text-align: right;">42683.25</td>
 </tr>
 </tbody>
 </table>
@@ -835,7 +835,7 @@ alternative hypothesis: stationary</code></pre>
 <p>Interpretar</p>
 </section>
 <section id="modelo-sarima" class="level4">
-<h4 class="anchored" data-anchor-id="modelo-sarima"><strong>Modelo Sarima</strong></h4>
+<h4 class="anchored" data-anchor-id="modelo-sarima"><strong>Modelo SARIMA</strong></h4>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -860,19 +860,33 @@ Dickey-Fuller = -16.847, Lag order = 15, p-value = 0.01
 alternative hypothesis: stationary</code></pre>
 </div>
 </div>
-<p>Interpretar</p>
+<p>Para el cálculo de P y Q, las compnentes estacionales de SARIMA, se evidencia que hay picos significativos en el lag 7 en PACF y en los lags 7 y 28 en el ACF. Lo anterior, nos sugiere. que P es de orden 1 y Q es de orden 1.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>Series: train 
-ARIMA(2,1,2)(2,1,2)[7] 
+ARIMA(1,1,1)(1,1,1)[7] 
 
 Coefficients:
-          ar1      ar2     ma1     ma2     sar1    sar2     sma1     sma2
-      -0.2268  -0.3764  0.0840  0.2190  -0.6467  0.0680  -0.3018  -0.6708
-s.e.   0.0889   0.0767  0.0939  0.0791   0.0794  0.0169   0.0783   0.0767
+         ar1      ma1    sar1     sma1
+      0.3617  -0.5284  0.0439  -0.9824
+s.e.  0.0678   0.0614  0.0168   0.0038
 
-sigma^2 = 5018:  log likelihood = -21219.97
-AIC=42457.93   AICc=42457.98   BIC=42513.96</code></pre>
+sigma^2 = 5099:  log likelihood = -21251.53
+AIC=42513.06   AICc=42513.08   BIC=42544.19</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: train 
+ARIMA(2,1,2)(1,1,1)[7] 
+
+Coefficients:
+          ar1      ar2     ma1     ma2    sar1     sma1
+      -0.2029  -0.3355  0.0592  0.1731  0.0355  -0.9825
+s.e.   0.0896   0.0729  0.0936  0.0757  0.0171   0.0037
+
+sigma^2 = 5034:  log likelihood = -21226.68
+AIC=42467.37   AICc=42467.4   BIC=42510.95</code></pre>
 </div>
 </div>
 <p>Interpretar</p>
@@ -924,27 +938,39 @@ AIC=42457.93   AICc=42457.98   BIC=42513.96</code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Modelo 2</td>
-<td style="text-align: right;">2</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">42612.69</td>
-<td style="text-align: right;">42612.75</td>
-<td style="text-align: right;">42674.97</td>
+<td style="text-align: right;">42658.34</td>
+<td style="text-align: right;">42658.35</td>
+<td style="text-align: right;">42683.25</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">SARIMA</td>
+<td style="text-align: left;">SARIMA 1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">42513.06</td>
+<td style="text-align: right;">42513.08</td>
+<td style="text-align: right;">42544.19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SARIMA 2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">2</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">42457.93</td>
-<td style="text-align: right;">42457.98</td>
-<td style="text-align: right;">42513.96</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">42467.37</td>
+<td style="text-align: right;">42467.40</td>
+<td style="text-align: right;">42510.95</td>
 </tr>
 </tbody>
 </table>
@@ -966,10 +992,10 @@ AIC=42457.93   AICc=42457.98   BIC=42513.96</code></pre>
 <pre><code>
     Ljung-Box test
 
-data:  Residuals from ARIMA(2,1,2)(2,1,2)[7]
-Q* = 36.053, df = 3, p-value = 7.296e-08
+data:  Residuals from ARIMA(2,1,2)(1,1,1)[7]
+Q* = 20.293, df = 4, p-value = 0.000437
 
-Model df: 8.   Total lags used: 11</code></pre>
+Model df: 6.   Total lags used: 10</code></pre>
 </div>
 </div>
 <p>Interpretar</p>
@@ -978,11 +1004,11 @@ Model df: 8.   Total lags used: 11</code></pre>
 <h4 class="anchored" data-anchor-id="evaluación-de-resultados"><strong>Evaluación de resultados</strong></h4>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>                      ME      RMSE      MAE         MPE      MAPE     MASE
-Training set -0.19185672  70.68745 26.68524  -0.6821486  8.826798 1.018856
-Test set      0.07026132 116.41554 93.00246 -23.9023659 55.299381 3.550880
+<pre><code>                     ME      RMSE      MAE         MPE      MAPE     MASE
+Training set -0.1979438  70.81616 26.71058  -0.6997446  8.827522 1.019823
+Test set      8.1644888 120.31077 94.01147 -18.9307803 54.329410 3.589405
                      ACF1
-Training set -0.004300932
+Training set -0.002466106
 Test set               NA</code></pre>
 </div>
 </div>
@@ -993,7 +1019,7 @@ Test set               NA</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Series_Tiempo_files/figure-html/pronmosticos-1.png" class="img-fluid figure-img" width="1152"></p>
+<p><img src="Series_Tiempo_files/figure-html/pronosticos-1.png" class="img-fluid figure-img" width="1152"></p>
 </figure>
 </div>
 </div>
