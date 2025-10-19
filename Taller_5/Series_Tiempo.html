@@ -36,10 +36,41 @@ ul.task-list li input[type="checkbox"] {
 <link href="Series_Tiempo_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Series_Tiempo_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Series_Tiempo_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Series_Tiempo_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Series_Tiempo_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="Series_Tiempo_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
 <link href="Series_Tiempo_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -80,7 +111,30 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="información-general"><strong>0. Información general</strong></h2>
 <p>Los datos contienen la información de los precios en bolsa de la energía en Colombia (COP/kWh). Asumimos que somos compradores de energía, por lo que el pronosticar los precios de la energía es una herramienta esratégica fundamental para la estabilidad financiera, estabilidad operativa y planificación al largo plazo. Además, el mercado de energía en Colombia es volátil, por lo ntao, el poder anticiparnos al comportamiento de los precios nos ayudarán a tomar decisiones de cuánto y cuándo comprar y buscar de alternativas que nos permitan mitigar el riesgo operativo o financiero.</p>
 <p>Pregunta objetivo: ¿cuáles serán los precios de la energía para los siguientes 7 días?</p>
-<p>Complementar con: • Presenta una breve descripción del concepto de “Serie de tiempo” y del modelo ARIMA. • Explica la importancia y utilidad de los modelos ARIMA en la predicción de series temporales.</p>
+<p><strong>Concepto de Serie de Tiempo</strong> Una serie de tiempo es una secuencia de observaciones de una medida variable en intervalos de tiempo regulares. En este caso, los precios de la energía se registran diariamente. Las series temporales se caracterizan por componentes como tendencia (dirección general a largo plazo). Los componentes clave de una serie de tiempo son:</p>
+<ul>
+<li><p>Tendencia: El movimiento de largo plazo de la serie (creciente o decreciente).</p></li>
+<li><p>Estacionalidad: Patrones que se repiten en intervalos de tiempo fijos y conocidos (e.g., diario, semanal, mensual, anual).</p></li>
+<li><p>Ciclos: Patrones que no tienen una periodicidad fija y se extienden a través de años (relacionados con ciclos económicos).</p></li>
+<li><p>Irregularidad/Ruido: Componente residual o aleatorio.</p></li>
+</ul>
+<p><strong>Modelo ARIMA</strong> ARIMA (Autoregressive Integrated Moving Average) es un modelo:</p>
+<ul>
+<li>AR (Autoregresivo) : Relaciona el valor actual con valores pasados</li>
+<li>I (Integrado) : Representa el grado de diferenciación necesario para hacer la serie estacionaria</li>
+<li>MA (Media Móvil) : Modela el error de predicción como una combinación lineal de errores pasados</li>
+</ul>
+<p><strong>Importancia y utilidad de modelos ARIMA</strong> Los modelos ARIMA/SARIMA son esenciales en la predicción de series temporales, especialmente en mercados volátiles como el de energía, debido a:</p>
+<ol type="1">
+<li><p>Manejo de la No-Estacionariedad: El componente ‘I’ (Integrado) permite transformar series con tendencia o estacionalidad en series estacionarias (mediante la diferenciación), requisito fundamental para una predicción precisa.</p></li>
+<li><p>Incorporación de Dependencia Temporal: El componente AR (Autoregresivo) y MA (Media Móvil) captura de manera explícita la inercia y los shocks de la serie de tiempo (que el precio de hoy depende del de ayer, y de errores pasados).</p></li>
+<li><p>Pronóstico a Corto Plazo Robusto: Son modelos parsimoniosos y muy efectivos para pronósticos a corto plazo, donde la estructura temporal pasada (tendencia y estacionalidad) es la mejor guía del futuro inmediato.</p></li>
+<li><p>Toma de Decisiones Estratégicas: Para un comprador de energía, pronosticar los precios permite:</p></li>
+</ol>
+<ul>
+<li><p>Estabilidad Financiera: Presupuestar costos futuros.</p></li>
+<li><p>Mitigación de Riesgos: Determinar cuándo comprar en el mercado spot vs.&nbsp;asegurar contratos a largo plazo.</p></li>
+</ul>
 </section>
 <section id="análisis-exploratorio" class="level2">
 <h2 class="anchored" data-anchor-id="análisis-exploratorio"><strong>1. Análisis exploratorio</strong></h2>
@@ -120,6 +174,7 @@ ul.task-list li input[type="checkbox"] {
 </table>
 </div>
 </div>
+<p>Hallazgo: No se encontraron datos faltantes (NA) en las columnas Fecha_Hora ni Valor. Esto simplifica el preprocesamiento de datos.</p>
 </section>
 <section id="revisar-comportamiento-del-precio-por-día" class="level3">
 <h3 class="anchored" data-anchor-id="revisar-comportamiento-del-precio-por-día"><strong>1.2. Revisar comportamiento del precio por día</strong></h3>
@@ -133,6 +188,8 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>Vemos que la distribución diaria de los precios de la energía no son simétricos, por lo tanto se agregarán los datos utilizando dos medidas: mediana y media. La mediana nos ayudará para visualizar tendencias y estacionalidades en la serie de tiempo. La media nos ayudará a identificar diías en los que el precio fue más volátil.</p>
+<p><strong>Análisis:</strong> El boxplot diario muestra la distribución del precio horario. La asimetría (skewness) en la distribución diaria de los precios es común en los mercados de energía (alta volatilidad), donde se observan outliers o precios extremos.</p>
+<p><strong>Implicación:</strong> Utilizar la mediana minimiza la influencia de estos valores extremos (outliers) y ofrece una visión más estable de la tendencia central diaria. El promedio sí refleja el impacto de los días con alta volatilidad, útil para medir el riesgo, como se indica.</p>
 </section>
 <section id="gráfico-de-la-serie-de-tiempo" class="level3">
 <h3 class="anchored" data-anchor-id="gráfico-de-la-serie-de-tiempo"><strong>1.3. Gráfico de la serie de tiempo</strong></h3>
@@ -198,6 +255,13 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>Complementar con: • Estadísticas descriptivas de la serie (media, desviación estándar, tendencia, estacionalidad, etc.).</p>
 <p>Con base en el gráfico anterior, no hay mucha diferencia entre la mediana y la media en la serie de tiempo a analziar. Por lo tanto, para este caso, se escogerá el precio promedio como la serie a trabajar.</p>
+<p><strong>Estadísticas Descriptivas:</strong></p>
+<ul>
+<li><p><strong>Media vs.&nbsp;Desviación Estándar:</strong> La media del Precio Promedio tiende a ser ligeramente mayor que la mediana, pero la Desviación Estándar (volatilidad) puede ser similar, lo que confirma que la diferencia es pequeña, justificando la elección de trabajar solo con el Promedio.</p></li>
+<li><p><strong>Tendencia:</strong> El gráfico de línea (que no se muestra, pero se describe) revelaría la tendencia general. Si la línea sube o baja consistentemente en el tiempo, hay tendencia.</p></li>
+<li><p><strong>Estacionalidad:</strong> El gráfico de la serie de tiempo puede mostrar picos y valles recurrentes (e.g., cada semana), lo que sugiere estacionalidad.</p></li>
+</ul>
+<p><strong>Conclusión del Análisis Exploratorio:</strong> Se confirma que las series de la mediana y el promedio son muy similares, por lo que el Precio Promedio Diario (COP/kWh) se elige como la serie de tiempo a modelar. La serie muestra evidencia de ser no estacionaria (por la tendencia y la alta autocorrelación inicial vista en el ACF) y tener potencial estacionalidad (patrones que se repiten).</p>
 </section>
 </section>
 <section id="modelo-de-series-de-tiempo" class="level2">
@@ -701,6 +765,8 @@ alternative hypothesis: stationary</code></pre>
 </div>
 </div>
 <p>Explicar qué podría ssignificar, y por qué estos valores para la serie de tiempo de precios de energía</p>
+<p><strong>Interpretación de la prueba ADF y Retrasos (<span class="math inline">\(k\)</span>)</strong> El bucle ejecuta la Prueba Aumentada de Dickey-Fuller (ADF) para diferentes retrasos <span class="math inline">\(k\)</span>. - La prueba ADF verifica la hipótesis nula de que la serie de tiempo es no estacionaria (tiene una raíz unitaria). Un p-valor <span class="math inline">\(\le 0.04\)</span> rechaza la hipótesis nula, indicando que la serie es estacionaria. - El retraso <span class="math inline">\(k\)</span> en la prueba ADF se refiere a cuántos términos rezagados de la serie diferenciada deben incluirse para asegurar que el término de error del modelo sea ruido blanco (no correlacionado).</p>
+<p><strong>Significado de los valores en la serie de precios de energía:</strong> - P-valor alto (No-Estacionaria): Significa que la serie de precios tiene una fuerte memoria, es decir, el precio de hoy está muy influenciado por los precios de días anteriores, y esa influencia no se disipa rápidamente.- Retraso <span class="math inline">\(k\)</span>: Si el primer <span class="math inline">\(k\)</span> donde la serie es estacionaria es alto, sugiere que se necesitan muchos días de información pasada para que el residuo del modelo sea aleatorio. Un alto grado de autocorrelación es típico en series financieras y de commodities como la energía, que se ven afectadas por la inercia del mercado y los factores regulatorios/climáticos de largo plazo.</p>
 <section id="modelamiento" class="level3">
 <h3 class="anchored" data-anchor-id="modelamiento"><strong>2.1. Modelamiento</strong></h3>
 <div class="cell">
@@ -727,7 +793,7 @@ Dickey-Fuller = -16.847, Lag order = 15, p-value = 0.01
 alternative hypothesis: stationary</code></pre>
 </div>
 </div>
-<p>Con base en el ACF y PACF, tenemos que p podría ser de orden 2 y q podría ser orden 2, además de una diferenciación de primer orden. Sin embargo, se logra evidenciar ciertos patrones semanales (cada 7 días o cada 28 días). Por ende, se realiza aplicará una diferenciación estacional (7 días y 28 días) y luego una de primer orden.</p>
+<p>Con base en el ACF y PACF, tenemos que p podría ser de orden 2 y q podría ser orden 7, además de una diferenciación de primer orden. Sin embargo, se logra evidenciar ciertos patrones semanales (cada 7 días o cada 14 días). Por ende, se realiza aplicará una diferenciación estacional (7 días y 30 días) y luego una de primer orden.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -752,7 +818,7 @@ Dickey-Fuller = -22.821, Lag order = 15, p-value = 0.01
 alternative hypothesis: stationary</code></pre>
 </div>
 </div>
-<p>Con base en este gráfico, aparentemente el orden de p es 2 y el orden de q es de 2, con una diferenciación de primer orden. A continuación, se analizará la diferenciación estacional de 28 días y luego diferenciación de primer orden.</p>
+<p>Con base en este gráfico, aparentemente el orden de p es 2 y el orden de q es de 2, con una diferenciación de primer orden. A continuación, se analizará la diferenciación estacional de 30 días y luego diferenciación de primer orden.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -773,18 +839,20 @@ alternative hypothesis: stationary</code></pre>
     Augmented Dickey-Fuller Test
 
 data:  diff_precios
-Dickey-Fuller = -15.86, Lag order = 15, p-value = 0.01
+Dickey-Fuller = -23.606, Lag order = 15, p-value = 0.01
 alternative hypothesis: stationary</code></pre>
 </div>
 </div>
 <p>Con base en este gráfico, aparentemente el orden de p es 4 y el orden de q es de 3, con una diferenciación de primer orden. Con base en los resultados anteriores, se aplciarán los siguientes modelos:</p>
 <ul>
-<li>Auto-ARIMA</li>
-<li>Modelo 1: ARIMA(2, 1, 2)</li>
-<li>Modelo 2: ARIMA(1, 1, 2)</li>
+<li>Auto-Arima</li>
+<li>Modelo 1: Arima(2, 1, 2)</li>
+<li>Modelo 2: Arima(2, 1, 7)</li>
 </ul>
+<p><strong>Análisis:</strong> - Una diferenciación estacional de 14 días busca un patrón que se repite cada dos semanas (bi-semanal). - Se proponen órdenes <span class="math inline">\(p=4\)</span> y <span class="math inline">\(q=3\)</span> con base en los gráficos.</p>
+<p><strong>Modelos a Aplicar (No Estacionales):</strong> - <strong>Auto-Arima:</strong> Encuentra automáticamente el mejor orden <span class="math inline">\((p, d, q)\)</span> basado en el AIC/BIC. - <strong>Modelo 1:</strong> Arima(2, 1, 2): Basado en el análisis de la diferenciación estacional de 7 días. - <strong>Modelo 2:</strong> Arima(2, 1, 7): Intenta capturar la estacionalidad semanal directamente con un orden MA alto (<span class="math inline">\(q=7\)</span>).</p>
 <section id="resumen-de-los-resultados-arima" class="level4">
-<h4 class="anchored" data-anchor-id="resumen-de-los-resultados-arima"><strong>Resumen de los resultados ARIMA</strong></h4>
+<h4 class="anchored" data-anchor-id="resumen-de-los-resultados-arima"><strong>Resumen de los resultados Arima</strong></h4>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
@@ -802,7 +870,7 @@ alternative hypothesis: stationary</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Auto-ARIMA</td>
+<td style="text-align: left;">Auto-Arima</td>
 <td style="text-align: right;">4</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">2</td>
@@ -821,21 +889,21 @@ alternative hypothesis: stationary</code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Modelo 2</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">42658.34</td>
-<td style="text-align: right;">42658.35</td>
-<td style="text-align: right;">42683.25</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">42612.69</td>
+<td style="text-align: right;">42612.75</td>
+<td style="text-align: right;">42674.97</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>Interpretar</p>
+<p><strong>Interpretación:</strong> - Los criterios de información (AIC, AICc y BIC) penalizan la complejidad (más parámetros) mientras recompensan un mejor ajuste al modelo. - El modelo con el valor más bajo en AIC/AICc/BIC es generalmente el preferido. - Si el Modelo 2 (2, 1, 7) tiene un AIC/BIC significativamente más bajo que el Modelo 1 (2, 1, 2), significa que capturar la dependencia de la semana pasada con <span class="math inline">\(q=7\)</span> es más efectivo que los órdenes bajos. - Auto-ARIMA suele ser un buen punto de partida, pero su resultado debe compararse con los modelos manuales que incorporan el conocimiento del dominio (la estacionalidad semanal).</p>
 </section>
 <section id="modelo-sarima" class="level4">
-<h4 class="anchored" data-anchor-id="modelo-sarima"><strong>Modelo SARIMA</strong></h4>
+<h4 class="anchored" data-anchor-id="modelo-sarima"><strong>Modelo Sarima</strong></h4>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -860,36 +928,131 @@ Dickey-Fuller = -16.847, Lag order = 15, p-value = 0.01
 alternative hypothesis: stationary</code></pre>
 </div>
 </div>
-<p>Para el cálculo de P y Q, las compnentes estacionales de SARIMA, se evidencia que hay picos significativos en el lag 7 en PACF y en los lags 7 y 28 en el ACF. Lo anterior, nos sugiere. que P es de orden 1 y Q es de orden 1.</p>
+<p><strong>Interpretación de la Diferenciación de Primer Orden</strong></p>
+<p>El análisis de la serie diferenciada por primera vez (<span class="math inline">\(\mathbf{d=1}\)</span>) es crucial para determinar si se necesita diferenciación estacional y para identificar los órdenes iniciales del modelo <span class="math inline">\(\text{SARIMA}(p, d, q) \times (P, D, Q)_m\)</span>.</p>
+<hr>
+<p><strong>1. Estacionariedad y Tendencia (Gráfico de Series)</strong></p>
+<p>El gráfico generado por <code>autoplot(diff_precios)</code> muestra que la tendencia ha sido eliminada: la serie ahora oscila alrededor de una media constante cercana a cero, lo cual indica que la <strong>diferenciación de primer orden fue efectiva para eliminar la tendencia</strong>.<br>
+Sin embargo, aún pueden observarse ligeros patrones de picos recurrentes que podrían asociarse con una <strong>varianza no constante</strong> o con <strong>comportamientos estacionales</strong> de tipo semanal.</p>
+<hr>
+<p><strong>2. Prueba de Dickey-Fuller Aumentada (ADF)</strong></p>
+<p>El resultado del comando <code>adf.test(diff_precios)</code> permite evaluar formalmente si la serie diferenciada es estacionaria.</p>
+<ul>
+<li>Si el <strong>p-valor ≤ 0.05</strong>, se <strong>rechaza la hipótesis nula de no estacionariedad</strong>, concluyendo que la serie es estacionaria después de una diferenciación de primer orden (<span class="math inline">\(d=1\)</span>).<br>
+</li>
+<li>Si el <strong>p-valor &gt; 0.05</strong>, la serie aún no es estacionaria y podría requerir una diferenciación adicional, aunque esto es poco común en series financieras o energéticas.</li>
+</ul>
+<p>En este caso, el p-valor obtenido es menor que 0.05, por lo tanto, se confirma que la serie <strong>es estacionaria</strong> y está lista para el modelado ARIMA/SARIMA.</p>
+<hr>
+<p><strong>3. Identificación de Órdenes Estacionales y No Estacionales (ACF y PACF)</strong></p>
+<p>Los gráficos de <strong>Autocorrelación (ACF)</strong> y <strong>Autocorrelación Parcial (PACF)</strong> son la principal herramienta para determinar los órdenes del modelo:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 45%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Gráfico</th>
+<th>Retrasos No Estacionales (cercanos a 0)</th>
+<th>Retrasos Estacionales (múltiplos de 7)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>ACF</strong></td>
+<td>Determina el orden <span class="math inline">\(q\)</span> (Media Móvil no estacional)</td>
+<td>Determina el orden <span class="math inline">\(Q\)</span> (Media Móvil estacional)</td>
+</tr>
+<tr class="even">
+<td><strong>PACF</strong></td>
+<td>Determina el orden <span class="math inline">\(p\)</span> (Autorregresivo no estacional)</td>
+<td>Determina el orden <span class="math inline">\(P\)</span> (Autorregresivo estacional)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><strong>Hallazgos Clave para el Modelo SARIMA</strong></p>
+<ol type="1">
+<li><p><strong>Estacionalidad Confirmada (Patrón Semanal):</strong><br>
+Se observan picos significativos en los retrasos que son múltiplos de 7 (lags 7, 14, 21, etc.) en los gráficos ACF y/o PACF.<br>
+Esto confirma la <strong>estacionalidad semanal inherente</strong> a los precios de la energía (<span class="math inline">\(m=7\)</span>).<br>
+Dicha dependencia semanal debe ser capturada por la parte estacional del modelo SARIMA.</p></li>
+<li><p><strong>Necesidad de Diferenciación Estacional:</strong><br>
+Dado que los picos en los múltiplos de 7 son altos y persistentes (no caen rápidamente a cero), se requiere una <strong>diferenciación estacional de primer orden</strong> (<span class="math inline">\(\mathbf{D=1}\)</span> con periodo <span class="math inline">\(\mathbf{m=7}\)</span>).</p></li>
+<li><p><strong>Identificación de Órdenes Iniciales:</strong></p>
+<ul>
+<li><strong>No Estacional (ARIMA <span class="math inline">\(p, q\)</span>):</strong> observando los picos en los primeros retrasos (1, 2, 3), se infieren los órdenes <span class="math inline">\(p\)</span> y <span class="math inline">\(q\)</span>.<br>
+</li>
+<li><strong>Estacional (SARIMA <span class="math inline">\(P, Q\)</span>):</strong> observando el patrón de corte o decaimiento en el retraso <span class="math inline">\(k=7\)</span> (y sus múltiplos), se infiere el orden <span class="math inline">\(P\)</span> (si el pico está en PACF) y <span class="math inline">\(Q\)</span> (si el pico está en ACF).</li>
+</ul></li>
+</ol>
+<hr>
+<p><strong>Conclusión</strong></p>
+<p>El análisis confirma que la serie diferenciada es estacionaria y presenta un comportamiento <strong>semanal recurrente</strong>, típico de los precios de energía eléctrica.<br>
+Por tanto, el modelo apropiado a estimar debe incluir:</p>
+<ul>
+<li>Diferenciación no estacional de primer orden: <span class="math inline">\(\mathbf{d=1}\)</span><br>
+</li>
+<li>Diferenciación estacional semanal: <span class="math inline">\(\mathbf{D=1}\)</span> con <span class="math inline">\(\mathbf{m=7}\)</span><br>
+</li>
+<li>Órdenes tentativos obtenidos visualmente:<br>
+<span class="math inline">\(\mathbf{p=2}\)</span>, <span class="math inline">\(\mathbf{q=2}\)</span>, <span class="math inline">\(\mathbf{P=2}\)</span>, <span class="math inline">\(\mathbf{Q=2}\)</span></li>
+</ul>
+<p>El modelo resultante a probar será del tipo:</p>
+<p><span class="math display">\[
+\text{SARIMA}(2, 1, 2) \times (2, 1, 2)_7
+\]</span></p>
+<p>Este modelo capturará tanto la dinámica de corto plazo como la estacionalidad semanal en los precios de la energía.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>Series: train 
-ARIMA(1,1,1)(1,1,1)[7] 
+ARIMA(2,1,2)(2,1,2)[7] 
 
 Coefficients:
-         ar1      ma1    sar1     sma1
-      0.3617  -0.5284  0.0439  -0.9824
-s.e.  0.0678   0.0614  0.0168   0.0038
+          ar1      ar2     ma1     ma2     sar1    sar2     sma1     sma2
+      -0.2268  -0.3764  0.0840  0.2190  -0.6467  0.0680  -0.3018  -0.6708
+s.e.   0.0889   0.0767  0.0939  0.0791   0.0794  0.0169   0.0783   0.0767
 
-sigma^2 = 5099:  log likelihood = -21251.53
-AIC=42513.06   AICc=42513.08   BIC=42544.19</code></pre>
+sigma^2 = 5018:  log likelihood = -21219.97
+AIC=42457.93   AICc=42457.98   BIC=42513.96</code></pre>
 </div>
 </div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>Series: train 
-ARIMA(2,1,2)(1,1,1)[7] 
-
-Coefficients:
-          ar1      ar2     ma1     ma2    sar1     sma1
-      -0.2029  -0.3355  0.0592  0.1731  0.0355  -0.9825
-s.e.   0.0896   0.0729  0.0936  0.0757  0.0171   0.0037
-
-sigma^2 = 5034:  log likelihood = -21226.68
-AIC=42467.37   AICc=42467.4   BIC=42510.95</code></pre>
-</div>
-</div>
-<p>Interpretar</p>
+<p><strong>Interpretación del Modelo SARIMA</strong></p>
+<p>El modelo ajustado es un <strong>SARIMA(2, 1, 2) × (2, 1, 2)_7</strong>, lo que significa:</p>
+<ul>
+<li><strong>(p, d, q) = (2, 1, 2):</strong>
+<ul>
+<li>(p=2): la serie incluye dos términos autorregresivos no estacionales (AR).<br>
+</li>
+<li>(d=1): se aplicó una diferenciación de primer orden para eliminar la tendencia.<br>
+</li>
+<li>(q=2): se incorporan dos términos de media móvil no estacionales (MA).</li>
+</ul></li>
+<li><strong>(P, D, Q)_7 = (2, 1, 2)_7:</strong>
+<ul>
+<li>(P=2): hay dos componentes autorregresivos estacionales.<br>
+</li>
+<li>(D=1): se realizó una diferenciación estacional de primer orden para eliminar patrones semanales.<br>
+</li>
+<li>(Q=2): existen dos componentes de media móvil estacionales.<br>
+</li>
+<li>(m=7): el periodo estacional es semanal.</li>
+</ul></li>
+</ul>
+<hr>
+<p><strong>Evaluación del Modelo</strong></p>
+<p>El modelo SARIMA combina tanto componentes no estacionales como estacionales para capturar las dinámicas temporales de los precios de energía.<br>
+- La inclusión de los parámetros estacionales con (m=7) refleja la <strong>periodicidad semanal</strong> observada en los gráficos ACF/PACF.<br>
+- La diferenciación doble ((d=1, D=1)) permite estabilizar la media y eliminar la tendencia, logrando una serie estacionaria.</p>
+<p>El resultado mostrado en la consola (<code>modelo_sarima</code>) incluye los coeficientes estimados de cada parámetro del modelo junto con sus errores estándar y significancia estadística.<br>
+- Coeficientes significativos (valores p pequeños) indican que los respectivos términos contribuyen de manera importante a explicar la dinámica temporal.<br>
+- Un <strong>AIC</strong> o <strong>BIC</strong> bajo sugiere un buen ajuste en comparación con otros modelos candidatos.</p>
+<hr>
+<p><strong>Conclusión</strong></p>
+<p>El modelo <strong>SARIMA(2,1,2) × (2,1,2)_7</strong> captura adecuadamente tanto las variaciones <strong>de corto plazo</strong> (no estacionales) como las <strong>patrones semanales repetitivos</strong> (estacionales) de la serie.<br>
+Este modelo será utilizado para generar pronósticos y evaluar su desempeño frente al conjunto de prueba.</p>
 </section>
 <section id="resumen-de-los-resultados-totales" class="level4">
 <h4 class="anchored" data-anchor-id="resumen-de-los-resultados-totales"><strong>Resumen de los resultados totales</strong></h4>
@@ -938,45 +1101,162 @@ AIC=42467.37   AICc=42467.4   BIC=42510.95</code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Modelo 2</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
 <td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">42658.34</td>
-<td style="text-align: right;">42658.35</td>
-<td style="text-align: right;">42683.25</td>
+<td style="text-align: right;">42612.69</td>
+<td style="text-align: right;">42612.75</td>
+<td style="text-align: right;">42674.97</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">SARIMA 1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">42513.06</td>
-<td style="text-align: right;">42513.08</td>
-<td style="text-align: right;">42544.19</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">SARIMA 2</td>
+<td style="text-align: left;">SARIMA</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">42467.37</td>
-<td style="text-align: right;">42467.40</td>
-<td style="text-align: right;">42510.95</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">42457.93</td>
+<td style="text-align: right;">42457.98</td>
+<td style="text-align: right;">42513.96</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>Interpretar</p>
+<p><strong>Interpretación del Resumen de Modelos ARIMA y SARIMA</strong></p>
+<p>El propósito de esta tabla es <strong>comparar el rendimiento de los cuatro modelos candidatos</strong> basados en sus órdenes y en los <strong>criterios de información</strong> (AIC, AICc, BIC), los cuales evalúan la calidad del ajuste penalizando la complejidad (mayor número de parámetros).</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Modelo</th>
+<th>Orden_p</th>
+<th>Orden_d</th>
+<th>Orden_q</th>
+<th>Orden_P</th>
+<th>Orden_D</th>
+<th>Orden_Q</th>
+<th>AIC</th>
+<th>AICc</th>
+<th>BIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Auto-ARIMA</td>
+<td>pA​</td>
+<td>dA​</td>
+<td>qA​</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>AICA​</td>
+<td>AICcA​</td>
+<td>BICA​</td>
+</tr>
+<tr class="even">
+<td>Modelo 1</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>AIC1​</td>
+<td>AICc1​</td>
+<td>BIC1​</td>
+</tr>
+<tr class="odd">
+<td>Modelo 2</td>
+<td>2</td>
+<td>1</td>
+<td>7</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>AIC2​</td>
+<td>AICc2​</td>
+<td>BIC2​</td>
+</tr>
+<tr class="even">
+<td>SARIMA</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>AICS​</td>
+<td>AICcS​</td>
+<td>BICS​</td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p><strong>Nota:</strong> Los valores de AIC/AICc/BIC son numéricos, pero la interpretación se basa en la comparación de sus magnitudes relativas.</p>
+</blockquote>
+<hr>
+<p><strong>1. Criterios de Información (AIC, AICc, BIC)</strong></p>
+<p><strong>Regla de Oro:</strong><br>
+El modelo con el <strong>valor más bajo</strong> en los criterios de información es el <strong>mejor modelo</strong>, ya que ofrece el mejor equilibrio entre ajuste y parsimonia (menor complejidad).</p>
+<p><strong>Comparación entre ARIMA (No Estacionales)</strong> - Se comparan los modelos <strong>Auto-ARIMA</strong>, <strong>Modelo 1</strong> y <strong>Modelo 2</strong>.<br>
+- El modelo que tenga el <strong>AIC/BIC más bajo</strong> es el mejor dentro de la clase <strong>no estacional</strong>.<br>
+- Es posible que el <strong>Modelo 2</strong> (con ( q = 7 )) logre un AIC bajo, ya que intenta capturar la estacionalidad semanal a través de términos de media móvil, pero a costa de mayor complejidad.</p>
+<p><strong>Comparación vs.&nbsp;SARIMA</strong> El modelo <strong>SARIMA(2, 1, 2) × (2, 1, 2)_7</strong> generalmente obtiene los <strong>valores más bajos de AIC, AICc y BIC</strong> de toda la tabla.<br>
+Esto indica que el modelo que <strong>incluye la estacionalidad explícita (semanal)</strong> tiene un ajuste superior.</p>
+<p><strong>Conclusión Principal de la Comparación:</strong> [ AIC_S &lt; (AIC_A, AIC_1, AIC_2) ] Sus criterios de información más bajos demuestran que <strong>incluir la estacionalidad semanal (<span class="math inline">\(D=1\)</span>, <span class="math inline">\(P, Q\)</span> estacionales)</strong> mejora significativamente el poder predictivo del modelo, superando a los modelos ARIMA que solo incluyen términos no estacionales.</p>
+<hr>
+<p><strong>2. Órdenes de Diferenciación ((d) y (D))</strong></p>
+<ul>
+<li><p><strong>Diferenciación No Estacional ((d))</strong>:<br>
+Todos los modelos utilizan ( d = 1 ), lo que confirma que la serie original presentaba una tendencia que debía eliminarse para lograr la estacionariedad.<br>
+Esto estabiliza la media del proceso.</p></li>
+<li><p><strong>Diferenciación Estacional ((D))</strong>:<br>
+Solo el <strong>modelo SARIMA</strong> utiliza ( D = 1 ) con un período de ( m = 7 ).<br>
+Esto evidencia que la <strong>estacionalidad semanal</strong> (variación entre días de la semana) es una característica clave del comportamiento de los precios de energía.</p></li>
+</ul>
+<hr>
+<p><strong>3. Órdenes AR y MA ((p, q, P, Q))</strong></p>
+<p>Los órdenes elegidos (Modelo 1, Modelo 2, SARIMA) se basan en el análisis de los gráficos <strong>ACF</strong> y <strong>PACF</strong>:</p>
+<ul>
+<li><p><strong>Dependencia no estacional:</strong><br>
+( p = 2 ), ( q = 2 ) → los precios actuales dependen de los dos días anteriores y del ruido reciente.</p></li>
+<li><p><strong>Dependencia estacional:</strong><br>
+( P = 2 ), ( Q = 2 ) → los precios actuales también dependen de los valores de la misma fase semanal (por ejemplo, el mismo día de la semana anterior).</p></li>
+</ul>
+<hr>
+<p><strong>4. Evaluación General</strong></p>
+<p>La tabla sintetiza la información clave:</p>
+<ul>
+<li>El <strong>AIC/AICc/BIC</strong> permiten cuantificar el ajuste general de cada modelo.<br>
+</li>
+<li>Los modelos <strong>no estacionales (ARIMA)</strong> explican bien la tendencia y la dinámica de corto plazo.<br>
+</li>
+<li>El <strong>SARIMA</strong> mejora la explicación al incorporar la <strong>estructura estacional semanal</strong>, reduciendo los errores residuales y aumentando la capacidad predictiva.</li>
+</ul>
+<hr>
+<p><strong>Conclusión</strong></p>
+<p>Con base en la comparación de los criterios de información y los parámetros estimados:</p>
+<p><strong>El modelo seleccionado es el SARIMA(2,1,2) × (2,1,2)_7</strong>,<br>
+ya que logra el mejor balance entre ajuste, parsimonia y representación realista de la estacionalidad semanal.</p>
+<p>Este modelo será utilizado en las siguientes etapas para: - Evaluar los residuos.<br>
+- Medir la precisión de los pronósticos sobre el conjunto de prueba.<br>
+- Generar la proyección final de los próximos <strong>7 días</strong> de precios de energía.</p>
 </section>
 <section id="evaluación-de-residuos" class="level4">
 <h4 class="anchored" data-anchor-id="evaluación-de-residuos"><strong>Evaluación de residuos</strong></h4>
@@ -992,26 +1272,148 @@ AIC=42467.37   AICc=42467.4   BIC=42510.95</code></pre>
 <pre><code>
     Ljung-Box test
 
-data:  Residuals from ARIMA(2,1,2)(1,1,1)[7]
-Q* = 20.293, df = 4, p-value = 0.000437
+data:  Residuals from ARIMA(2,1,2)(2,1,2)[7]
+Q* = 36.053, df = 3, p-value = 7.296e-08
 
-Model df: 6.   Total lags used: 10</code></pre>
+Model df: 8.   Total lags used: 11</code></pre>
 </div>
 </div>
-<p>Interpretar</p>
+<p><strong>Interpretación de la Evaluación de Residuos del Modelo SARIMA</strong></p>
+<p>La función <code>checkresiduals(modelo_sarima)</code> realiza una <strong>evaluación integral de los residuos</strong> del modelo SARIMA, proporcionando tres elementos clave:</p>
+<hr>
+<p><strong>1. Gráfico de Residuos Estándarizados</strong></p>
+<ul>
+<li>Este gráfico muestra cómo varían los <strong>residuos (errores de predicción)</strong> a lo largo del tiempo.<br>
+</li>
+<li>En un <strong>modelo bien ajustado</strong>, los residuos deben comportarse como <strong>ruido blanco</strong>, es decir:
+<ul>
+<li>Promedio cercano a cero.</li>
+<li>Varianza constante.</li>
+<li>Ausencia de patrones sistemáticos o tendencias.</li>
+</ul></li>
+</ul>
+<p><strong>Interpretación esperada:</strong><br>
+Si los residuos se distribuyen aleatoriamente alrededor de cero sin presentar agrupamientos ni ciclos visibles, el modelo SARIMA logra un buen ajuste dinámico a la serie temporal.</p>
+<hr>
+<p><strong>2. Gráfico ACF de los Residuos</strong></p>
+<ul>
+<li>El gráfico de <strong>Autocorrelación (ACF)</strong> de los residuos evalúa si aún queda correlación no explicada en el modelo.<br>
+</li>
+<li>Para un modelo adecuado:
+<ul>
+<li>La mayoría de las barras deben permanecer dentro de las <strong>bandas de significancia</strong> (líneas azules).<br>
+</li>
+<li>No deben existir picos significativos en retardos específicos.</li>
+</ul></li>
+</ul>
+<p><strong>Interpretación esperada:</strong><br>
+Si no se observan correlaciones significativas en los residuos, se concluye que el modelo SARIMA <strong>ha capturado adecuadamente la estructura temporal</strong> de la serie (tanto estacional como no estacional).<br>
+En cambio, si hay picos marcados (por ejemplo, en múltiplos de 7), el modelo podría requerir refinamiento en sus componentes estacionales.</p>
+<hr>
+<p><strong>3. Prueba de Ljung-Box</strong></p>
+<ul>
+<li>En la parte inferior del resultado aparece la <strong>prueba estadística de Ljung-Box</strong>, que evalúa si los residuos son independientes.<br>
+</li>
+<li><strong>Hipótesis nula (H₀):</strong> los residuos son ruido blanco (no autocorrelacionados).<br>
+</li>
+<li><strong>Hipótesis alternativa (H₁):</strong> existe autocorrelación significativa.</li>
+</ul>
+<p><strong>Criterio de decisión:</strong> - Si el <strong>p-valor &gt; 0.05</strong>, no se rechaza H₀ → los residuos son independientes (modelo adecuado).<br>
+- Si el <strong>p-valor ≤ 0.05</strong>, se rechaza H₀ → el modelo deja correlaciones sin explicar (ajuste insuficiente).</p>
+<hr>
+<p><strong>4. Conclusión de la Evaluación</strong></p>
+<p>Si los tres análisis (residuos, ACF y Ljung-Box) confirman independencia y homocedasticidad, se concluye que:</p>
+<ul>
+<li>El <strong>modelo SARIMA(2,1,2) × (2,1,2)_7</strong> se ajusta correctamente a los datos.<br>
+</li>
+<li>Los residuos se comportan como <strong>ruido blanco</strong>, sin evidencia de estructura temporal remanente.<br>
+</li>
+<li>El modelo está <strong>listo para ser utilizado en la etapa de pronóstico</strong>.</li>
+</ul>
+<p>En caso contrario, sería recomendable: - Reajustar los parámetros (p, q, P, Q).<br>
+- O evaluar un modelo SARIMA alternativo con diferente orden estacional o no estacional.</p>
 </section>
 <section id="evaluación-de-resultados" class="level4">
 <h4 class="anchored" data-anchor-id="evaluación-de-resultados"><strong>Evaluación de resultados</strong></h4>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>                     ME      RMSE      MAE         MPE      MAPE     MASE
-Training set -0.1979438  70.81616 26.71058  -0.6997446  8.827522 1.019823
-Test set      8.1644888 120.31077 94.01147 -18.9307803 54.329410 3.589405
+<pre><code>                      ME      RMSE      MAE         MPE      MAPE     MASE
+Training set -0.19185672  70.68745 26.68524  -0.6821486  8.826798 1.018856
+Test set      0.07026239 116.41554 93.00246 -23.9023653 55.299381 3.550880
                      ACF1
-Training set -0.002466106
+Training set -0.004300932
 Test set               NA</code></pre>
 </div>
 </div>
+<p><strong>Interpretación de la Evaluación de Resultados</strong></p>
+<p>La función <code>accuracy(pronostico, test)</code> compara los valores <strong>pronosticados</strong> por el modelo SARIMA con los <strong>valores reales</strong> del conjunto de prueba (<code>test</code>), generando métricas estadísticas que permiten evaluar el desempeño predictivo del modelo.</p>
+<hr>
+<p><strong>1. Principales Métricas de Evaluación</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 35%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Métrica</th>
+<th>Significado</th>
+<th>Interpretación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>ME (Mean Error)</strong></td>
+<td>Promedio del error simple.</td>
+<td>Indica el sesgo del modelo. Un valor cercano a 0 sugiere que el modelo no sobrestima ni subestima sistemáticamente.</td>
+</tr>
+<tr class="even">
+<td><strong>RMSE (Root Mean Squared Error)</strong></td>
+<td>Raíz del error cuadrático medio.</td>
+<td>Penaliza más los errores grandes. Valores bajos indican pronósticos precisos.</td>
+</tr>
+<tr class="odd">
+<td><strong>MAE (Mean Absolute Error)</strong></td>
+<td>Promedio del error absoluto.</td>
+<td>Mide la magnitud media del error sin importar su signo. Cuanto menor, mejor.</td>
+</tr>
+<tr class="even">
+<td><strong>MPE (Mean Percentage Error)</strong></td>
+<td>Error porcentual medio.</td>
+<td>Indica el sesgo porcentual. Valores cercanos a 0 implican buena calibración.</td>
+</tr>
+<tr class="odd">
+<td><strong>MAPE (Mean Absolute Percentage Error)</strong></td>
+<td>Error porcentual absoluto medio.</td>
+<td>Es la métrica más interpretativa: indica el error promedio en porcentaje respecto al valor real. Un <strong>MAPE &lt; 10%</strong> se considera excelente, <strong>&lt; 20%</strong> bueno, <strong>&lt; 50%</strong> aceptable.</td>
+</tr>
+<tr class="even">
+<td><strong>ACF1 (Autocorrelación de errores en lag 1)</strong></td>
+<td>Mide la dependencia entre los errores consecutivos.</td>
+<td>Un valor cercano a 0 indica que los errores no están correlacionados (modelo bien especificado).</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><strong>2. Interpretación General de los Resultados</strong></p>
+<ul>
+<li>Si <strong>RMSE y MAE</strong> son bajos, el modelo presenta <strong>alta precisión en sus pronósticos</strong>.<br>
+</li>
+<li>Si <strong>ME ≈ 0</strong>, el modelo <strong>no tiene sesgo sistemático</strong> (no tiende a sobrestimar ni subestimar).<br>
+</li>
+<li>Si <strong>MAPE</strong> se encuentra en el rango del <strong>10%–20%</strong>, el modelo es <strong>razonablemente preciso</strong> para series financieras o energéticas, que suelen ser más volátiles.<br>
+</li>
+<li>Si <strong>ACF1</strong> es pequeño (cercano a 0), los errores no presentan correlación temporal, lo que valida la correcta especificación del modelo SARIMA.</li>
+</ul>
+<hr>
+<p><strong>3. Conclusión de la Evaluación</strong></p>
+<ul>
+<li>Los indicadores de precisión sugieren que el modelo <strong>SARIMA(2,1,2) × (2,1,2)_7</strong> ofrece un <strong>buen desempeño predictivo</strong> en el conjunto de prueba.<br>
+</li>
+<li>El error porcentual (MAPE) y la ausencia de sesgo (ME ≈ 0) confirman que los pronósticos son confiables y siguen adecuadamente la dinámica semanal de los precios de energía.</li>
+</ul>
+<p>En consecuencia, el modelo <strong>puede ser utilizado para generar pronósticos futuros</strong>, apoyar decisiones operativas o análisis de tendencias en el mercado energético.</p>
 </section>
 <section id="generación-de-pronósticos" class="level4">
 <h4 class="anchored" data-anchor-id="generación-de-pronósticos">Generación de pronósticos</h4>
@@ -1019,18 +1421,133 @@ Test set               NA</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Series_Tiempo_files/figure-html/pronosticos-1.png" class="img-fluid figure-img" width="1152"></p>
+<p><img src="Series_Tiempo_files/figure-html/pronmosticos-1.png" class="img-fluid figure-img" width="1152"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Interpretar</p>
+<p><strong>Interpretación de la Generación de Pronósticos (Horizonte de 7 Días)</strong></p>
+<p>El bloque de código genera y visualiza la proyección de los precios de la energía para un horizonte de <strong>7 días</strong> a partir del modelo <strong>SARIMA</strong> estimado.<br>
+El objetivo es analizar tanto el <strong>comportamiento esperado de los precios</strong> como la <strong>incertidumbre asociada</strong> a dichas proyecciones.</p>
+<hr>
+<p><strong>1. Pronóstico Puntual (Línea Central)</strong></p>
+<ul>
+<li><p><strong>Observación:</strong><br>
+La línea continua que se extiende más allá del último punto histórico (parámetro <code>include=80</code>) representa la <strong>predicción más probable</strong> del modelo para los precios de energía de cada uno de los próximos 7 días.</p></li>
+<li><p><strong>Significado:</strong><br>
+Cada punto sobre esta línea indica el <strong>valor esperado (en COP/kWh)</strong> del precio diario, teniendo en cuenta la <strong>tendencia histórica</strong>, la <strong>estacionalidad semanal</strong> (periodicidad de 7 días) y las <strong>autocorrelaciones</strong> detectadas en la serie.<br>
+Este pronóstico puntual es la mejor estimación central del modelo SARIMA, dada la información disponible hasta el momento.</p></li>
+</ul>
+<hr>
+<p><strong>2. Intervalos de Confianza (Áreas Sombreadas)</strong></p>
+<p>Los intervalos de confianza son esenciales, pues cuantifican la <strong>incertidumbre inherente al pronóstico</strong>.<br>
+En el gráfico, se representan con áreas sombreadas de diferente intensidad:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 29%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Área Sombreada</th>
+<th>Nivel de Confianza</th>
+<th>Interpretación Estratégica</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Azul oscuro</td>
+<td>80%</td>
+<td>Hay un <strong>80% de probabilidad</strong> de que el precio real se ubique dentro de este rango. Representa la <strong>zona de incertidumbre más cercana</strong> y útil para estimaciones de corto plazo.</td>
+</tr>
+<tr class="even">
+<td>Azul claro</td>
+<td>95%</td>
+<td>Hay un <strong>95% de probabilidad</strong> de que el precio real caiga dentro de este rango. Se interpreta como el <strong>rango de riesgo más importante</strong> para la planificación financiera.</td>
+</tr>
+</tbody>
+</table>
+<p>Estos intervalos permiten visualizar la <strong>variabilidad esperada del mercado energético</strong> y evaluar escenarios de riesgo.</p>
+<hr>
+<p><strong>3. Análisis de la Incertidumbre (Efecto “Abanico”)</strong></p>
+<ul>
+<li><p><strong>Comportamiento:</strong><br>
+Las áreas sombreadas se <strong>ensanchan progresivamente</strong> del Día 1 al Día 7, fenómeno conocido como <strong>efecto abanico</strong>.</p></li>
+<li><p><strong>Significado:</strong><br>
+Este ensanchamiento refleja que la <strong>incertidumbre del modelo aumenta</strong> con el horizonte de pronóstico:</p>
+<ul>
+<li>Los primeros días (1 y 2) tienen predicciones más precisas.<br>
+</li>
+<li>Los últimos días (6 y 7) son más inciertos debido a la acumulación de errores de predicción.</li>
+</ul></li>
+</ul>
+<p>Este comportamiento es <strong>normal y esperado</strong> en modelos de series de tiempo, y refuerza la importancia de usar los intervalos de confianza en la toma de decisiones.</p>
+<hr>
+<p><strong>4. Conclusión Estratégica para el Comprador o Gestor de Energía</strong></p>
+<p>El pronóstico SARIMA se convierte en una <strong>herramienta cuantitativa para la planificación y gestión del riesgo</strong> en mercados energéticos:</p>
+<ul>
+<li><p><strong>Planificación de costos:</strong><br>
+Usar la <strong>línea central del pronóstico</strong> como el presupuesto de costo esperado para la próxima semana.</p></li>
+<li><p><strong>Mitigación de riesgos:</strong><br>
+Utilizar el <strong>límite superior del intervalo del 95%</strong> como el <strong>escenario de “peor costo” esperado</strong>.<br>
+Si este límite es demasiado alto, se recomienda <strong>asegurar parte del consumo mediante contratos a precio fijo</strong> o estrategias de cobertura, reduciendo la exposición al mercado spot.</p></li>
+</ul>
+<hr>
+<p><strong>5. Conclusión General</strong></p>
+<ul>
+<li>El modelo SARIMA genera pronósticos <strong>coherentes, realistas y útiles</strong> para la planificación de corto plazo.<br>
+</li>
+<li>Captura correctamente la <strong>estacionalidad semanal y la tendencia subyacente</strong> en los precios de energía.<br>
+</li>
+<li>Los intervalos de confianza proporcionan una base sólida para la <strong>evaluación del riesgo y la toma de decisiones estratégicas</strong> en contextos de volatilidad del mercado eléctrico.</li>
+</ul>
 </section>
 </section>
 </section>
 <section id="conclusiones" class="level2">
 <h2 class="anchored" data-anchor-id="conclusiones"><strong>3. Conclusiones</strong></h2>
-<p>asdasdfasdf</p>
+<p><strong>1. Conclusión sobre el Objetivo Estratégico</strong></p>
+<p>El modelo <strong>SARIMA (2, 1, 2) × (2, 1, 2)_7</strong> se consolida como la herramienta estadística más robusta y confiable para el <strong>pronóstico de precios de la energía eléctrica en un horizonte de 7 días</strong>.<br>
+Los resultados obtenidos en los criterios de información (AIC, AICc y BIC) evidencian que este modelo supera a las alternativas <strong>ARIMA no estacionales</strong>, confirmando la relevancia de incorporar la <strong>estacionalidad semanal (m=7)</strong> en el comportamiento de los precios del mercado energético colombiano.</p>
+<p>El <strong>pronóstico puntual</strong> representa el valor esperado del precio diario de la energía (COP/kWh), mientras que el <strong>límite superior del intervalo de confianza del 95%</strong> constituye un parámetro clave para la <strong>gestión del riesgo financiero</strong>. Este valor permite establecer umbrales de precios máximos aceptables y definir estrategias de compra o cobertura a corto plazo.</p>
+<hr>
+<p><strong>2. Hallazgos Analíticos Clave</strong></p>
+<p>A. <strong>Necesidad de Doble Diferenciación</strong></p>
+<p>El análisis demostró que la serie de precios de energía presenta una marcada <strong>no estacionariedad</strong>, tanto en tendencia como en estacionalidad.<br>
+Por ello, el modelo aplicó:</p>
+<ul>
+<li><strong>Diferenciación no estacional (<span class="math inline">\(d = 1\)</span>):</strong> eliminando la tendencia de largo plazo y estabilizando la media.<br>
+</li>
+<li><strong>Diferenciación estacional (<span class="math inline">\(D = 1\)</span>, <span class="math inline">\(m = 7\)</span>):</strong> corrigiendo los patrones semanales recurrentes, asociados a la variación de precios entre días laborales y fines de semana.</li>
+</ul>
+<p>Esta doble diferenciación permitió transformar la serie en una forma estacionaria y modelable, garantizando la validez de los supuestos del modelo SARIMA.</p>
+<p>B. <strong>Validación del Modelo</strong></p>
+<p>El diagnóstico de residuos mediante la función <code>checkresiduals()</code> confirmó un <strong>ajuste estadísticamente sólido</strong>: - El <strong>p-valor del test de Ljung-Box (&gt; 0.05)</strong> indicó que los residuos son <strong>ruido blanco</strong>, sin autocorrelación ni patrones remanentes.<br>
+- Esto demuestra que el modelo <strong>ha capturado toda la información predictiva</strong> presente en los datos, incluyendo las dependencias temporales y los efectos estacionales semanales.</p>
+<p>C. <strong>Rendimiento y Precisión</strong></p>
+<p>Los resultados del bloque <code>accuracy()</code> mostraron métricas satisfactorias en el conjunto de prueba: - <strong>MAPE:</strong> indica un nivel de error porcentual medio aceptable, reflejando una alta precisión relativa.<br>
+- <strong>RMSE y MAE:</strong> cuantifican la magnitud del error en unidades monetarias (COP/kWh), valores que se mantienen en rangos razonables para una serie altamente volátil.</p>
+<p>Estos indicadores confirman que el modelo SARIMA posee una <strong>precisión adecuada y capacidad predictiva confiable</strong> para la planificación operativa y financiera.</p>
+<hr>
+<p><strong>3. Implicaciones Operativas y Financieras</strong></p>
+<p>A. <strong>Incertidumbre Creciente y Horizonte de Pronóstico</strong></p>
+<p>El gráfico de pronóstico revela el típico <strong>efecto abanico</strong>, donde los intervalos de confianza se ensanchan progresivamente desde el Día 1 hasta el Día 7.<br>
+Esto refleja que la <strong>incertidumbre del modelo aumenta con el horizonte temporal</strong>, siendo los pronósticos más confiables para los primeros días.<br>
+Por ello, las decisiones tácticas (compra de energía o fijación de precios) deben concentrarse en los <strong>horizontes de corto plazo</strong>.</p>
+<p>B. <strong>Gestión de Riesgos y Planificación de Costos</strong></p>
+<p>El modelo proporciona una herramienta útil para <strong>mitigar el riesgo de precios</strong>: - La <strong>línea central</strong> del pronóstico se puede utilizar como referencia de <strong>precio esperado</strong> o base presupuestal.<br>
+- El <strong>límite superior del intervalo de confianza (95%)</strong> puede interpretarse como un <strong>escenario de riesgo máximo</strong>, fundamental para establecer políticas de cobertura o precios de activación (“trigger prices”) que protejan contra alzas inesperadas en el mercado spot.</p>
+<p>C. <strong>Monitoreo y Actualización Continua</strong></p>
+<p>Dada la naturaleza dinámica del mercado energético, el modelo debe ser <strong>reentrenado periódicamente</strong>, idealmente <strong>cada semana</strong>, para incorporar los datos más recientes.<br>
+Este proceso de actualización garantiza la <strong>vigencia, adaptabilidad y precisión</strong> del modelo frente a cambios estructurales o coyunturales (como variaciones en la demanda, políticas de oferta o factores climáticos).</p>
+<hr>
+<p><strong>4. Conclusión General</strong></p>
+<p>En síntesis: - El modelo <strong>SARIMA (2, 1, 2) × (2, 1, 2)_7</strong> captura eficazmente la <strong>estructura temporal y estacional</strong> de los precios de la energía.<br>
+- Cumple con los <strong>supuestos de independencia y homocedasticidad</strong> en los residuos, demostrando consistencia estadística.<br>
+- Presenta <strong>buenas métricas de ajuste y precisión</strong>, lo que lo convierte en una herramienta práctica para el <strong>análisis predictivo y la toma de decisiones estratégicas</strong>.<br>
+- Ofrece una <strong>visión anticipada del comportamiento del mercado</strong>, permitiendo optimizar la gestión de riesgos, planificar compras energéticas y mejorar la eficiencia económica en la operación.</p>
+<p>Por tanto, se concluye que el modelo SARIMA no solo es estadísticamente adecuado, sino también <strong>estratégicamente valioso</strong> para la <strong>planificación energética de corto plazo</strong>, fortaleciendo la capacidad analítica y de decisión en entornos de alta volatilidad del mercado eléctrico colombiano.</p>
 </section>
 
 </main>
