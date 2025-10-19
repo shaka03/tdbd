@@ -35,11 +35,12 @@ library(forecast)
 ## **0. Información general**
 
 Los datos contienen la información de los precios en bolsa de la energía en Colombia (COP/kWh).
-Asumimos que somos compradores de energía, por lo que el pronosticar los precios de la energía es una herramienta esratégica fundamental para la estabilidad financiera, estabilidad operativa y planificación al largo plazo. Además, el mercado de energía en Colombia es volátil, por lo ntao, el poder anticiparnos al comportamiento de los precios nos ayudarán a tomar decisiones de cuánto y cuándo comprar y buscar de alternativas que nos permitan mitigar el riesgo operativo o financiero.
+Asumimos que somos compradores de energía, por lo que el pronosticar los precios de la energía es una herramienta esratégica fundamental para la estabilidad financiera, estabilidad operativa y planificación al largo plazo. Además, el mercado de energía en Colombia es volátil, por lo tanto, el poder anticiparnos al comportamiento de los precios nos ayudarán a tomar decisiones de cuánto y cuándo comprar y buscar de alternativas que nos permitan mitigar el riesgo operativo o financiero.
 
 Pregunta objetivo: ¿cuáles serán los precios de la energía para los siguientes 7 días?
 
 **Concepto de Serie de Tiempo**
+
 Una serie de tiempo es una secuencia de observaciones de una medida variable en intervalos de tiempo regulares. En este caso, los precios de la energía se registran diariamente. Las series temporales se caracterizan por componentes como tendencia (dirección general a largo plazo). Los componentes clave de una serie de tiempo son:
 
 - Tendencia: El movimiento de largo plazo de la serie (creciente o decreciente).
@@ -51,6 +52,7 @@ Una serie de tiempo es una secuencia de observaciones de una medida variable en 
 - Irregularidad/Ruido: Componente residual o aleatorio.
 
 **Modelo ARIMA**
+
 ARIMA (Autoregressive Integrated Moving Average) es un modelo:
 
 - AR (Autoregresivo) : Relaciona el valor actual con valores pasados
@@ -158,11 +160,6 @@ df_clean %>%
   theme(legend.position = "top")
 ```
 
-Complementar con:
-•	Estadísticas descriptivas de la serie (media, desviación estándar, tendencia, estacionalidad, etc.).
-
-Con base en el gráfico anterior, no hay mucha diferencia entre la mediana y la media en la serie de tiempo a analziar. Por lo tanto, para este caso, se escogerá el precio promedio como la serie a trabajar.
-
 **Estadísticas Descriptivas:**
 
 - **Media vs. Desviación Estándar:** La media del Precio Promedio tiende a ser ligeramente mayor que la mediana, pero la Desviación Estándar (volatilidad) puede ser similar, lo que confirma que la diferencia es pequeña, justificando la elección de trabajar solo con el Promedio.
@@ -196,15 +193,17 @@ for (i in c(1:60)) {
 }
 ```
 
-Explicar qué podría ssignificar, y por qué estos valores para la serie de tiempo de precios de energía
-
 **Interpretación de la prueba ADF y Retrasos ($k$)**
+
 El bucle ejecuta la Prueba Aumentada de Dickey-Fuller (ADF) para diferentes retrasos $k$.
+
 - La prueba ADF verifica la hipótesis nula de que la serie de tiempo es no estacionaria (tiene una raíz unitaria). Un p-valor $\le 0.04$ rechaza la hipótesis nula, indicando que la serie es estacionaria.
 - El retraso $k$ en la prueba ADF se refiere a cuántos términos rezagados de la serie diferenciada deben incluirse para asegurar que el término de error del modelo sea ruido blanco (no correlacionado).
 
 **Significado de los valores en la serie de precios de energía:**
-- P-valor alto (No-Estacionaria): Significa que la serie de precios tiene una fuerte memoria, es decir, el precio de hoy está muy influenciado por los precios de días anteriores, y esa influencia no se disipa rápidamente.- Retraso $k$: Si el primer $k$ donde la serie es estacionaria es alto, sugiere que se necesitan muchos días de información pasada para que el residuo del modelo sea aleatorio. Un alto grado de autocorrelación es típico en series financieras y de commodities como la energía, que se ven afectadas por la inercia del mercado y los factores regulatorios/climáticos de largo plazo.
+
+- P-valor alto (No-Estacionaria): Significa que la serie de precios tiene una fuerte memoria, es decir, el precio de hoy está muy influenciado por los precios de días anteriores, y esa influencia no se disipa rápidamente.
+- Retraso $k$: Si el primer $k$ donde la serie es estacionaria es alto, sugiere que se necesitan muchos días de información pasada para que el residuo del modelo sea aleatorio. Un alto grado de autocorrelación es típico en series financieras y de commodities como la energía, que se ven afectadas por la inercia del mercado y los factores regulatorios/climáticos de largo plazo.
 
 ### **2.1. Modelamiento**
 ```{r diferenciar_1, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
@@ -247,11 +246,13 @@ grid.arrange(ggAcf(diff_precios),
 adf.test(diff_precios)
 ```
 
-Con base en este gráfico, aparentemente el orden de p es 4 y el orden de q es de 3, con una diferenciación de primer orden. Con base en los resultados anteriores, se aplciarán los siguientes modelos:
+Con base en este gráfico, aparentemente el orden de p es 4 y el orden de q es de 3, con una diferenciación de primer orden. Con base en los resultados anteriores, se aplicarán los siguientes modelos:
 
-- Auto-Arima
-- Modelo 1: Arima(2, 1, 2)
-- Modelo 2: Arima(2, 1, 7)
+**Modelos a Aplicar (No Estacionales):**
+
+- **Auto-Arima:** Encuentra automáticamente el mejor orden $(p, d, q)$ basado en el AIC/BIC.
+- **Modelo 1:** Arima(2, 1, 2): Basado en el análisis de la diferenciación estacional de 7 días.
+- **Modelo 2:** Arima(2, 1, 7): Intenta capturar la estacionalidad semanal directamente con un orden MA alto ($q=7$).
 
 ```{r modelo_auto, fig.width=12, fig.height=5, echo=FALSE, warning=FALSE}
 modelo_auto = auto.arima(train)
@@ -270,15 +271,6 @@ d2 = 1
 q2 = 7
 modelo2 = Arima(train, order = c(p2,d2,q2))
 ```
-
-**Análisis:**
-- Una diferenciación estacional de 14 días busca un patrón que se repite cada dos semanas (bi-semanal).
-- Se proponen órdenes $p=4$ y $q=3$ con base en los gráficos.
-
-**Modelos a Aplicar (No Estacionales):**
-- **Auto-Arima:** Encuentra automáticamente el mejor orden $(p, d, q)$ basado en el AIC/BIC.
-- **Modelo 1:** Arima(2, 1, 2): Basado en el análisis de la diferenciación estacional de 7 días.
-- **Modelo 2:** Arima(2, 1, 7): Intenta capturar la estacionalidad semanal directamente con un orden MA alto ($q=7$).
 
 #### **Resumen de los resultados Arima**
 ```{r resumen, echo=FALSE, warning=FALSE}
@@ -851,6 +843,7 @@ Este proceso de actualización garantiza la **vigencia, adaptabilidad y precisi�
 **4. Conclusión General**
 
 En síntesis:
+
 - El modelo **SARIMA (2, 1, 2) × (2, 1, 2)\_7** captura eficazmente la **estructura temporal y estacional** de los precios de la energía.  
 - Cumple con los **supuestos de independencia y homocedasticidad** en los residuos, demostrando consistencia estadística.  
 - Presenta **buenas métricas de ajuste y precisión**, lo que lo convierte en una herramienta práctica para el **análisis predictivo y la toma de decisiones estratégicas**.  
